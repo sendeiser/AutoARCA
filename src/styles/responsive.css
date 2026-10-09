@@ -1,0 +1,281 @@
+/**
+ * AutoARCA — Responsive System & Fluid Layout
+ * Proporciones áureas, tipografía fluida y ergonomía táctil en todos los tipos de pantalla.
+ * Dispositivos: Mobile (<480px), Phablets (481-768px), Tablets (769-1024px), Desktop (1025-1440px), Wide (>1441px).
+ */
+
+/* ==============================================================================
+   1. Tipografía y Escalas Fluidas
+   ============================================================================== */
+:root {
+  --fluid-h1: clamp(1.4rem, 3.2vw + 0.6rem, 2.25rem);
+  --fluid-h2: clamp(1.15rem, 2.2vw + 0.5rem, 1.65rem);
+  --fluid-h3: clamp(1rem, 1.5vw + 0.4rem, 1.35rem);
+  --fluid-body: clamp(0.82rem, 0.4vw + 0.72rem, 0.95rem);
+  --fluid-small: clamp(0.72rem, 0.3vw + 0.64rem, 0.82rem);
+  
+  --fluid-page-padding: clamp(0.65rem, 2.2vw, 2rem);
+  --fluid-card-padding: clamp(0.75rem, 1.8vw, 1.5rem);
+  --fluid-gap: clamp(0.5rem, 1.5vw, 1.25rem);
+}
+
+/* ==============================================================================
+   2. Soporte Universal de Áreas Seguras (iPhone Notch & Dynamic Island)
+   ============================================================================== */
+body {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ==============================================================================
+   3. Contenedores de Página Adaptativos
+   ============================================================================== */
+.accountant-portal-container,
+.admin-container {
+  width: 100%;
+  max-width: min(94vw, 1200px) !important;
+  margin: 0 auto !important;
+  padding: var(--fluid-page-padding) !important;
+  box-sizing: border-box;
+}
+
+/* ==============================================================================
+   4. StatGrids Proporcionados en Todo Tipo de Pantalla
+   ============================================================================== */
+.uui-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--fluid-gap);
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+/* En teléfonos (< 540px), mostrar 2 columnas para no hacer scroll vertical infinito */
+@media (max-width: 540px) {
+  .uui-stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .uui-stat-card {
+    padding: 0.75rem !important;
+    border-radius: 10px !important;
+  }
+
+  .uui-stat-value {
+    font-size: clamp(1.1rem, 4.5vw, 1.35rem) !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .uui-stat-label {
+    font-size: 0.74rem !important;
+  }
+
+  .uui-stat-icon-wrap {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .uui-stat-footer {
+    font-size: 0.68rem !important;
+  }
+}
+
+/* En pantallas ultra-pequeñas (< 360px), 1 columna */
+@media (max-width: 360px) {
+  .uui-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==============================================================================
+   5. Terminal POS Ergonómico y Sin Desborde
+   ============================================================================== */
+.pos-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .pos-container {
+    padding: 0.35rem 0.5rem 4.5rem 0.5rem !important;
+  }
+
+  .pos-header {
+    margin-bottom: 0.4rem !important;
+    padding: 0.45rem 0.65rem !important;
+  }
+
+  .pos-display-card {
+    padding: 0.65rem 0.85rem !important;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .pos-amount-display {
+    font-size: clamp(2rem, 10vw, 2.75rem) !important;
+  }
+
+  .pos-keypad {
+    gap: 0.35rem !important;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .keypad-btn {
+    height: 48px !important;
+    font-size: 1.35rem !important;
+    border-radius: 12px !important;
+  }
+
+  .pos-emit-btn {
+    height: 48px !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Pantallas de altura reducida (Landscape móvil o laptops pequeñas) */
+@media (max-height: 700px) and (orientation: landscape) {
+  .pos-container {
+    padding-top: 0.25rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .keypad-btn {
+    height: 40px !important;
+    font-size: 1.15rem !important;
+  }
+
+  .pos-display-card {
+    padding: 0.45rem 0.75rem !important;
+  }
+
+  .pos-amount-display {
+    font-size: 2rem !important;
+  }
+}
+
+/* ==============================================================================
+   6. AuthScreen Adaptativo (Login & Registro)
+   ============================================================================== */
+.uui-auth-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (max-width: 640px) {
+  .uui-auth-left {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .uui-auth-box {
+    max-width: 100% !important;
+  }
+
+  .uui-role-selector {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .uui-role-card {
+    padding: 0.75rem 0.5rem !important;
+  }
+
+  .uui-role-title {
+    font-size: 0.78rem !important;
+  }
+
+  .uui-role-desc {
+    font-size: 0.68rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .uui-role-selector {
+    grid-template-columns: 1fr !important;
+  }
+
+  .uui-demo-buttons {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==============================================================================
+   7. Tablas y Tarjetas Responsivas
+   ============================================================================== */
+.uui-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Indicador sutil de scroll horizontal si la tabla desborda */
+.uui-table-container {
+  position: relative;
+}
+
+.uui-table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.uui-table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.uui-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+@media (max-width: 640px) {
+  .uui-table-toolbar {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.65rem !important;
+    padding: 0.85rem !important;
+  }
+
+  .uui-th, .uui-td {
+    padding: 0.65rem 0.75rem !important;
+    font-size: 0.78rem !important;
+  }
+}
+
+/* ==============================================================================
+   8. Modales en Pantallas Móviles
+   ============================================================================== */
+@media (max-width: 580px) {
+  .uui-modal-box {
+    margin: 0 0.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+    border-radius: 14px !important;
+  }
+
+  .uui-modal-header {
+    padding: 1rem 1rem 0.65rem 1rem !important;
+  }
+
+  .uui-modal-body {
+    padding: 0 1rem 1rem 1rem !important;
+  }
+
+  .uui-modal-footer {
+    padding: 0.75rem 1rem !important;
+  }
+}
+
+/* ==============================================================================
+   9. Pantallas Anchas / Monitores de Escritorio (> 1440px)
+   ============================================================================== */
+@media (min-width: 1441px) {
+  .uui-auth-container {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .accountant-portal-container,
+  .admin-container {
+    max-width: 1320px !important;
+  }
+}

@@ -249,7 +249,12 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     ];
   }, [businessProfile, taxMetrics, batchHistory, pendingSales]);
 
-  const clientUserForCheck = users.find((u) => u.id === 'client-1') || currentUser;
+  const clientInState = users.find((u) => u.id === (currentUser?.id || 'client-1'));
+  const clientUserForCheck =
+    currentUser?.role === 'client'
+      ? (currentUser.subscription_status === 'past_due' ? currentUser : (clientInState || currentUser))
+      : (users.find((u) => u.id === 'client-1') || currentUser);
+
   const isClientSuspended =
     clientUserForCheck &&
     (clientUserForCheck.subscription_status === 'past_due' ||
