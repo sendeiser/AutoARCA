@@ -1,121 +1,193 @@
-/* Estilos del Terminal POS Táctil Ultra-Rápido */
+/* Estilos Avanzados del Terminal POS Táctil (UI/UX Pro Max) */
 :root {
-  --pos-bg: #0f172a;
+  --pos-bg: #0b1120;
   --pos-card-bg: rgba(30, 41, 59, 0.7);
-  --pos-card-border: rgba(255, 255, 255, 0.08);
+  --pos-card-border: rgba(255, 255, 255, 0.1);
   --pos-primary: #10b981;
-  --pos-primary-hover: #059669;
+  --pos-primary-glow: rgba(16, 185, 129, 0.35);
   --pos-accent: #38bdf8;
   --pos-text-main: #f8fafc;
   --pos-text-muted: #94a3b8;
-  --pos-btn-bg: rgba(51, 65, 85, 0.6);
-  --pos-btn-hover: rgba(71, 85, 105, 0.8);
-  --pos-btn-active: rgba(100, 116, 139, 0.9);
+  --pos-btn-bg: rgba(30, 41, 59, 0.8);
+  --pos-btn-hover: rgba(51, 65, 85, 0.9);
+  --pos-btn-active: rgba(71, 85, 105, 1);
 }
 
 .pos-container {
   display: flex;
   flex-direction: column;
-  max-width: 540px;
+  max-width: 520px;
   margin: 0 auto;
-  padding: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 1.25rem 1rem 3rem 1rem;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   color: var(--pos-text-main);
-  background: var(--pos-bg);
-  min-height: 100vh;
   box-sizing: border-box;
 }
 
+/* Cabecera del POS */
 .pos-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--pos-card-border);
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--pos-card-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
 }
 
-.pos-header h2 {
-  font-size: 1.25rem;
+.pos-header-info h2 {
+  font-size: 1.15rem;
   margin: 0;
-  font-weight: 700;
-  color: var(--pos-text-main);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.pos-header-info small {
+  font-size: 0.78rem;
+  color: var(--pos-text-muted);
+}
+
+.pos-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sound-toggle-btn {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--pos-card-border);
+  border-radius: 8px;
+  color: var(--pos-text-muted);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
 .pos-header-badge {
   font-size: 0.75rem;
-  padding: 0.25rem 0.6rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   background: rgba(16, 185, 129, 0.15);
   color: var(--pos-primary);
-  font-weight: 600;
+  font-weight: 700;
   border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
 }
 
-/* Visor de Importe */
+/* Visor Digital de Importe (OLED Glow) */
 .pos-display-card {
-  background: var(--pos-card-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--pos-card-border);
-  border-radius: 16px;
-  padding: 1.25rem;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.8));
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 20px;
+  padding: 1.25rem 1.5rem;
   margin-bottom: 1rem;
   text-align: right;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s ease;
+}
+
+.pos-display-card.pulsing {
+  border-color: var(--pos-primary);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
 }
 
 .pos-display-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--pos-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-weight: 700;
   margin-bottom: 0.25rem;
 }
 
 .pos-amount-display {
-  font-size: 2.75rem;
+  font-size: 2.85rem;
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   line-height: 1.1;
   word-break: break-all;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .pos-amount-display span {
   color: var(--pos-primary);
+  font-weight: 700;
   margin-right: 0.25rem;
 }
 
-/* Chips de Método de Pago */
+/* Fila de Cliente */
+.pos-client-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--pos-card-border);
+  padding: 0.5rem 0.85rem;
+  border-radius: 12px;
+  margin-bottom: 0.85rem;
+  font-size: 0.85rem;
+}
+
+.pos-client-link {
+  color: var(--pos-accent);
+  cursor: pointer;
+  text-decoration: none;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.pos-client-link:hover {
+  background: rgba(56, 189, 248, 0.25);
+}
+
+/* Selector de Medios de Pago */
 .pos-payment-selector {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .payment-chip {
   height: 48px;
   background: var(--pos-btn-bg);
   border: 1px solid var(--pos-card-border);
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--pos-text-muted);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   touch-action: manipulation;
 }
 
+.payment-chip:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
 .payment-chip.active {
-  background: var(--pos-primary);
-  color: #0f172a;
-  border-color: var(--pos-primary);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
 }
 
 /* Atajos Rápidos de Dinero */
@@ -123,17 +195,17 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .quick-amount-chip {
   height: 44px;
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  color: var(--pos-accent);
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  color: #38bdf8;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
@@ -141,110 +213,113 @@
   justify-content: center;
 }
 
-.quick-amount-chip:active {
-  transform: scale(0.96);
-  background: rgba(56, 189, 248, 0.2);
+.quick-amount-chip:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
 }
 
-/* Botonera Numérica Táctil */
+.quick-amount-chip:active {
+  transform: scale(0.95);
+}
+
+/* Botonera Numérica Ergonómica (48px+ Touch Targets) */
 .pos-keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.6rem;
+  gap: 0.65rem;
   margin-bottom: 1rem;
 }
 
 .keypad-btn {
-  height: 60px;
+  height: 62px;
   background: var(--pos-btn-bg);
   border: 1px solid var(--pos-card-border);
-  border-radius: 14px;
+  border-radius: 16px;
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.1s ease;
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   touch-action: manipulation;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.keypad-btn:hover {
+  background: var(--pos-btn-hover);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .keypad-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.94);
   background: var(--pos-btn-active);
+  box-shadow: none;
 }
 
 .keypad-btn.action {
   color: #f87171;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.keypad-btn.action:hover {
+  background: rgba(239, 68, 68, 0.25);
 }
 
 /* Botón Grande de Emisión */
 .pos-emit-btn {
-  height: 56px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  height: 60px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border: none;
-  border-radius: 14px;
+  border-radius: 16px;
   color: #ffffff;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
   transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.pos-emit-btn:hover {
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
+  transform: translateY(-1px);
 }
 
 .pos-emit-btn:active {
   transform: scale(0.98);
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* Alerta de Consumidor Final y Modal */
-.pos-client-badge-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(30, 41, 59, 0.5);
-  padding: 0.5rem 0.75rem;
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-  font-size: 0.85rem;
-}
-
-.pos-client-link {
-  color: var(--pos-accent);
-  cursor: pointer;
-  text-decoration: underline;
-  background: none;
-  border: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-/* Toast de Éxito */
+/* Toast de Confirmación */
 .pos-toast {
   position: fixed;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  background: #10b981;
+  background: linear-gradient(135deg, #10b981, #047857);
   color: #ffffff;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.75rem;
   border-radius: 9999px;
-  font-weight: 700;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  animation: fadeInOut 1.5s ease forwards;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.4);
   z-index: 1000;
+  animation: toastSlide 1.5s ease forwards;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translate(-50%, 15px); }
-  20% { opacity: 1; transform: translate(-50%, 0); }
-  80% { opacity: 1; transform: translate(-50%, 0); }
+@keyframes toastSlide {
+  0% { opacity: 0; transform: translate(-50%, 20px); }
+  15% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
   100% { opacity: 0; transform: translate(-50%, -15px); }
 }

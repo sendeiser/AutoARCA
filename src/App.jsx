@@ -1,11 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PosTerminal from './components/PosTerminal.jsx';
 import ClientDashboard from './components/ClientDashboard.jsx';
 import AccountantPortal from './components/AccountantPortal.jsx';
 import SuperAdminDashboard from './components/SuperAdminDashboard.jsx';
+import AuthModal from './components/AuthModal.jsx';
+import UserProfileModal from './components/UserProfileModal.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
-import { INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
+import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
+import { soundService } from './services/soundService.js';
 import './index.css';
 
 export default function App() {
@@ -14,6 +17,14 @@ export default function App() {
   const [scales, setScales] = useState(INITIAL_SCALES);
   const [users, setUsers] = useState(INITIAL_USERS);
   const [businessProfile, setBusinessProfile] = useState(INITIAL_BUSINESS);
+  const [currentUser, setCurrentUser] = useState(INITIAL_USERS[0]);
+  
+  // Modales
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  // Ventas de demostración
   const [pendingSales, setPendingSales] = useState([
     {
       id: 'demo-s1',
@@ -38,10 +49,85 @@ export default function App() {
   ]);
   const [batchHistory, setBatchHistory] = useState([]);
 
-  // Usuario cliente actual
-  const currentClientUser = useMemo(() => {
-    return users.find((u) => u.id === 'client-1') || users[0];
-  }, [users]);
+  // Cargar sesión persistida al iniciar
+  useEffect(() => {
+    try {
+      const session = authService.getCurrentSession();
+      if (session && session.user) {
+        setCurrentUser(session.user);
+        setRole(session.user.role || 'client');
+        if (session.business) {
+          setBusinessProfile(session.business);
+        }
+      }
+      const loadedUsers = authService.getUsers();
+      if (loadedUsers && loadedUsers.length > 0) {
+        setUsers(loadedUsers);
+      }
+    } catch {
+      // Ignorar errores en entornos sin localStorage
+    }
+  }, []);
+
+  // Sincronizar usuario activo cuando se cambia el rol en el selector
+  const handleRoleChange = (newRole) => {
+    soundService.playKeyTap();
+    setRole(newRole);
+    const targetUser = users.find((u) => u.role === newRole) || users[0];
+    if (targetUser) {
+      setCurrentUser(targetUser);
+      authService.switchUser(targetUser.id);
+    }
+  };
+
+  // Toggle de sonido
+  const handleToggleSound = () => {
+    const nextState = soundService.toggleSound();
+    setSoundEnabled(nextState);
+    if (nextState) {
+      soundService.playSuccessChime();
+    }
+  };
+
+  // Login o Registro exitoso
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+    setRole(user.role || 'client');
+    setUsers(authService.getUsers());
+    
+    // Si es cliente, sincronizar negocio
+    const bizList = authService.getBusinesses();
+    const userBiz = bizList.find((b) => b.user_id === user.id) || bizList[0];
+    if (userBiz) {
+      setBusinessProfile(userBiz);
+    }
+    
+    setIsAuthOpen(false);
+    soundService.playSuccessChime();
+  };
+
+  // Logout
+  const handleLogout = () => {
+    soundService.playKeyTap();
+    authService.logout();
+    setIsProfileOpen(false);
+    const defaultUser = INITIAL_USERS[0];
+    setCurrentUser(defaultUser);
+    setRole('client');
+    setBusinessProfile(INITIAL_BUSINESS);
+  };
+
+  // Actualización de perfil
+  const handleUserUpdated = (updatedUser) => {
+    setCurrentUser(updatedUser);
+    setUsers(authService.getUsers());
+    const bizList = authService.getBusinesses();
+    const updatedBiz = bizList.find((b) => b.id === businessProfile.id);
+    if (updatedBiz) {
+      setBusinessProfile(updatedBiz);
+    }
+    soundService.playSuccessChime();
+  };
 
   // Escala impositiva activa del comercio
   const currentScale = useMemo(() => {
@@ -68,7 +154,7 @@ export default function App() {
   // Registro de venta en el POS
   const handleRecordSale = async (receiptData) => {
     const newReceipt = await recordSaleReceipt(receiptData, {
-      profile: currentClientUser,
+      profile: currentUser,
       businessProfile
     });
     setPendingSales((prev) => [...prev, newReceipt]);
@@ -77,6 +163,7 @@ export default function App() {
 
   // Cierre de jornada diario
   const handleCloseBatch = async () => {
+    soundService.playKeyTap();
     const today = new Date().toISOString().slice(0, 10);
     const batch = await closeDailyBatch(businessProfile.id, today, 'manual', {
       businessProfile,
@@ -84,12 +171,14 @@ export default function App() {
     });
     setBatchHistory((prev) => [batch, ...prev]);
     setPendingSales([]);
+    soundService.playSuccessChime();
     return batch;
   };
 
   // Guardar escalas en SuperAdmin
   const handleSaveScales = (updatedScales) => {
     setScales(updatedScales);
+    authService.saveScales(updatedScales);
   };
 
   // Actualizar suscripción en SuperAdmin
@@ -97,6 +186,9 @@ export default function App() {
     setUsers((prev) =>
       prev.map((u) => (u.id === userId ? { ...u, subscription_status: newStatus } : u))
     );
+    if (currentUser.id === userId) {
+      setCurrentUser((prev) => ({ ...prev, subscription_status: newStatus }));
+    }
   };
 
   // Preparar clientes para el portal del contador
@@ -129,16 +221,17 @@ export default function App() {
     ];
   }, [businessProfile, taxMetrics, batchHistory, pendingSales]);
 
+  const clientUserForCheck = users.find((u) => u.id === 'client-1') || currentUser;
   const isClientSuspended =
-    currentClientUser.subscription_status === 'past_due' ||
-    currentClientUser.subscription_status === 'cancelled';
+    clientUserForCheck.subscription_status === 'past_due' ||
+    clientUserForCheck.subscription_status === 'cancelled';
 
   return (
     <div>
       {/* Barra de Navegación Principal */}
       <header className="app-shell-navbar">
-        <div className="app-brand">
-          <span>⚡</span> AutoARCA
+        <div className="app-brand" onClick={() => setClientView('pos')}>
+          <span>⚡</span> AutoARCA <span className="brand-badge">SaaS Cloud</span>
         </div>
 
         {/* Pestañas de Navegación para el rol cliente */}
@@ -147,33 +240,67 @@ export default function App() {
             <button
               type="button"
               className={`app-nav-btn ${clientView === 'pos' ? 'active' : ''}`}
-              onClick={() => setClientView('pos')}
+              onClick={() => { soundService.playKeyTap(); setClientView('pos'); }}
             >
               Terminal POS
             </button>
             <button
               type="button"
               className={`app-nav-btn ${clientView === 'dashboard' ? 'active' : ''}`}
-              onClick={() => setClientView('dashboard')}
+              onClick={() => { soundService.playKeyTap(); setClientView('dashboard'); }}
             >
               Dashboard Fiscal
             </button>
           </nav>
         )}
 
-        {/* Conmutador de Rol para Demostración y Prueba */}
+        {/* Controles de Usuario, Audio y Rol */}
         <div className="app-user-controls">
-          <label style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Rol:</label>
+          {/* Audio Toggle */}
+          <button
+            type="button"
+            className={`sound-toggle-btn ${!soundEnabled ? 'muted' : ''}`}
+            onClick={handleToggleSound}
+            title={soundEnabled ? 'Desactivar efectos de audio táctil' : 'Activar efectos de audio táctil'}
+          >
+            {soundEnabled ? '🔊 Audio' : '🔇 Silencio'}
+          </button>
+
+          {/* Selector de Rol */}
           <select
             data-testid="role-switcher-select"
             className="role-switcher-select"
             value={role}
-            onChange={(e) => setRole(e.target.value)}
+            onChange={(e) => handleRoleChange(e.target.value)}
           >
             <option value="client">👤 Cliente (Comercio)</option>
             <option value="accountant">📑 Contador (Estudio)</option>
             <option value="superadmin">👑 SuperAdmin (Global)</option>
           </select>
+
+          {/* Chip de Perfil o Botón de Auth */}
+          {currentUser ? (
+            <div
+              className="user-profile-chip"
+              onClick={() => { soundService.playKeyTap(); setIsProfileOpen(true); }}
+              title="Ver y editar perfil de usuario"
+            >
+              <div className="user-chip-avatar">
+                {currentUser.full_name?.charAt(0) || 'U'}
+              </div>
+              <div className="user-chip-name">
+                {currentUser.full_name || 'Mi Cuenta'}
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn-open-auth"
+              onClick={() => { soundService.playKeyTap(); setIsAuthOpen(true); }}
+            >
+              Ingresar / Registrarse 🚀
+            </button>
+          )}
         </div>
       </header>
 
@@ -199,7 +326,7 @@ export default function App() {
                 pendingSales={pendingSales}
                 batchHistory={batchHistory}
                 onCloseBatch={handleCloseBatch}
-                onNavigateToPos={() => setClientView('pos')}
+                onNavigateToPos={() => { soundService.playKeyTap(); setClientView('pos'); }}
               />
             )}
           </>
@@ -221,6 +348,23 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Modal de Autenticación */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
+
+      {/* Modal de Perfil de Usuario */}
+      <UserProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        currentUser={currentUser}
+        businessProfile={businessProfile}
+        onUserUpdated={handleUserUpdated}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }

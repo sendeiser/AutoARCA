@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { soundService } from '../services/soundService.js';
 import '../styles/posTerminal.css';
 
 export default function PosTerminal({
@@ -14,12 +15,21 @@ export default function PosTerminal({
   const [showClientModal, setShowClientModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
 
   // Formato visual en pantalla
   const numericAmount = Number(amountRaw) || 0;
   const displayFormatted = numericAmount.toLocaleString('es-AR');
 
+  const triggerPulse = () => {
+    setIsPulsing(true);
+    setTimeout(() => setIsPulsing(false), 120);
+  };
+
   const handleDigit = (digit) => {
+    soundService.playTap();
+    triggerPulse();
     setAmountRaw((prev) => {
       if (prev === '0') return digit === '00' ? '0' : digit;
       if (prev.length >= 9) return prev; // Límite de seguridad
@@ -28,10 +38,14 @@ export default function PosTerminal({
   };
 
   const handleClear = () => {
+    soundService.playTap();
+    triggerPulse();
     setAmountRaw('0');
   };
 
   const handleBackspace = () => {
+    soundService.playTap();
+    triggerPulse();
     setAmountRaw((prev) => {
       if (prev.length <= 1) return '0';
       return prev.slice(0, -1);
@@ -39,10 +53,18 @@ export default function PosTerminal({
   };
 
   const handleQuickAdd = (value) => {
+    soundService.playTap();
+    triggerPulse();
     setAmountRaw((prev) => {
       const current = Number(prev) || 0;
       return String(current + value);
     });
+  };
+
+  const toggleSound = () => {
+    const next = !isMuted;
+    setIsMuted(next);
+    soundService.setMuted(next);
   };
 
   const showToast = (msg) => {
@@ -52,12 +74,14 @@ export default function PosTerminal({
 
   const handleEmit = async () => {
     if (numericAmount <= 0) {
+      soundService.playWarning();
       showToast('Ingresa un importe mayor a cero');
       return;
     }
 
     // Validación legal ARCA: si supera el tope sin identificar, forzar carga de DNI/CUIT
     if (customerDocType === 'SIN_IDENTIFICAR' && numericAmount > anonymousMaxLimit) {
+      soundService.playWarning();
       setShowClientModal(true);
       return;
     }
@@ -74,13 +98,15 @@ export default function PosTerminal({
           date: new Date().toISOString().slice(0, 10)
         });
       }
-      showToast('¡Comprobante emitido!');
+      soundService.playSuccess();
+      showToast('¡Comprobante emitido con éxito!');
       setAmountRaw('0');
       // Reset cliente a consumidor final por defecto
       setCustomerDocType('SIN_IDENTIFICAR');
       setCustomerDocNumber('0');
       setCustomerName('Consumidor Final');
     } catch (err) {
+      soundService.playWarning();
       showToast(err.message || 'Error al emitir comprobante');
     } finally {
       setIsSubmitting(false);
@@ -91,17 +117,27 @@ export default function PosTerminal({
     <div className="pos-container">
       {/* Cabecera del Comercio */}
       <div className="pos-header">
-        <div>
+        <div className="pos-header-info">
           <h2>{businessProfile.fantasy_name || businessProfile.razon_social || 'Terminal POS'}</h2>
-          <small style={{ color: 'var(--pos-text-muted)' }}>
+          <small>
             CUIT: {businessProfile.cuit || 'Sin configurar'} · PV: {String(businessProfile.pos_number || 1).padStart(5, '0')}
           </small>
         </div>
-        <div className="pos-header-badge">Factura C</div>
+        <div className="pos-header-actions">
+          <button
+            type="button"
+            className="sound-toggle-btn"
+            onClick={toggleSound}
+            title={isMuted ? 'Activar sonido táctil' : 'Silenciar'}
+          >
+            {isMuted ? '🔇' : '🔊'}
+          </button>
+          <div className="pos-header-badge">Factura C</div>
+        </div>
       </div>
 
-      {/* Visor de Importe */}
-      <div className="pos-display-card">
+      {/* Visor de Importe Digital */}
+      <div className={`pos-display-card ${isPulsing ? 'pulsing' : ''}`}>
         <div className="pos-display-label">Total a Cobrar</div>
         <div className="pos-amount-display" data-testid="pos-amount-display">
           <span>$ </span>
@@ -126,28 +162,28 @@ export default function PosTerminal({
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'cash' ? 'active' : ''}`}
-          onClick={() => setPaymentMethod('cash')}
+          onClick={() => { soundService.playTap(); setPaymentMethod('cash'); }}
         >
           💵 Efectivo
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'transfer' ? 'active' : ''}`}
-          onClick={() => setPaymentMethod('transfer')}
+          onClick={() => { soundService.playTap(); setPaymentMethod('transfer'); }}
         >
           📱 Transfer.
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'debit' ? 'active' : ''}`}
-          onClick={() => setPaymentMethod('debit')}
+          onClick={() => { soundService.playTap(); setPaymentMethod('debit'); }}
         >
           💳 Débito
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'credit' ? 'active' : ''}`}
-          onClick={() => setPaymentMethod('credit')}
+          onClick={() => { soundService.playTap(); setPaymentMethod('credit'); }}
         >
           💳 Crédito
         </button>
@@ -192,39 +228,19 @@ export default function PosTerminal({
 
       {/* Modal de Identificación de Cliente */}
       {showClientModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1rem',
-            zIndex: 999
-          }}
-        >
-          <div
-            style={{
-              background: '#1e293b',
-              padding: '1.5rem',
-              borderRadius: '16px',
-              maxWidth: '400px',
-              width: '100%',
-              color: '#fff'
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Identificación del Cliente</h3>
+        <div className="auth-overlay">
+          <div className="auth-card" style={{ maxWidth: '440px' }}>
+            <h3 style={{ marginTop: 0, fontSize: '1.25rem' }}>Identificación del Cliente</h3>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-              Para ventas mayores a ${anonymousMaxLimit.toLocaleString('es-AR')} o a pedido del cliente, registra sus datos fiscales.
+              Para ventas mayores a ${anonymousMaxLimit.toLocaleString('es-AR')} o a pedido del cliente, registra sus datos fiscales exigidos por ARCA.
             </p>
 
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', marginBottom: '0.25rem' }}>Tipo Documento</label>
+            <div className="auth-form-group">
+              <label className="auth-label">Tipo Documento</label>
               <select
+                className="auth-select"
                 value={customerDocType}
                 onChange={(e) => setCustomerDocType(e.target.value)}
-                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: '#334155', color: '#fff', border: 'none' }}
               >
                 <option value="SIN_IDENTIFICAR">Consumidor Final (Sin identificar)</option>
                 <option value="DNI">DNI</option>
@@ -232,35 +248,36 @@ export default function PosTerminal({
               </select>
             </div>
 
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', marginBottom: '0.25rem' }}>Número de Documento</label>
+            <div className="auth-form-group">
+              <label className="auth-label">Número de Documento</label>
               <input
                 type="text"
+                className="auth-input"
                 value={customerDocNumber}
                 onChange={(e) => setCustomerDocNumber(e.target.value.replace(/[^0-9]/g, ''))}
                 placeholder="Ej. 30712345678"
-                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: '#334155', color: '#fff', border: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', marginBottom: '0.25rem' }}>Nombre o Razón Social</label>
+            <div className="auth-form-group">
+              <label className="auth-label">Nombre o Razón Social</label>
               <input
                 type="text"
+                className="auth-input"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Ej. Juan Pérez"
-                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: '#334155', color: '#fff', border: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1.25rem' }}>
               <button
                 type="button"
+                className="auth-btn-primary"
                 onClick={() => setShowClientModal(false)}
-                style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', background: '#475569', color: '#fff', border: 'none', cursor: 'pointer' }}
+                style={{ margin: 0, padding: '0.65rem 1.25rem' }}
               >
-                Listo
+                Confirmar Datos
               </button>
             </div>
           </div>

@@ -47,6 +47,12 @@ export default function TaxTrafficLight({ metrics }) {
             style={{ width: `${boundedPercentage}%` }}
           />
         </div>
+        <div className="progress-milestones">
+          <span>0%</span>
+          <span>50%</span>
+          <span>85% Alerta</span>
+          <span>100% Límite</span>
+        </div>
       </div>
 
       {/* Grilla de Métricas en Tarjetas */}
