@@ -6,7 +6,7 @@
  * - Desacoplamiento de estado y composición flexible
  */
 
-import React, { useState, createContext, useContext, useMemo } from 'react';
+import React, { useState, createContext, useContext, useMemo, useRef, useEffect } from 'react';
 import { soundService } from '../services/soundService.js';
 import {
   CashIcon,
@@ -48,12 +48,25 @@ export function PosTerminalProvider({
   const [isMuted, setIsMuted] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
 
+  const pulseTimeoutRef = useRef(null);
+  const toastTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
   const numericAmount = Number(amountRaw) || 0;
   const displayFormatted = numericAmount.toLocaleString('es-AR');
 
   const triggerPulse = () => {
     setIsPulsing(true);
-    setTimeout(() => setIsPulsing(false), 120);
+    if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
+    pulseTimeoutRef.current = setTimeout(() => {
+      setIsPulsing(false);
+    }, 120);
   };
 
   const actions = useMemo(() => ({
@@ -96,7 +109,8 @@ export function PosTerminalProvider({
     },
     showToast(msg) {
       setToastMessage(msg);
-      setTimeout(() => setToastMessage(null), 1500);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 1500);
     },
     setPaymentMethod(pm) {
       soundService.playTap();
