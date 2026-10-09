@@ -241,10 +241,12 @@ export default function App() {
     <div>
       {/* Barra de Navegación Principal estilo Apple macOS / iPadOS */}
       <header className="app-shell-navbar">
-        <div className="app-brand" onClick={() => setClientView('pos')}>
-          <AppleLogoIcon size={19} />
-          <span>AutoARCA</span>
-          <span className="brand-apple-badge">Apple HIG</span>
+        <div className="navbar-left">
+          <div className="app-brand" onClick={() => setClientView('pos')}>
+            <AppleLogoIcon size={18} />
+            <span>AutoARCA</span>
+            <span className="brand-apple-badge">Apple HIG</span>
+          </div>
         </div>
 
         {/* Pestañas de Navegación para el rol cliente */}
@@ -278,7 +280,8 @@ export default function App() {
           >
             <span className="live-pulse-dot" />
             <CloudSyncIcon size={14} />
-            <span>Supabase DB</span>
+            <span className="control-label-desktop">Supabase DB</span>
+            <span className="control-label-mobile">DB</span>
           </button>
 
           {/* Audio Toggle */}
@@ -288,7 +291,8 @@ export default function App() {
             onClick={handleToggleSound}
             title={soundEnabled ? 'Desactivar efectos de audio táctil' : 'Activar efectos de audio táctil'}
           >
-            {soundEnabled ? <><VolumeOnIcon size={15} /> Audio</> : <><VolumeOffIcon size={15} /> Silencio</>}
+            {soundEnabled ? <VolumeOnIcon size={15} /> : <VolumeOffIcon size={15} />}
+            <span className="control-label-desktop">{soundEnabled ? 'Audio' : 'Silencio'}</span>
           </button>
 
           {/* Selector de Rol */}
@@ -298,9 +302,9 @@ export default function App() {
             value={role}
             onChange={(e) => handleRoleChange(e.target.value)}
           >
-            <option value="client">👤 Cliente (Comercio)</option>
-            <option value="accountant">📑 Contador (Estudio)</option>
-            <option value="superadmin">👑 SuperAdmin (Global)</option>
+            <option value="client">👤 Cliente</option>
+            <option value="accountant">📑 Contador</option>
+            <option value="superadmin">👑 Admin</option>
           </select>
 
           {/* Chip de Perfil o Botón de Auth */}
@@ -324,7 +328,7 @@ export default function App() {
               onClick={() => { soundService.playKeyTap(); setIsAuthOpen(true); }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
             >
-              <PlusIcon size={15} /> Ingresar / Registrarse
+              <PlusIcon size={15} /> <span className="control-label-desktop">Ingresar</span>
             </button>
           )}
         </div>
