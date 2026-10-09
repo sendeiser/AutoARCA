@@ -185,10 +185,34 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           <form onSubmit={handleRegisterSubmit}>
             <div className="auth-form-group">
               <label className="auth-label">Tipo de Cuenta</label>
+              <div className="role-switcher-segmented" style={{ width: '100%', display: 'flex' }} role="tablist">
+                <button
+                  type="button"
+                  className={`role-seg-btn ${regRole === 'client' ? 'active' : ''}`}
+                  onClick={() => setRegRole('client')}
+                  style={{ flex: 1, justifyContent: 'center', padding: '0.45rem' }}
+                  role="tab"
+                  aria-selected={regRole === 'client'}
+                >
+                  🏪 Comercio / Monotributo
+                </button>
+                <button
+                  type="button"
+                  className={`role-seg-btn ${regRole === 'accountant' ? 'active' : ''}`}
+                  onClick={() => setRegRole('accountant')}
+                  style={{ flex: 1, justifyContent: 'center', padding: '0.45rem' }}
+                  role="tab"
+                  aria-selected={regRole === 'accountant'}
+                >
+                  📊 Estudio Contable
+                </button>
+              </div>
               <select
-                className="auth-select"
+                className="role-switcher-select-sr-only"
                 value={regRole}
                 onChange={(e) => setRegRole(e.target.value)}
+                tabIndex={-1}
+                aria-hidden="true"
               >
                 <option value="client">Comercio / Profesional Monotributista</option>
                 <option value="accountant">Estudio Contable / Contador</option>

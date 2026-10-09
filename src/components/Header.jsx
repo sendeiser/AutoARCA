@@ -7,13 +7,15 @@
  */
 
 import React from 'react';
-import { AppleLogoIcon, CloudSyncIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, LogoutIcon } from './Icons.jsx';
+import { AppleLogoIcon, CloudSyncIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, LogoutIcon, SunIcon, MoonIcon } from './Icons.jsx';
 import { soundService } from '../services/soundService.js';
 import '../styles/header.css';
 
 export default function Header({
   role = 'client',
   currentUser = null,
+  theme = 'dark',
+  onToggleTheme,
   soundEnabled = true,
   onToggleSound,
   onRoleChange,
@@ -42,8 +44,24 @@ export default function Header({
         </button>
       </div>
 
-      {/* Zona Derecha: Controles de Sistema, Sonido, Rol y Perfil */}
+      {/* Zona Derecha: Controles de Sistema, Modo Claro/Oscuro, Sonido, Rol Directo y Perfil */}
       <div className="app-user-controls">
+        {/* Conmutador de Modo Claro / Modo Oscuro */}
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          data-testid="theme-toggle-btn"
+          onClick={() => {
+            soundService.playKeyTap();
+            if (onToggleTheme) onToggleTheme();
+          }}
+          title={theme === 'light' ? 'Cambiar a Modo Oscuro (OLED)' : 'Cambiar a Modo Claro (Luz de día)'}
+          aria-label="Alternar tema claro y oscuro"
+        >
+          {theme === 'light' ? <MoonIcon size={14} /> : <SunIcon size={14} />}
+          <span className="control-label-desktop">{theme === 'light' ? 'Oscuro' : 'Claro'}</span>
+        </button>
+
         {/* Píldora de Sincronización Supabase Cloud en Vivo */}
         <button
           type="button"
@@ -75,16 +93,68 @@ export default function Header({
           <span className="control-label-desktop">{soundEnabled ? 'Audio' : 'Silencio'}</span>
         </button>
 
-        {/* Selector de Rol del Sistema (Cliente, Contador, SuperAdmin) */}
+        {/* Selector Directo de Rol Segmentado (Sin acordeón ni desplegables) */}
         <div className="role-switcher-wrap">
+          <div className="role-switcher-segmented" role="tablist" aria-label="Cambiar cuenta">
+            <button
+              type="button"
+              className={`role-seg-btn ${role === 'client' ? 'active' : ''}`}
+              onClick={() => {
+                soundService.playKeyTap();
+                if (onRoleChange) onRoleChange('client');
+              }}
+              data-testid="role-pill-client"
+              role="tab"
+              aria-selected={role === 'client'}
+              title="Ir a cuenta Comercio / Monotributo"
+            >
+              <span className="role-seg-icon">👤</span>
+              <span className="role-seg-text">Cliente</span>
+            </button>
+
+            <button
+              type="button"
+              className={`role-seg-btn ${role === 'accountant' ? 'active' : ''}`}
+              onClick={() => {
+                soundService.playKeyTap();
+                if (onRoleChange) onRoleChange('accountant');
+              }}
+              data-testid="role-pill-accountant"
+              role="tab"
+              aria-selected={role === 'accountant'}
+              title="Ir a cuenta Estudio Contable"
+            >
+              <span className="role-seg-icon">📑</span>
+              <span className="role-seg-text">Contador</span>
+            </button>
+
+            <button
+              type="button"
+              className={`role-seg-btn ${role === 'superadmin' ? 'active' : ''}`}
+              onClick={() => {
+                soundService.playKeyTap();
+                if (onRoleChange) onRoleChange('superadmin');
+              }}
+              data-testid="role-pill-superadmin"
+              role="tab"
+              aria-selected={role === 'superadmin'}
+              title="Ir a cuenta SuperAdmin"
+            >
+              <span className="role-seg-icon">👑</span>
+              <span className="role-seg-text">Admin</span>
+            </button>
+          </div>
+
+          {/* Select sincronizado para accesibilidad y tests automatizados */}
           <select
             data-testid="role-switcher-select"
-            className="role-switcher-select"
+            className="role-switcher-select-sr-only"
             value={role}
             onChange={(e) => {
               if (onRoleChange) onRoleChange(e.target.value);
             }}
             aria-label="Seleccionar rol activo"
+            tabIndex={-1}
           >
             <option value="client">👤 Cliente</option>
             <option value="accountant">📑 Contador</option>

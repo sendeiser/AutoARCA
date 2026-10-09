@@ -1,0 +1,515 @@
+/**
+ * AutoARCA — Modo Claro (Light Theme)
+ * Especificación de diseño Impeccable (Craft Floor, WCAG AAA Contrast & Soft Elevation)
+ * Activado cuando el elemento raíz o body tiene [data-theme="light"]
+ */
+
+:root[data-theme="light"],
+body[data-theme="light"] {
+  /* 1. Paleta de Color Base Apple HIG & Untitled UI */
+  --apple-blue: #007aff;
+  --apple-green: #28a745;
+  --apple-orange: #f59e0b;
+  --apple-red: #ef4444;
+  --apple-purple: #7c3aed;
+  --apple-teal: #0891b2;
+  --apple-indigo: #4f46e5;
+
+  /* Superficies y Fondos */
+  --apple-bg-base: #f8fafc;
+  --apple-bg-secondary: #ffffff;
+  --apple-bg-tertiary: #f1f5f9;
+  --apple-bg-grouped: #f1f5f9;
+  --apple-bg-grouped-secondary: #ffffff;
+
+  /* Materiales Frosted Glass */
+  --apple-material-thick: rgba(255, 255, 255, 0.95);
+  --apple-material-regular: rgba(255, 255, 255, 0.88);
+  --apple-material-ultrathin: rgba(255, 255, 255, 0.65);
+
+  /* Jerarquía de Texto y Etiquetas */
+  --apple-label-primary: #0f172a;
+  --apple-label-secondary: #475569;
+  --apple-label-tertiary: #64748b;
+  --apple-label-quaternary: #94a3b8;
+
+  /* Bordes y Separadores */
+  --apple-separator: rgba(15, 23, 42, 0.08);
+  --apple-separator-opaque: #e2e8f0;
+  --apple-glow-blue: rgba(0, 122, 255, 0.15);
+  --apple-glow-green: rgba(40, 167, 69, 0.15);
+
+  /* Mapeo de compatibilidad */
+  --bg-main: var(--apple-bg-base);
+  --bg-card: #ffffff;
+  --border-card: rgba(15, 23, 42, 0.08);
+  --border-glow: var(--apple-glow-blue);
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-glow: rgba(16, 185, 129, 0.15);
+  --accent: #7c3aed;
+  --accent-glow: rgba(124, 58, 237, 0.15);
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+
+  /* Untitled UI Sombras Suaves */
+  --uui-shadow-xs: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  --uui-shadow-sm: 0px 1px 3px rgba(16, 24, 40, 0.08), 0px 1px 2px rgba(16, 24, 40, 0.04);
+  --uui-shadow-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.06), 0px 2px 4px -2px rgba(16, 24, 40, 0.04);
+  --uui-shadow-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --uui-shadow-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+/* ==============================================================================
+   2. Canvas y Fondo Global en Modo Claro
+   ============================================================================== */
+body[data-theme="light"] {
+  background-color: #f8fafc !important;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(0, 122, 255, 0.04) 0px, transparent 50%),
+    radial-gradient(at 85% 85%, rgba(124, 58, 237, 0.04) 0px, transparent 50%) !important;
+  color: #0f172a !important;
+}
+
+/* ==============================================================================
+   3. Header y Navegación en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .app-shell-navbar {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04) !important;
+}
+
+[data-theme="light"] .app-brand {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-brand:hover {
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .brand-apple-badge {
+  background: rgba(0, 122, 255, 0.1) !important;
+  color: #007aff !important;
+  border-color: rgba(0, 122, 255, 0.25) !important;
+}
+
+[data-theme="light"] .theme-toggle-btn,
+[data-theme="light"] .sound-toggle-btn {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .theme-toggle-btn:hover,
+[data-theme="light"] .sound-toggle-btn:hover {
+  background: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .role-switcher-segmented {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+[data-theme="light"] .role-seg-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .role-seg-btn:hover {
+  color: #0f172a !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="light"] .role-seg-btn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+[data-theme="light"] .user-profile-chip {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .user-chip-name {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .user-chip-avatar {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .header-logout-btn {
+  background: rgba(239, 68, 68, 0.08) !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+  color: #dc2626 !important;
+}
+
+/* Navbar Segmented Control Desktop */
+[data-theme="light"] .navbar-desktop-segment {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .navbar-segment-container {
+  background: rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .navbar-segment-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .navbar-segment-btn:hover {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .navbar-segment-btn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+/* Navbar Floating Bottom Bar Mobile */
+[data-theme="light"] .navbar-mobile-bottom {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 -4px 12px rgba(16, 24, 40, 0.05) !important;
+}
+
+[data-theme="light"] .navbar-bottom-tab {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .navbar-bottom-tab.active {
+  color: #007aff !important;
+}
+
+/* ==============================================================================
+   4. Untitled UI Componentes en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .uui-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .uui-card-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-card-subtitle {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-stat-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .uui-stat-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-stat-value {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-stat-footer {
+  color: #64748b !important;
+}
+
+/* Botones Secundarios y Terciarios */
+[data-theme="light"] .uui-btn-secondary {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .uui-btn-secondary:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-theme="light"] .uui-btn-tertiary {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .uui-btn-tertiary:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+  color: #0f172a !important;
+}
+
+/* Campos de Texto e Inputs */
+[data-theme="light"] .uui-input-box {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-input-box::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .uui-input-box:focus {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12) !important;
+}
+
+[data-theme="light"] .uui-input-label {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .uui-input-hint {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-search-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* Tablas de Datos Untitled UI */
+[data-theme="light"] .uui-table-container {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .uui-table-toolbar {
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .uui-th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-td {
+  color: #1e293b !important;
+  border-bottom-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .uui-tr:hover {
+  background: #f8fafc !important;
+}
+
+/* Modales Untitled UI */
+[data-theme="light"] .uui-modal-overlay {
+  background: rgba(15, 23, 42, 0.45) !important;
+}
+
+[data-theme="light"] .uui-modal-box {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xl) !important;
+}
+
+[data-theme="light"] .uui-modal-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-modal-desc {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-modal-close-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-modal-close-btn:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+  color: #0f172a !important;
+}
+
+/* ==============================================================================
+   5. Terminal POS en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .pos-card,
+[data-theme="light"] .pos-display-card,
+[data-theme="light"] .pos-keypad-card,
+[data-theme="light"] .pos-terminal-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-sm) !important;
+}
+
+[data-theme="light"] .pos-amount-display,
+[data-theme="light"] .pos-display-amount {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .keypad-btn,
+[data-theme="light"] .pos-keypad-btn {
+  background: #f8fafc !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .keypad-btn:hover,
+[data-theme="light"] .pos-keypad-btn:hover {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .keypad-btn:active,
+[data-theme="light"] .pos-keypad-btn:active {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .keypad-btn.action-btn {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #dc2626 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+[data-theme="light"] .quick-amount-chip,
+[data-theme="light"] .pos-chip {
+  background: #f1f5f9 !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .quick-amount-chip:hover,
+[data-theme="light"] .pos-chip:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .payment-method-chip {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .payment-method-chip.active {
+  background: #f5f3ff !important;
+  border-color: #7c3aed !important;
+  color: #7c3aed !important;
+  box-shadow: 0 0 0 1px #7c3aed !important;
+}
+
+/* ==============================================================================
+   6. Pantalla AuthScreen Split-Screen en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .uui-auth-container {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .uui-auth-left {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .uui-auth-right {
+  background: 
+    radial-gradient(circle at 60% 40%, rgba(124, 58, 237, 0.08), rgba(241, 245, 249, 0.98)),
+    linear-gradient(180deg, #f8fafc 0%, #ede9fe 100%) !important;
+  border-left-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-auth-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-auth-subtitle {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .uui-auth-segmented {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-auth-tab {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-auth-tab.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+[data-theme="light"] .uui-role-card {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-role-card:hover {
+  background: #f1f5f9 !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+[data-theme="light"] .uui-role-card.selected {
+  background: #f5f3ff !important;
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 1px #7c3aed !important;
+}
+
+[data-theme="light"] .uui-role-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-role-desc {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-demo-section {
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-demo-btn {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .uui-demo-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-showcase-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-md) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-quote-box {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ==============================================================================
+   7. Portales y Dashboards en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .dashboard-section-title,
+[data-theme="light"] .portal-section-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .client-card,
+[data-theme="light"] .admin-card,
+[data-theme="light"] .metric-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+/* Custom Scrollbar en Modo Claro */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18) !important;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.28) !important;
+}

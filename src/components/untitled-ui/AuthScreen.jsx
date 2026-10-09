@@ -8,12 +8,12 @@ import React, { useState } from 'react';
 import Button from './Button.jsx';
 import InputField from './InputField.jsx';
 import Badge from './Badge.jsx';
-import { AppleLogoIcon, BoltIcon, CheckCircleIcon } from '../Icons.jsx';
+import { AppleLogoIcon, BoltIcon, CheckCircleIcon, SunIcon, MoonIcon } from '../Icons.jsx';
 import { authService, INITIAL_SCALES } from '../../services/authService.js';
 import { soundService } from '../../services/soundService.js';
 import '../../styles/untitled-ui.css';
 
-export default function AuthScreen({ onAuthSuccess }) {
+export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleTheme }) {
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -122,17 +122,37 @@ export default function AuthScreen({ onAuthSuccess }) {
       {/* Lado Izquierdo: Formulario de Autenticación */}
       <div className="uui-auth-left">
         <div className="uui-auth-box">
-          {/* Header con Marca y Badge */}
+          {/* Header con Marca, Badge y Conmutador de Tema */}
           <div className="uui-auth-header">
-            <div className="uui-auth-logo-badge">
-              <AppleLogoIcon size={24} />
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
-                AutoARCA
-              </span>
-              <Badge variant="brand" hasDot={true}>
-                SaaS v1.0
-              </Badge>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div className="uui-auth-logo-badge" style={{ marginBottom: 0 }}>
+                <AppleLogoIcon size={24} />
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'inherit' }}>
+                  AutoARCA
+                </span>
+                <Badge variant="brand" hasDot={true}>
+                  SaaS v1.0
+                </Badge>
+              </div>
+
+              {onToggleTheme && (
+                <button
+                  type="button"
+                  className="theme-toggle-btn"
+                  data-testid="theme-toggle-btn"
+                  onClick={() => {
+                    soundService.playKeyTap();
+                    onToggleTheme();
+                  }}
+                  title={theme === 'light' ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'}
+                  aria-label="Alternar tema"
+                >
+                  {theme === 'light' ? <MoonIcon size={14} /> : <SunIcon size={14} />}
+                  <span className="control-label-desktop">{theme === 'light' ? 'Oscuro' : 'Claro'}</span>
+                </button>
+              )}
             </div>
+
             <h1 className="uui-auth-title">
               {mode === 'login' ? 'Bienvenido de nuevo' : 'Crea tu cuenta'}
             </h1>

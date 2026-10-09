@@ -40,11 +40,39 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   const [users, setUsers] = useState(INITIAL_USERS);
   const [businessProfile, setBusinessProfile] = useState(INITIAL_BUSINESS);
   
-  // Modales
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+
+  // Modo de visualización: Claro (Light) / Oscuro (Dark)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('autoarca_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+    } catch {
+      // ignore
+    }
+    return 'dark';
+  });
+
+  // Sincronizar tema con el atributo data-theme del documento
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('autoarca_theme', theme);
+    } catch {
+      // ignore
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   // Ventas de demostración
   const [pendingSales, setPendingSales] = useState([
@@ -265,6 +293,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     return (
       <AuthScreen
         onAuthSuccess={handleAuthSuccess}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
     );
   }
@@ -276,6 +306,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
       <Header
         role={role}
         currentUser={currentUser}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         onRoleChange={handleRoleChange}
