@@ -1,0 +1,250 @@
+/* Estilos del Terminal POS Táctil Ultra-Rápido */
+:root {
+  --pos-bg: #0f172a;
+  --pos-card-bg: rgba(30, 41, 59, 0.7);
+  --pos-card-border: rgba(255, 255, 255, 0.08);
+  --pos-primary: #10b981;
+  --pos-primary-hover: #059669;
+  --pos-accent: #38bdf8;
+  --pos-text-main: #f8fafc;
+  --pos-text-muted: #94a3b8;
+  --pos-btn-bg: rgba(51, 65, 85, 0.6);
+  --pos-btn-hover: rgba(71, 85, 105, 0.8);
+  --pos-btn-active: rgba(100, 116, 139, 0.9);
+}
+
+.pos-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--pos-text-main);
+  background: var(--pos-bg);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.pos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pos-card-border);
+}
+
+.pos-header h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 700;
+  color: var(--pos-text-main);
+}
+
+.pos-header-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--pos-primary);
+  font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Visor de Importe */
+.pos-display-card {
+  background: var(--pos-card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--pos-card-border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  text-align: right;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.pos-display-label {
+  font-size: 0.8rem;
+  color: var(--pos-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.pos-amount-display {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.pos-amount-display span {
+  color: var(--pos-primary);
+  margin-right: 0.25rem;
+}
+
+/* Chips de Método de Pago */
+.pos-payment-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.payment-chip {
+  height: 48px;
+  background: var(--pos-btn-bg);
+  border: 1px solid var(--pos-card-border);
+  border-radius: 12px;
+  color: var(--pos-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.payment-chip.active {
+  background: var(--pos-primary);
+  color: #0f172a;
+  border-color: var(--pos-primary);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Atajos Rápidos de Dinero */
+.pos-quick-amounts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.quick-amount-chip {
+  height: 44px;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: var(--pos-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-amount-chip:active {
+  transform: scale(0.96);
+  background: rgba(56, 189, 248, 0.2);
+}
+
+/* Botonera Numérica Táctil */
+.pos-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.keypad-btn {
+  height: 60px;
+  background: var(--pos-btn-bg);
+  border: 1px solid var(--pos-card-border);
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.keypad-btn:active {
+  transform: scale(0.95);
+  background: var(--pos-btn-active);
+}
+
+.keypad-btn.action {
+  color: #f87171;
+  font-size: 1.25rem;
+}
+
+/* Botón Grande de Emisión */
+.pos-emit-btn {
+  height: 56px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.pos-emit-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Alerta de Consumidor Final y Modal */
+.pos-client-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.5);
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.pos-client-link {
+  color: var(--pos-accent);
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Toast de Éxito */
+.pos-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  animation: fadeInOut 1.5s ease forwards;
+  z-index: 1000;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, 15px); }
+  20% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -15px); }
+}
