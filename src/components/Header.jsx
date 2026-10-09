@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { AppleLogoIcon, CloudSyncIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon } from './Icons.jsx';
+import { AppleLogoIcon, CloudSyncIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, LogoutIcon } from './Icons.jsx';
 import { soundService } from '../services/soundService.js';
 import '../styles/header.css';
 
@@ -20,6 +20,7 @@ export default function Header({
   onOpenSupabaseModal,
   onOpenProfile,
   onOpenAuth,
+  onLogout,
   onBrandClick
 }) {
   return (
@@ -93,23 +94,40 @@ export default function Header({
 
         {/* Chip de Perfil de Usuario o Botón de Ingreso */}
         {currentUser ? (
-          <button
-            type="button"
-            className="user-profile-chip"
-            onClick={() => {
-              soundService.playKeyTap();
-              if (onOpenProfile) onOpenProfile();
-            }}
-            title={`Perfil de ${currentUser.full_name || 'Usuario'}`}
-            aria-label="Abrir perfil de usuario"
-          >
-            <div className="user-chip-avatar">
-              {currentUser.full_name?.charAt(0) || 'U'}
-            </div>
-            <div className="user-chip-name">
-              {currentUser.full_name || 'Mi Cuenta'}
-            </div>
-          </button>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+            <button
+              type="button"
+              className="user-profile-chip"
+              onClick={() => {
+                soundService.playKeyTap();
+                if (onOpenProfile) onOpenProfile();
+              }}
+              title={`Perfil de ${currentUser.full_name || 'Usuario'}`}
+              aria-label="Abrir perfil de usuario"
+            >
+              <div className="user-chip-avatar">
+                {currentUser.full_name?.charAt(0) || 'U'}
+              </div>
+              <div className="user-chip-name">
+                {currentUser.full_name || 'Mi Cuenta'}
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="header-logout-btn"
+              data-testid="header-logout-btn"
+              onClick={() => {
+                soundService.playKeyTap();
+                if (onLogout) onLogout();
+              }}
+              title="Cerrar sesión y volver al ingreso"
+              aria-label="Cerrar sesión"
+            >
+              <LogoutIcon size={14} />
+              <span className="control-label-desktop">Salir</span>
+            </button>
+          </div>
         ) : (
           <button
             type="button"

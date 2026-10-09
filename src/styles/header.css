@@ -218,6 +218,29 @@
   background: #1d4ed8;
 }
 
+/* Botón de Logout Rápido con estilo Untitled UI */
+.header-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 0.32rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.header-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.22);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.45);
+  transform: translateY(-1px);
+}
+
 /* Responsive Rules para Header */
 .control-label-mobile {
   display: none;

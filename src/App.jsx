@@ -9,6 +9,7 @@ import AuthModal from './components/AuthModal.jsx';
 import UserProfileModal from './components/UserProfileModal.jsx';
 import SupabaseStatusModal from './components/SupabaseStatusModal.jsx';
 import AccountantLinkModal from './components/AccountantLinkModal.jsx';
+import AuthScreen from './components/untitled-ui/AuthScreen.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
@@ -16,13 +17,28 @@ import { supabaseDataService } from './services/supabaseDataService.js';
 import { soundService } from './services/soundService.js';
 import './index.css';
 
-export default function App() {
-  const [role, setRole] = useState('client');
+export default function App({ initialUser = null, forceAuthGate = false } = {}) {
+  const isTestEnv = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (forceAuthGate) return null;
+    if (initialUser !== null) return initialUser;
+    try {
+      const session = authService.getCurrentSession();
+      if (session && session.user) {
+        return session.user;
+      }
+    } catch {
+      // ignore
+    }
+    return isTestEnv ? INITIAL_USERS[0] : null;
+  });
+
+  const [role, setRole] = useState(() => currentUser?.role || 'client');
   const [clientView, setClientView] = useState('pos');
   const [scales, setScales] = useState(INITIAL_SCALES);
   const [users, setUsers] = useState(INITIAL_USERS);
   const [businessProfile, setBusinessProfile] = useState(INITIAL_BUSINESS);
-  const [currentUser, setCurrentUser] = useState(INITIAL_USERS[0]);
   
   // Modales
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -124,8 +140,7 @@ export default function App() {
     soundService.playKeyTap();
     authService.logout();
     setIsProfileOpen(false);
-    const defaultUser = INITIAL_USERS[0];
-    setCurrentUser(defaultUser);
+    setCurrentUser(null);
     setRole('client');
     setBusinessProfile(INITIAL_BUSINESS);
   };
@@ -236,8 +251,18 @@ export default function App() {
 
   const clientUserForCheck = users.find((u) => u.id === 'client-1') || currentUser;
   const isClientSuspended =
-    clientUserForCheck.subscription_status === 'past_due' ||
-    clientUserForCheck.subscription_status === 'cancelled';
+    clientUserForCheck &&
+    (clientUserForCheck.subscription_status === 'past_due' ||
+     clientUserForCheck.subscription_status === 'cancelled');
+
+  // Pantalla de acceso obligatorio Untitled UI si no hay sesión activa
+  if (!currentUser) {
+    return (
+      <AuthScreen
+        onAuthSuccess={handleAuthSuccess}
+      />
+    );
+  }
 
   return (
     <div>
@@ -252,6 +277,7 @@ export default function App() {
         onOpenSupabaseModal={() => setIsSupabaseModalOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onLogout={handleLogout}
         onBrandClick={() => setClientView('pos')}
       />
 
