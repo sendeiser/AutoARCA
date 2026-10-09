@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
+import { TableIcon, UserIcon, CheckCircleIcon, SearchIcon } from './Icons.jsx';
 import '../styles/superAdmin.css';
 
 export default function SuperAdminDashboard({
@@ -130,21 +131,23 @@ export default function SuperAdminDashboard({
           type="button"
           className={`admin-tab-btn ${activeTab === 'scales' ? 'active' : ''}`}
           onClick={() => { soundService.playKeyTap(); setActiveTab('scales'); }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
         >
-          📊 Escalas Oficiales Monotributo
+          <TableIcon size={15} /> Escalas Oficiales Monotributo
         </button>
         <button
           type="button"
           className={`admin-tab-btn ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => { soundService.playKeyTap(); setActiveTab('users'); }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
         >
-          👥 Usuarios y Suscripciones
+          <UserIcon size={15} /> Usuarios y Suscripciones
         </button>
       </div>
 
       {toastMessage && (
         <div className="admin-toast">
-          <span>✨</span> {toastMessage}
+          <CheckCircleIcon size={16} /> {toastMessage}
         </div>
       )}
 
@@ -187,8 +190,13 @@ export default function SuperAdminDashboard({
                 </button>
               </div>
 
-              <button type="button" className="btn-save-admin" onClick={handleSave}>
-                💾 Guardar Escalas en Caliente
+              <button
+                type="button"
+                className="btn-save-admin"
+                onClick={handleSave}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+              >
+                <CheckCircleIcon size={16} /> Guardar Escalas en Caliente
               </button>
             </div>
           </div>

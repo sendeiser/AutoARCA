@@ -5,6 +5,7 @@ import AccountantPortal from './components/AccountantPortal.jsx';
 import SuperAdminDashboard from './components/SuperAdminDashboard.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import UserProfileModal from './components/UserProfileModal.jsx';
+import { BoltIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon } from './components/Icons.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
@@ -231,7 +232,7 @@ export default function App() {
       {/* Barra de Navegación Principal */}
       <header className="app-shell-navbar">
         <div className="app-brand" onClick={() => setClientView('pos')}>
-          <span>⚡</span> AutoARCA <span className="brand-badge">SaaS Cloud</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center' }}><BoltIcon size={20} /></span> AutoARCA <span className="brand-badge">SaaS Cloud</span>
         </div>
 
         {/* Pestañas de Navegación para el rol cliente */}
@@ -263,7 +264,7 @@ export default function App() {
             onClick={handleToggleSound}
             title={soundEnabled ? 'Desactivar efectos de audio táctil' : 'Activar efectos de audio táctil'}
           >
-            {soundEnabled ? '🔊 Audio' : '🔇 Silencio'}
+            {soundEnabled ? <><VolumeOnIcon size={15} /> Audio</> : <><VolumeOffIcon size={15} /> Silencio</>}
           </button>
 
           {/* Selector de Rol */}
@@ -297,8 +298,9 @@ export default function App() {
               type="button"
               className="btn-open-auth"
               onClick={() => { soundService.playKeyTap(); setIsAuthOpen(true); }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
             >
-              Ingresar / Registrarse 🚀
+              <PlusIcon size={15} /> Ingresar / Registrarse
             </button>
           )}
         </div>

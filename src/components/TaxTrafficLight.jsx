@@ -1,5 +1,6 @@
 import React from 'react';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
+import { AlertTriangleIcon } from './Icons.jsx';
 import '../styles/taxTrafficLight.css';
 
 export default function TaxTrafficLight({ metrics }) {
@@ -85,7 +86,9 @@ export default function TaxTrafficLight({ metrics }) {
           role="alert"
           className={`traffic-alert-banner ${isCritical ? 'critical' : 'warning'}`}
         >
-          <span style={{ fontSize: '1.2rem' }}>{isCritical ? '⚠️' : 'ℹ️'}</span>
+          <span style={{ display: 'flex', alignItems: 'center', marginTop: '2px' }}>
+            <AlertTriangleIcon size={20} />
+          </span>
           <div>
             <strong>{isCritical ? 'Alerta Crítica de Recategorización:' : 'Sugerencia Impositiva:'}</strong>{' '}
             {trafficLight.message}

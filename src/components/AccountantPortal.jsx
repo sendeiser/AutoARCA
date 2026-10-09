@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import JSZip from 'jszip';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
+import { SearchIcon, DownloadIcon, PlusIcon, TableIcon, GridIcon } from './Icons.jsx';
 import '../styles/accountantPortal.css';
 
 export default function AccountantPortal({
@@ -142,8 +143,9 @@ export default function AccountantPortal({
             type="button"
             className="btn-add-client-top"
             onClick={() => { soundService.playKeyTap(); setShowAddClientModal(true); }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
           >
-            ➕ Vincular Cliente por CUIT
+            <PlusIcon size={15} /> Vincular Cliente por CUIT
           </button>
           <button
             type="button"
@@ -151,7 +153,7 @@ export default function AccountantPortal({
             onClick={handleBulkZip}
             disabled={isGeneratingZip}
           >
-            📦 Descargar Lotes del Día (ZIP Masivo)
+            <DownloadIcon size={16} /> Descargar Lotes del Día (ZIP Masivo)
           </button>
         </div>
       </div>
@@ -187,7 +189,7 @@ export default function AccountantPortal({
       {/* Toolbar con Buscador, Filtros y Selector de Fecha */}
       <div className="accountant-toolbar">
         <div className="toolbar-search-wrap">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><SearchIcon size={16} /></span>
           <input
             type="text"
             className="search-input"
@@ -237,16 +239,18 @@ export default function AccountantPortal({
               className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
               onClick={() => { soundService.playKeyTap(); setViewMode('table'); }}
               title="Vista de Tabla"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             >
-              ☰ Tabla
+              <TableIcon size={14} /> Tabla
             </button>
             <button
               type="button"
               className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
               onClick={() => { soundService.playKeyTap(); setViewMode('cards'); }}
               title="Vista de Tarjetas"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             >
-              ▦ Tarjetas
+              <GridIcon size={14} /> Tarjetas
             </button>
           </div>
 
@@ -325,8 +329,9 @@ export default function AccountantPortal({
                             type="button"
                             className="btn-download-single"
                             onClick={() => handleDownloadSingle(client)}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
                           >
-                            📥 Descargar CSV
+                            <DownloadIcon size={14} /> Descargar CSV
                           </button>
                         ) : (
                           <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Pendiente</span>
@@ -396,10 +401,10 @@ export default function AccountantPortal({
                       <button
                         type="button"
                         className="btn-download-single"
-                        style={{ width: '100%', padding: '0.65rem' }}
+                        style={{ width: '100%', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
                         onClick={() => handleDownloadSingle(client)}
                       >
-                        📥 Descargar CSV ARCA
+                        <DownloadIcon size={14} /> Descargar CSV ARCA
                       </button>
                     ) : (
                       <div style={{ textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
@@ -419,7 +424,7 @@ export default function AccountantPortal({
         <div className="auth-overlay">
           <div className="auth-card" style={{ maxWidth: '480px' }}>
             <div className="auth-header">
-              <div className="auth-brand-logo">🤝</div>
+              <div className="auth-brand-logo" style={{ color: '#38bdf8' }}><PlusIcon size={32} /></div>
               <h2 className="auth-title">Vincular Cliente al Estudio</h2>
               <p className="auth-subtitle">Ingresa los datos fiscales del contribuyente</p>
             </div>

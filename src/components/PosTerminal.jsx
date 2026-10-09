@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { soundService } from '../services/soundService.js';
+import { CashIcon, CardIcon, QrTransferIcon, BackspaceIcon, VolumeOnIcon, VolumeOffIcon, UserIcon } from './Icons.jsx';
 import '../styles/posTerminal.css';
 
 export default function PosTerminal({
@@ -130,7 +131,7 @@ export default function PosTerminal({
             onClick={toggleSound}
             title={isMuted ? 'Activar sonido táctil' : 'Silenciar'}
           >
-            {isMuted ? '🔇' : '🔊'}
+            {isMuted ? <VolumeOffIcon size={16} /> : <VolumeOnIcon size={16} />}
           </button>
           <div className="pos-header-badge">Factura C</div>
         </div>
@@ -147,7 +148,10 @@ export default function PosTerminal({
 
       {/* Fila Informativa de Cliente */}
       <div className="pos-client-badge-row">
-        <span>👤 {customerName} {customerDocType !== 'SIN_IDENTIFICAR' ? `(${customerDocType} ${customerDocNumber})` : ''}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <UserIcon size={14} />
+          {customerName} {customerDocType !== 'SIN_IDENTIFICAR' ? `(${customerDocType} ${customerDocNumber})` : ''}
+        </span>
         <button
           type="button"
           className="pos-client-link"
@@ -164,28 +168,28 @@ export default function PosTerminal({
           className={`payment-chip ${paymentMethod === 'cash' ? 'active' : ''}`}
           onClick={() => { soundService.playTap(); setPaymentMethod('cash'); }}
         >
-          💵 Efectivo
+          <CashIcon size={15} /> Efectivo
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'transfer' ? 'active' : ''}`}
           onClick={() => { soundService.playTap(); setPaymentMethod('transfer'); }}
         >
-          📱 Transfer.
+          <QrTransferIcon size={15} /> Transfer.
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'debit' ? 'active' : ''}`}
           onClick={() => { soundService.playTap(); setPaymentMethod('debit'); }}
         >
-          💳 Débito
+          <CardIcon size={15} /> Débito
         </button>
         <button
           type="button"
           className={`payment-chip ${paymentMethod === 'credit' ? 'active' : ''}`}
           onClick={() => { soundService.playTap(); setPaymentMethod('credit'); }}
         >
-          💳 Crédito
+          <CardIcon size={15} /> Crédito
         </button>
       </div>
 
@@ -210,7 +214,9 @@ export default function PosTerminal({
         <button type="button" className="keypad-btn" onClick={() => handleDigit('9')}>9</button>
         <button type="button" className="keypad-btn action" onClick={handleClear}>C</button>
         <button type="button" className="keypad-btn" onClick={() => handleDigit('0')}>0</button>
-        <button type="button" className="keypad-btn action" onClick={handleBackspace}>⌫</button>
+        <button type="button" className="keypad-btn action" onClick={handleBackspace} aria-label="Borrar último dígito">
+          <BackspaceIcon size={18} />
+        </button>
       </div>
 
       {/* Botón Grande de Emisión */}
