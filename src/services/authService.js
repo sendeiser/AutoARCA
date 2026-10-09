@@ -37,7 +37,11 @@ export const INITIAL_USERS = [
     password: '1234',
     phone: '+54 11 4321 9876',
     role: 'accountant',
-    subscription_status: 'active'
+    subscription_status: 'active',
+    cuit: '30712345678',
+    matricula: 'T° 142 F° 89',
+    jurisdiccion: 'CPCECABA',
+    link_code: 'CONT-MENDEZ-9876'
   },
   {
     id: 'admin-1',
@@ -148,7 +152,9 @@ export const authService = {
     monotributoCategory = 'A',
     activityType = 'products',
     posNumber = 1,
-    accountantId = null
+    accountantId = null,
+    matricula = '',
+    jurisdiccion = 'CPCECABA'
   }) {
     const users = this.getUsers();
     const cleanEmail = email.trim().toLowerCase();
@@ -159,6 +165,13 @@ export const authService = {
 
     const newUserId = `usr-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const newBizId = `biz-${Date.now()}`;
+    const cleanCuit = cuit.replace(/[^0-9]/g, '');
+
+    // Código de vinculación para contadores (ej. CONT-GOMEZ-4581)
+    const slugName = fullName.trim().split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '') || 'ESTUDIO';
+    const linkCode = role === 'accountant'
+      ? `CONT-${slugName}-${Math.floor(1000 + Math.random() * 9000)}`
+      : null;
 
     const newUser = {
       id: newUserId,
@@ -168,9 +181,12 @@ export const authService = {
       phone,
       role,
       subscription_status: 'trial',
-      cuit: cuit.replace(/[^0-9]/g, ''),
+      cuit: cleanCuit,
       business_id: role === 'client' ? newBizId : null,
-      accountant_id: accountantId || 'accountant-1',
+      accountant_id: role === 'client' ? (accountantId || 'accountant-1') : null,
+      matricula: role === 'accountant' ? matricula : undefined,
+      jurisdiccion: role === 'accountant' ? jurisdiccion : undefined,
+      link_code: linkCode,
       created_at: new Date().toISOString()
     };
 
@@ -183,7 +199,7 @@ export const authService = {
       const newBusiness = {
         id: newBizId,
         user_id: newUserId,
-        cuit: cuit.replace(/[^0-9]/g, '') || '20000000001',
+        cuit: cleanCuit || '20000000001',
         razon_social: razonSocial.trim() || fullName.trim(),
         fantasy_name: fantasyName.trim() || fullName.trim(),
         monotributo_category: monotributoCategory,
@@ -273,5 +289,111 @@ export const authService = {
   saveScales(scales) {
     setStorage(STORAGE_KEY_SCALES, scales);
     return scales;
+  },
+
+  // ==========================================
+  // SISTEMA DE VINCULACIÓN CONTADOR <-> CLIENTES
+  // ==========================================
+
+  // Obtener todos los contadores registrados
+  getAccountants() {
+    const users = this.getUsers();
+    return users.filter((u) => u.role === 'accountant');
+  },
+
+  // Buscar contador por código de vinculación, CUIT o email
+  findAccountant(query) {
+    if (!query) return null;
+    const cleanQuery = query.trim().toLowerCase();
+    const cleanNumbers = query.replace(/[^0-9]/g, '');
+    const accountants = this.getAccountants();
+
+    return accountants.find((acc) => {
+      const matchCode = acc.link_code && acc.link_code.toLowerCase() === cleanQuery;
+      const matchEmail = acc.email && acc.email.toLowerCase() === cleanQuery;
+      const matchCuit = cleanNumbers.length >= 8 && acc.cuit && acc.cuit.includes(cleanNumbers);
+      const matchId = acc.id === query.trim();
+      return matchCode || matchEmail || matchCuit || matchId;
+    }) || null;
+  },
+
+  // Vincular un cliente a un contador
+  linkClientToAccountant(clientId, accountantId) {
+    const users = this.getUsers();
+    const clientIdx = users.findIndex((u) => u.id === clientId);
+    if (clientIdx === -1) {
+      throw new Error('Cliente no encontrado');
+    }
+    const accountant = users.find((u) => u.id === accountantId && u.role === 'accountant');
+    if (!accountant) {
+      throw new Error('El contador seleccionado no existe o no tiene rol de contador');
+    }
+
+    users[clientIdx].accountant_id = accountantId;
+    this.saveUsers(users);
+
+    // Actualizar sesión actual si es el usuario logueado
+    const current = this.getCurrentSession();
+    if (current && current.id === clientId) {
+      current.accountant_id = accountantId;
+      this.setCurrentSession(current);
+    }
+
+    return { client: users[clientIdx], accountant };
+  },
+
+  // Desvincular un cliente de su contador
+  unlinkClientFromAccountant(clientId) {
+    const users = this.getUsers();
+    const clientIdx = users.findIndex((u) => u.id === clientId);
+    if (clientIdx === -1) {
+      throw new Error('Cliente no encontrado');
+    }
+
+    users[clientIdx].accountant_id = null;
+    this.saveUsers(users);
+
+    const current = this.getCurrentSession();
+    if (current && current.id === clientId) {
+      current.accountant_id = null;
+      this.setCurrentSession(current);
+    }
+
+    return users[clientIdx];
+  },
+
+  // Obtener la lista de clientes vinculados a un contador
+  getClientsForAccountant(accountantId) {
+    const users = this.getUsers();
+    const businesses = this.getBusinesses();
+
+    const clientUsers = users.filter((u) => u.role === 'client' && u.accountant_id === accountantId);
+    return clientUsers.map((client) => {
+      const biz = businesses.find((b) => b.user_id === client.id) || {
+        cuit: client.cuit || '20000000001',
+        razon_social: client.full_name,
+        fantasy_name: client.full_name,
+        monotributo_category: 'A'
+      };
+      return {
+        userId: client.id,
+        fullName: client.full_name,
+        email: client.email,
+        phone: client.phone,
+        subscriptionStatus: client.subscription_status,
+        cuit: biz.cuit,
+        razonSocial: biz.razon_social,
+        fantasyName: biz.fantasy_name,
+        monotributoCategory: biz.monotributo_category
+      };
+    });
+  },
+
+  // Obtener los datos del contador asignado a un cliente
+  getAccountantForClient(clientId) {
+    const users = this.getUsers();
+    const client = users.find((u) => u.id === clientId);
+    if (!client || !client.accountant_id) return null;
+    return users.find((u) => u.id === client.accountant_id) || null;
   }
 };

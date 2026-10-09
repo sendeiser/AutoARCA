@@ -1,0 +1,120 @@
+/**
+ * Componente Navbar — Navegación Adaptativa Inteligente
+ * - En Desktop / Tablet: Barra horizontal de pestañas segmentadas Apple
+ * - En Mobile (<768px): Floating Bottom Tab Bar ergonómica para liberar espacio vertical
+ */
+
+import React from 'react';
+import {
+  CalculatorIcon,
+  ChartBarIcon,
+  UsersIcon,
+  LinkIcon,
+  TableIcon,
+  DownloadIcon,
+  BriefcaseIcon
+} from './Icons.jsx';
+import { soundService } from '../services/soundService.js';
+import '../styles/navbar.css';
+
+export default function Navbar({
+  role = 'client',
+  activeTab = 'pos',
+  onTabChange,
+  isClientSuspended = false,
+  badges = {}
+}) {
+  const handleSelect = (tabKey) => {
+    soundService.playKeyTap();
+    if (onTabChange) onTabChange(tabKey);
+  };
+
+  // Definición de pestañas por cada rol
+  const getTabsForRole = () => {
+    if (role === 'client') {
+      if (isClientSuspended) return [];
+      return [
+        {
+          key: 'pos',
+          label: 'Terminal POS',
+          mobileLabel: 'POS',
+          icon: CalculatorIcon,
+          badge: badges.posSalesCount > 0 ? badges.posSalesCount : null,
+          badgeColor: 'blue'
+        },
+        {
+          key: 'dashboard',
+          label: 'Dashboard Fiscal',
+          mobileLabel: 'Fiscal',
+          icon: ChartBarIcon,
+          badge: badges.taxTrafficColor ? '' : null,
+          badgeColor: badges.taxTrafficColor || 'green'
+        }
+      ];
+    }
+    return [];
+  };
+
+  const tabs = getTabsForRole();
+  if (tabs.length === 0) return null;
+
+  return (
+    <>
+      {/* 1. Barra de Navegación para Desktop y Tablet (Sub-header) */}
+      <nav className="navbar-desktop-segment" aria-label="Navegación principal">
+        <div className="navbar-segment-container">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={`navbar-segment-btn ${isActive ? 'active' : ''}`}
+                onClick={() => handleSelect(tab.key)}
+                aria-selected={isActive}
+                role="tab"
+              >
+                <Icon size={15} />
+                <span className="navbar-segment-label">{tab.label}</span>
+                {tab.badge !== null && tab.badge !== undefined && (
+                  <span className={`navbar-segment-badge badge-${tab.badgeColor}`}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* 2. Floating Bottom Tab Bar para Mobile (< 768px) */}
+      <nav className="navbar-mobile-bottom" aria-label="Navegación móvil">
+        <div className="navbar-bottom-inner">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={`navbar-bottom-tab ${isActive ? 'active' : ''}`}
+                onClick={() => handleSelect(tab.key)}
+                aria-selected={isActive}
+                role="tab"
+              >
+                <div className="navbar-bottom-icon-wrap">
+                  <Icon size={19} />
+                  {tab.badge !== null && tab.badge !== undefined && (
+                    <span className={`navbar-bottom-dot dot-${tab.badgeColor}`} />
+                  )}
+                </div>
+                <span className="navbar-bottom-label">{tab.mobileLabel}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </>
+  );
+}

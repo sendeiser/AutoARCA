@@ -127,5 +127,70 @@ export const supabaseDataService = {
     } catch {
       return null;
     }
+  },
+
+  // Sincronizar usuario o contador hacia Supabase profiles
+  async syncUser(user) {
+    try {
+      const payload = {
+        id: user.id && user.id.includes('-') && user.id.length >= 32 ? user.id : undefined,
+        role: user.role,
+        full_name: user.full_name,
+        email: user.email,
+        phone: user.phone || null,
+        accountant_id: user.accountant_id || null,
+        subscription_status: user.subscription_status || 'active'
+      };
+
+      const { data, error } = await supabase.from('profiles').upsert([payload], { onConflict: 'email' }).select();
+      if (error) return { success: false, error: error.message };
+      return { success: true, data };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  },
+
+  // Actualizar vinculación de contador en Supabase
+  async updateClientAccountant(clientId, accountantId) {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ accountant_id: accountantId })
+        .eq('id', clientId)
+        .select();
+
+      if (error) return { success: false, error: error.message };
+      return { success: true, data };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  },
+
+  // Obtener clientes vinculados a un contador desde Supabase
+  async fetchAccountantClients(accountantId) {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select(`
+          id,
+          full_name,
+          email,
+          phone,
+          subscription_status,
+          business_profiles (
+            id,
+            cuit,
+            razon_social,
+            fantasy_name,
+            monotributo_category
+          )
+        `)
+        .eq('accountant_id', accountantId);
+
+      if (error) return null;
+      return data;
+    } catch {
+      return null;
+    }
   }
 };

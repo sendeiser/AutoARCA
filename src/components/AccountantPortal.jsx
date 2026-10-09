@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import JSZip from 'jszip';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
-import { SearchIcon, DownloadIcon, PlusIcon, TableIcon, GridIcon } from './Icons.jsx';
+import { SearchIcon, DownloadIcon, PlusIcon, TableIcon, GridIcon, LinkIcon, CopyIcon } from './Icons.jsx';
+import AccountantLinkModal from './AccountantLinkModal.jsx';
 import '../styles/accountantPortal.css';
 
 export default function AccountantPortal({
@@ -17,6 +18,7 @@ export default function AccountantPortal({
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
   const [isGeneratingZip, setIsGeneratingZip] = useState(false);
   const [showAddClientModal, setShowAddClientModal] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
   const [newCuit, setNewCuit] = useState('');
   const [newFantasyName, setNewFantasyName] = useState('');
   const [newRazonSocial, setNewRazonSocial] = useState('');
@@ -154,6 +156,46 @@ export default function AccountantPortal({
             disabled={isGeneratingZip}
           >
             <DownloadIcon size={16} /> Descargar Lotes del Día (ZIP Masivo)
+          </button>
+        </div>
+      </div>
+
+      {/* Banner de Código de Vinculación Profesional */}
+      <div className="accountant-link-banner" style={{ background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.28)', borderRadius: '12px', padding: '0.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ background: '#2563eb', color: '#fff', borderRadius: '8px', padding: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LinkIcon size={18} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.76rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase' }}>
+              Código de Vinculación Profesional para Clientes
+            </div>
+            <div className="font-mono" style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '0.04em' }}>
+              {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button
+            type="button"
+            className="btn-add-client-top"
+            onClick={() => {
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(accountantProfile.link_code || 'CONT-MENDEZ-9876');
+                alert('¡Código copiado al portapapeles!');
+              }
+            }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.08)' }}
+          >
+            <CopyIcon size={14} /> Copiar Código
+          </button>
+          <button
+            type="button"
+            className="btn-add-client-top"
+            onClick={() => { soundService.playKeyTap(); setShowLinkModal(true); }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+          >
+            <LinkIcon size={14} /> Gestionar Vinculaciones
           </button>
         </div>
       </div>
@@ -503,6 +545,16 @@ export default function AccountantPortal({
           </div>
         </div>
       )}
+
+      {/* Modal Completo de Vinculación Contador <-> Clientes */}
+      <AccountantLinkModal
+        isOpen={showLinkModal}
+        onClose={() => setShowLinkModal(false)}
+        accountantUser={accountantProfile}
+        onClientsUpdated={() => {
+          // Si el padre pasó clients, se mantendrá actualizado
+        }}
+      />
     </div>
   );
 }

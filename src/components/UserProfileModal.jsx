@@ -103,6 +103,7 @@ export default function UserProfileModal({
             />
           </div>
 
+          {/* Datos para Clientes */}
           {currentUser.role === 'client' && (
             <>
               <div className="auth-form-group">
@@ -130,6 +131,25 @@ export default function UserProfileModal({
                 </select>
               </div>
 
+              {/* Estudio Contable Vinculado */}
+              <div style={{ background: 'rgba(37, 99, 235, 0.1)', border: '1px solid rgba(37, 99, 235, 0.25)', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.25rem' }}>
+                <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+                  📑 Estudio Contable Asignado
+                </div>
+                {authService.getAccountantForClient(currentUser.id) ? (
+                  <div style={{ fontSize: '0.85rem', color: '#e2e8f0' }}>
+                    <div style={{ fontWeight: 600 }}>{authService.getAccountantForClient(currentUser.id).full_name}</div>
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                      {authService.getAccountantForClient(currentUser.id).email} · {authService.getAccountantForClient(currentUser.id).matricula || 'Matrícula Verificada'}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
+                    Sin contador vinculado actualmente.
+                  </div>
+                )}
+              </div>
+
               <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.25rem', fontSize: '0.85rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <span style={{ color: '#94a3b8' }}>CUIT:</span>
@@ -141,6 +161,35 @@ export default function UserProfileModal({
                 </div>
               </div>
             </>
+          )}
+
+          {/* Datos para Contadores */}
+          {currentUser.role === 'accountant' && (
+            <div style={{ background: 'rgba(37, 99, 235, 0.1)', border: '1px solid rgba(37, 99, 235, 0.25)', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+                🔑 Tu Código de Vinculación para Clientes
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                <span className="font-mono" style={{ fontSize: '1.1rem', fontWeight: 700, color: '#38bdf8' }}>
+                  {currentUser.link_code || 'CONT-MENDEZ-9876'}
+                </span>
+                <button
+                  type="button"
+                  style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '0.35rem 0.65rem', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
+                  onClick={() => {
+                    if (navigator.clipboard) {
+                      navigator.clipboard.writeText(currentUser.link_code || 'CONT-MENDEZ-9876');
+                      alert('¡Código copiado al portapapeles!');
+                    }
+                  }}
+                >
+                  Copiar Código
+                </button>
+              </div>
+              <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '0.4rem' }}>
+                Comparte este código a tus clientes para que te autoricen en sus terminales AutoARCA.
+              </div>
+            </div>
           )}
 
           <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>

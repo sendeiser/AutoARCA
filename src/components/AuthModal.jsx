@@ -20,6 +20,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [regFantasyName, setRegFantasyName] = useState('');
   const [regCategory, setRegCategory] = useState('D');
   const [regActivityType, setRegActivityType] = useState('products');
+  const [regMatricula, setRegMatricula] = useState('');
+  const [regJurisdiccion, setRegJurisdiccion] = useState('CPCECABA');
+  const [regAccountantCode, setRegAccountantCode] = useState('');
 
   if (!isOpen) return null;
 
@@ -42,6 +45,15 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         setErrorMsg('Por favor completa los campos obligatorios.');
         return;
       }
+
+      let assignedAccountantId = null;
+      if (regRole === 'client' && regAccountantCode.trim()) {
+        const foundAcc = authService.findAccountant(regAccountantCode.trim());
+        if (foundAcc) {
+          assignedAccountantId = foundAcc.id;
+        }
+      }
+
       const user = authService.register({
         fullName: regFullName,
         email: regEmail,
@@ -51,7 +63,10 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         cuit: regCuit,
         fantasyName: regFantasyName,
         monotributoCategory: regCategory,
-        activityType: regActivityType
+        activityType: regActivityType,
+        matricula: regMatricula,
+        jurisdiccion: regJurisdiccion,
+        accountantId: assignedAccountantId
       });
       if (onAuthSuccess) onAuthSuccess(user);
     } catch (err) {
@@ -217,6 +232,54 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               </div>
             </div>
 
+            {/* Campos Específicos para Contador */}
+            {regRole === 'accountant' && (
+              <>
+                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.75rem' }}>
+                  <div className="auth-form-group">
+                    <label className="auth-label">Matrícula Profesional</label>
+                    <input
+                      type="text"
+                      className="auth-input"
+                      placeholder="Ej. T° 142 F° 89"
+                      value={regMatricula}
+                      onChange={(e) => setRegMatricula(e.target.value)}
+                    />
+                  </div>
+                  <div className="auth-form-group">
+                    <label className="auth-label">Consejo / Jurisdicción</label>
+                    <select
+                      className="auth-select"
+                      value={regJurisdiccion}
+                      onChange={(e) => setRegJurisdiccion(e.target.value)}
+                    >
+                      <option value="CPCECABA">CPCECABA (CABA)</option>
+                      <option value="CPCEBA">CPCEBA (Bs. As.)</option>
+                      <option value="CPCESFE">CPCESFE (Santa Fe)</option>
+                      <option value="CPCECBA">CPCECBA (Córdoba)</option>
+                      <option value="OTRA">Otro Consejo</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="auth-form-group">
+                  <label className="auth-label">CUIT del Estudio / Profesional</label>
+                  <input
+                    type="text"
+                    className="auth-input"
+                    placeholder="30712345678 (11 dígitos)"
+                    value={regCuit}
+                    onChange={(e) => setRegCuit(e.target.value.replace(/[^0-9]/g, ''))}
+                    maxLength={11}
+                  />
+                </div>
+
+                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#bae6fd', marginBottom: '1rem', lineHeight: '1.4' }}>
+                  🛡️ <strong>Portal Profesional:</strong> Se generará automáticamente tu <strong>Código de Vinculación</strong> para que tus clientes te autoricen la descarga diaria de comprobantes ARCA.
+                </div>
+              </>
+            )}
+
             {/* Campos Fiscales para Comercios */}
             {regRole === 'client' && (
               <>
@@ -271,6 +334,20 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                       <option value="both">Ambas Actividades</option>
                     </select>
                   </div>
+                </div>
+
+                <div className="auth-form-group">
+                  <label className="auth-label">Código de tu Contador (Opcional)</label>
+                  <input
+                    type="text"
+                    className="auth-input font-mono"
+                    placeholder="Ej. CONT-MENDEZ-9876 o CUIT de tu contador"
+                    value={regAccountantCode}
+                    onChange={(e) => setRegAccountantCode(e.target.value)}
+                  />
+                  <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                    Si tu contador te dio su código, ingrésalo para vincularte a su estudio automáticamente.
+                  </span>
                 </div>
               </>
             )}

@@ -1,0 +1,174 @@
+/**
+ * Estilos para el Componente Navbar (AutoARCA)
+ * Enfoque Híbrido:
+ * - Desktop: Segmented Control horizontal Apple
+ * - Mobile (< 768px): Floating Bottom Tab Bar ergonómica estilo iOS
+ */
+
+/* 1. Desktop Segmented Control */
+.navbar-desktop-segment {
+  display: flex;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  background: rgba(15, 23, 42, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navbar-segment-container {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 3px;
+}
+
+.navbar-segment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-segment-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.navbar-segment-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+}
+
+.navbar-segment-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.navbar-segment-badge.badge-blue {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.navbar-segment-badge.badge-green {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.navbar-segment-badge.badge-yellow {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+.navbar-segment-badge.badge-red {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* 2. Mobile Floating Bottom Bar (< 768px) */
+.navbar-mobile-bottom {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* En móviles, ocultamos el segment superior para ahorrar espacio vertical */
+  .navbar-desktop-segment {
+    display: none;
+  }
+
+  /* Mostramos la Bottom Tab Bar estilo iOS */
+  .navbar-mobile-bottom {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  }
+
+  .navbar-bottom-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 54px;
+    padding: 0 0.5rem;
+  }
+
+  .navbar-bottom-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 0.25rem 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    gap: 2px;
+  }
+
+  .navbar-bottom-tab:active {
+    transform: scale(0.94);
+  }
+
+  .navbar-bottom-tab.active {
+    color: #38bdf8;
+  }
+
+  .navbar-bottom-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-bottom-dot {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .navbar-bottom-dot.dot-blue { background: #38bdf8; }
+  .navbar-bottom-dot.dot-green { background: #10b981; }
+  .navbar-bottom-dot.dot-yellow { background: #f59e0b; }
+  .navbar-bottom-dot.dot-red { background: #ef4444; }
+
+  .navbar-bottom-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .navbar-bottom-tab.active .navbar-bottom-label {
+    font-weight: 700;
+  }
+
+  /* Ajuste de padding inferior para el contenedor principal de la app */
+  main {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

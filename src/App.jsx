@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import Header from './components/Header.jsx';
+import Navbar from './components/Navbar.jsx';
 import PosTerminal from './components/PosTerminal.jsx';
 import ClientDashboard from './components/ClientDashboard.jsx';
 import AccountantPortal from './components/AccountantPortal.jsx';
@@ -6,7 +8,7 @@ import SuperAdminDashboard from './components/SuperAdminDashboard.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import UserProfileModal from './components/UserProfileModal.jsx';
 import SupabaseStatusModal from './components/SupabaseStatusModal.jsx';
-import { BoltIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, AppleLogoIcon, CloudSyncIcon } from './components/Icons.jsx';
+import AccountantLinkModal from './components/AccountantLinkModal.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
@@ -240,99 +242,32 @@ export default function App() {
   return (
     <div>
       {/* Barra de Navegación Principal estilo Apple macOS / iPadOS */}
-      <header className="app-shell-navbar">
-        <div className="navbar-left">
-          <div className="app-brand" onClick={() => setClientView('pos')}>
-            <AppleLogoIcon size={18} />
-            <span>AutoARCA</span>
-            <span className="brand-apple-badge">Apple HIG</span>
-          </div>
-        </div>
+      {/* Barra Superior Header */}
+      <Header
+        role={role}
+        currentUser={currentUser}
+        soundEnabled={soundEnabled}
+        onToggleSound={handleToggleSound}
+        onRoleChange={handleRoleChange}
+        onOpenSupabaseModal={() => setIsSupabaseModalOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        onBrandClick={() => setClientView('pos')}
+      />
 
-        {/* Pestañas de Navegación para el rol cliente */}
-        {role === 'client' && !isClientSuspended && (
-          <nav className="app-nav-tabs">
-            <button
-              type="button"
-              className={`app-nav-btn ${clientView === 'pos' ? 'active' : ''}`}
-              onClick={() => { soundService.playKeyTap(); setClientView('pos'); }}
-            >
-              Terminal POS
-            </button>
-            <button
-              type="button"
-              className={`app-nav-btn ${clientView === 'dashboard' ? 'active' : ''}`}
-              onClick={() => { soundService.playKeyTap(); setClientView('dashboard'); }}
-            >
-              Dashboard Fiscal
-            </button>
-          </nav>
-        )}
-
-        {/* Controles de Usuario, Audio y Rol */}
-        <div className="app-user-controls">
-          {/* Supabase Cloud Live Sync Pill */}
-          <button
-            type="button"
-            className="supabase-cloud-pill"
-            onClick={() => { soundService.playKeyTap(); setIsSupabaseModalOpen(true); }}
-            title="Ver estado de base de datos Supabase PostgreSQL y auto-sync"
-          >
-            <span className="live-pulse-dot" />
-            <CloudSyncIcon size={14} />
-            <span className="control-label-desktop">Supabase DB</span>
-            <span className="control-label-mobile">DB</span>
-          </button>
-
-          {/* Audio Toggle */}
-          <button
-            type="button"
-            className={`sound-toggle-btn ${!soundEnabled ? 'muted' : ''}`}
-            onClick={handleToggleSound}
-            title={soundEnabled ? 'Desactivar efectos de audio táctil' : 'Activar efectos de audio táctil'}
-          >
-            {soundEnabled ? <VolumeOnIcon size={15} /> : <VolumeOffIcon size={15} />}
-            <span className="control-label-desktop">{soundEnabled ? 'Audio' : 'Silencio'}</span>
-          </button>
-
-          {/* Selector de Rol */}
-          <select
-            data-testid="role-switcher-select"
-            className="role-switcher-select"
-            value={role}
-            onChange={(e) => handleRoleChange(e.target.value)}
-          >
-            <option value="client">👤 Cliente</option>
-            <option value="accountant">📑 Contador</option>
-            <option value="superadmin">👑 Admin</option>
-          </select>
-
-          {/* Chip de Perfil o Botón de Auth */}
-          {currentUser ? (
-            <div
-              className="user-profile-chip"
-              onClick={() => { soundService.playKeyTap(); setIsProfileOpen(true); }}
-              title="Ver y editar perfil de usuario"
-            >
-              <div className="user-chip-avatar">
-                {currentUser.full_name?.charAt(0) || 'U'}
-              </div>
-              <div className="user-chip-name">
-                {currentUser.full_name || 'Mi Cuenta'}
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="btn-open-auth"
-              onClick={() => { soundService.playKeyTap(); setIsAuthOpen(true); }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-            >
-              <PlusIcon size={15} /> <span className="control-label-desktop">Ingresar</span>
-            </button>
-          )}
-        </div>
-      </header>
+      {/* Navegación Inteligente Adaptativa (Desktop Segmented Control & Mobile Bottom Bar) */}
+      <Navbar
+        role={role}
+        activeTab={clientView}
+        onTabChange={(newTab) => setClientView(newTab)}
+        isClientSuspended={isClientSuspended}
+        badges={{
+          posSalesCount: pendingSales.length,
+          taxTrafficColor: taxMetrics.trafficLight.color,
+          totalClients: accountantClientsList.length,
+          totalUsers: users.length
+        }}
+      />
 
       {/* Contenido Dinámico según Rol y Estado */}
       <main>
