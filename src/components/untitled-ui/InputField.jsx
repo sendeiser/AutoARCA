@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import '../../styles/untitled-ui.css';
 
-export default function InputField({
+export function InputField({
   label,
   hint,
   error,
@@ -80,3 +80,5 @@ export default function InputField({
     </div>
   );
 }
+
+export default InputField;

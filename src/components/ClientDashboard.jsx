@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
 import TaxTrafficLight from './TaxTrafficLight.jsx';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
+import { Card, CardHeader, CardTitle, CardSubtitle } from './untitled-ui/Card.jsx';
+import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
+import { Button } from './untitled-ui/Button.jsx';
+import { Badge } from './untitled-ui/Badge.jsx';
+import {
+  Table,
+  TableContainer,
+  TableToolbar,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
+} from './untitled-ui/Table.jsx';
+import { BoltIcon, DownloadIcon } from './Icons.jsx';
 
 export default function ClientDashboard({
   metrics,
@@ -52,133 +67,173 @@ export default function ClientDashboard({
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem', color: '#f8fafc' }}>
-      {/* Barra de Navegación Rápida */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+    <div style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem', color: '#f8fafc' }}>
+      {/* Barra de Encabezado Principal */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 800 }}>
-            {businessProfile.fantasy_name || 'Panel del Comercio'}
-          </h1>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-            CUIT: {businessProfile.cuit || 'Sin registrar'} · {businessProfile.razon_social || ''}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
+            <h1 style={{ fontSize: '1.6rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
+              {businessProfile.fantasy_name || 'Panel del Comercio'}
+            </h1>
+            <Badge variant="brand" hasDot={true}>
+              Cat. {businessProfile.monotributo_category || 'D'}
+            </Badge>
+          </div>
+          <span style={{ fontSize: '0.84rem', color: '#94a3b8' }}>
+            CUIT: <strong>{businessProfile.cuit || 'Sin registrar'}</strong> · {businessProfile.razon_social || 'Titular'}
           </span>
         </div>
-        <button
-          type="button"
+
+        <Button
+          variant="primary"
+          size="md"
           onClick={onNavigateToPos}
-          style={{
-            padding: '0.6rem 1.2rem',
-            background: 'linear-gradient(135deg, #10b981, #059669)',
-            border: 'none',
-            borderRadius: '10px',
-            color: '#fff',
-            fontWeight: 700,
-            cursor: 'pointer'
-          }}
+          iconLeading={<BoltIcon size={16} />}
         >
-          Ir al Terminal POS ⚡
-        </button>
+          Terminal POS ⚡
+        </Button>
       </div>
 
+      {/* Métricas Estadísticas de Untitled UI */}
+      <StatGrid>
+        <StatCard
+          label="Emisión Pendiente Hoy"
+          value={formatCurrencyARS(pendingTotal)}
+          icon="🧾"
+          caption={`${pendingCount} comprobantes`}
+          trend={pendingCount > 0 ? 'up' : 'neutral'}
+          change={pendingCount > 0 ? `+${pendingCount}` : '0'}
+        />
+
+        <StatCard
+          label="Acumulado Móvil 12 Meses"
+          value={formatCurrencyARS(metrics?.rolling12mSales || 0)}
+          icon="📈"
+          caption={`Tope Cat. ${businessProfile.monotributo_category || 'D'}`}
+          trend="neutral"
+          change={`${(metrics?.percentageConsumed || 0).toFixed(1)}%`}
+        />
+
+        <StatCard
+          label="Margen de Seguridad ARCA"
+          value={formatCurrencyARS(metrics?.safetyMarginARS || 0)}
+          icon="🛡️"
+          caption="Disponible antes de recategorizar"
+          trend={metrics?.safetyMarginARS > 0 ? 'up' : 'down'}
+          change={metrics?.trafficLight?.label || 'Estable'}
+        />
+
+        <StatCard
+          label="Proyección Fin de Período"
+          value={formatCurrencyARS(metrics?.projectedAnnualSales || 0)}
+          icon="🎯"
+          caption="Estimación lineal"
+          trend="neutral"
+        />
+      </StatGrid>
+
       {/* Semáforo Fiscal de Monotributo */}
-      <TaxTrafficLight metrics={metrics} />
+      <div style={{ marginBottom: '1.5rem' }}>
+        <TaxTrafficLight metrics={metrics} />
+      </div>
 
       {/* Tarjeta de Cierre de Jornada del Día */}
-      <div
-        style={{
-          background: 'rgba(30, 41, 59, 0.7)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          marginBottom: '1.5rem'
-        }}
-      >
+      <Card style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem' }}>Cierre de Jornada de Hoy</h3>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
-              {pendingCount} ventas registradas hoy · Total: <strong>{formatCurrencyARS(pendingTotal)}</strong>
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+              <CardTitle>Cierre de Jornada de Hoy</CardTitle>
+              {pendingCount > 0 ? (
+                <Badge variant="warning" hasDot={true}>Pendiente de Cierre</Badge>
+              ) : (
+                <Badge variant="success" hasDot={true}>Al Día</Badge>
+              )}
+            </div>
+            <CardSubtitle>
+              {pendingCount} ventas registradas hoy · Total acumulado: <strong>{formatCurrencyARS(pendingTotal)}</strong>
+            </CardSubtitle>
           </div>
-          <button
-            type="button"
+
+          <Button
+            variant="primary"
+            size="lg"
             onClick={handleCloseDay}
             disabled={isClosing || pendingCount === 0}
-            style={{
-              padding: '0.75rem 1.5rem',
-              background: pendingCount > 0 ? '#38bdf8' : '#475569',
-              color: pendingCount > 0 ? '#0f172a' : '#94a3b8',
-              border: 'none',
-              borderRadius: '12px',
-              fontWeight: 800,
-              fontSize: '0.95rem',
-              cursor: pendingCount > 0 ? 'pointer' : 'not-allowed'
-            }}
+            isLoading={isClosing}
+            iconLeading={<DownloadIcon size={16} />}
           >
             {isClosing ? 'Generando Lote...' : '📥 Cerrar Jornada y Enviar al Contador'}
-          </button>
+          </Button>
         </div>
 
         {closeSuccess && (
-          <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: '8px', color: '#10b981', fontSize: '0.85rem' }}>
-            {closeSuccess}
+          <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: '8px', color: '#34d399', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span>✓</span>
+            <span>{closeSuccess}</span>
           </div>
         )}
-      </div>
+      </Card>
 
-      {/* Historial de Lotes ARCA Generados */}
-      <div
-        style={{
-          background: 'rgba(30, 41, 59, 0.7)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '16px',
-          padding: '1.5rem'
-        }}
-      >
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem' }}>Historial de Lotes Diarios para ARCA</h3>
-        {batchHistory.length === 0 ? (
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Aún no se han generado lotes diarios cerrados.</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {batchHistory.map((batch) => (
-              <div
-                key={batch.id}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: 'rgba(15, 23, 42, 0.5)',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '10px'
-                }}
-              >
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.95rem' }}>Lote {batch.batch_date}</strong>
-                  <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-                    {batch.total_sales_count} comprobantes · {formatCurrencyARS(batch.total_amount)} · Cerrado por {batch.closed_by === 'cron' ? 'Automático (Cron)' : 'Manual'}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleDownloadFile(batch)}
-                  style={{
-                    padding: '0.4rem 0.8rem',
-                    background: 'rgba(56, 189, 248, 0.15)',
-                    border: '1px solid #38bdf8',
-                    color: '#38bdf8',
-                    borderRadius: '8px',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  Descargar CSV 📥
-                </button>
-              </div>
-            ))}
+      {/* Tabla de Historial de Lotes ARCA Generados */}
+      <TableContainer>
+        <TableToolbar>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
+              Historial de Lotes Diarios para ARCA
+            </h3>
+            <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+              Archivos consolidados listos para exportación oficial
+            </span>
           </div>
+          <Badge variant="gray">{batchHistory.length} Lotes</Badge>
+        </TableToolbar>
+
+        {batchHistory.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+            Aún no se han generado lotes diarios cerrados.
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Fecha Lote</TableHead>
+                <TableHead>Comprobantes</TableHead>
+                <TableHead>Monto Total</TableHead>
+                <TableHead>Tipo Cierre</TableHead>
+                <TableHead style={{ textAlign: 'right' }}>Acción</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {batchHistory.map((batch) => (
+                <TableRow key={batch.id}>
+                  <TableCell>
+                    <strong>{batch.batch_date}</strong>
+                  </TableCell>
+                  <TableCell>{batch.total_sales_count} ventas</TableCell>
+                  <TableCell>
+                    <strong>{formatCurrencyARS(batch.total_amount)}</strong>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={batch.closed_by === 'cron' ? 'brand' : 'gray'}>
+                      {batch.closed_by === 'cron' ? 'Automático (Cron)' : 'Manual'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell style={{ textAlign: 'right' }}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleDownloadFile(batch)}
+                      iconLeading={<DownloadIcon size={14} />}
+                    >
+                      Descargar CSV
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
-      </div>
+      </TableContainer>
     </div>
   );
 }

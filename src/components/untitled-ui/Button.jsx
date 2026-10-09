@@ -6,13 +6,15 @@
 import React from 'react';
 import '../../styles/untitled-ui.css';
 
-export default function Button({
+export function Button({
   variant = 'primary',
   size = 'md',
   isLoading = false,
   isBlock = false,
   leftIcon = null,
   rightIcon = null,
+  iconLeading = null,
+  iconTrailing = null,
   children,
   className = '',
   disabled,
@@ -22,6 +24,8 @@ export default function Button({
   const variantClass = `uui-btn-${variant}`;
   const sizeClass = `uui-btn-${size}`;
   const blockClass = isBlock ? 'uui-btn-block' : '';
+  const lead = iconLeading || leftIcon;
+  const trail = iconTrailing || rightIcon;
 
   return (
     <button
@@ -35,12 +39,14 @@ export default function Button({
           ⏳
         </span>
       ) : (
-        leftIcon && <span className="uui-btn-icon-left">{leftIcon}</span>
+        lead && <span className="uui-btn-icon-left">{lead}</span>
       )}
       <span>{children}</span>
-      {!isLoading && rightIcon && (
-        <span className="uui-btn-icon-right">{rightIcon}</span>
+      {!isLoading && trail && (
+        <span className="uui-btn-icon-right">{trail}</span>
       )}
     </button>
   );
 }
+
+export default Button;

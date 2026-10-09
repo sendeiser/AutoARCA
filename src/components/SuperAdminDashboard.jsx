@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
-import { TableIcon, UserIcon, CheckCircleIcon, SearchIcon } from './Icons.jsx';
+import { TableIcon, UserIcon, CheckCircleIcon } from './Icons.jsx';
+import { Button } from './untitled-ui/Button.jsx';
+import { Badge } from './untitled-ui/Badge.jsx';
+import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
+import { SearchInput } from './untitled-ui/SearchInput.jsx';
+import {
+  Table,
+  TableContainer,
+  TableToolbar,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
+} from './untitled-ui/Table.jsx';
 import '../styles/superAdmin.css';
+import '../styles/untitled-ui.css';
 
 export default function SuperAdminDashboard({
   scales = [],
@@ -87,46 +102,59 @@ export default function SuperAdminDashboard({
   });
 
   return (
-    <div className="admin-container">
+    <div className="admin-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '1.25rem' }}>
       {/* Cabecera del Panel */}
-      <div className="admin-header">
+      <div className="admin-header" style={{ marginBottom: '1.5rem' }}>
         <div>
-          <div className="admin-badge-top">Centro de Comando Maestro</div>
-          <h1>Panel Global de SuperAdmin</h1>
-          <p style={{ margin: '0.35rem 0 0 0', color: '#94a3b8' }}>
+          <div style={{ display: 'inline-block', marginBottom: '0.4rem' }}>
+            <Badge variant="brand" hasDot={true}>Centro de Comando Maestro</Badge>
+          </div>
+          <h1 style={{ fontSize: '1.75rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
+            Panel Global de SuperAdmin
+          </h1>
+          <p style={{ margin: '0.35rem 0 0 0', color: '#94a3b8', fontSize: '0.88rem' }}>
             Control de Parámetros Impositivos ARCA y Monitoreo SaaS en Tiempo Real
           </p>
         </div>
       </div>
 
-      {/* Global SaaS Platform Metrics Banner */}
-      <div className="admin-kpi-grid">
-        <div className="admin-kpi-card">
-          <div className="admin-kpi-label">Usuarios Registrados</div>
-          <div className="admin-kpi-val">{totalUsersCount}</div>
-          <div className="admin-kpi-sub">Comercios y contadores</div>
-        </div>
-        <div className="admin-kpi-card">
-          <div className="admin-kpi-label">Suscripciones Activas</div>
-          <div className="admin-kpi-val" style={{ color: '#10b981' }}>{activeSubsCount}</div>
-          <div className="admin-kpi-sub">Cuentas al día</div>
-        </div>
-        <div className="admin-kpi-card">
-          <div className="admin-kpi-label">Cuentas Suspendidas</div>
-          <div className="admin-kpi-val" style={{ color: pastDueSubsCount > 0 ? '#ef4444' : '#94a3b8' }}>
-            {pastDueSubsCount}
-          </div>
-          <div className="admin-kpi-sub">Pago pendiente</div>
-        </div>
-        <div className="admin-kpi-card">
-          <div className="admin-kpi-label">Escalas Configuradas</div>
-          <div className="admin-kpi-val" style={{ color: '#38bdf8' }}>{editableScales.length}</div>
-          <div className="admin-kpi-sub">Categorías A a K</div>
-        </div>
-      </div>
+      {/* Global SaaS Platform Metrics Banner con Untitled UI StatCard */}
+      <StatGrid>
+        <StatCard
+          label="Usuarios Registrados"
+          value={totalUsersCount}
+          icon="👥"
+          caption="Comercios y contadores"
+          trend="neutral"
+        />
+        <StatCard
+          label="Suscripciones Activas"
+          value={activeSubsCount}
+          icon="🟢"
+          caption="Cuentas al día"
+          trend="up"
+          change="Al día"
+        />
+        <StatCard
+          label="Cuentas Suspendidas"
+          value={pastDueSubsCount}
+          icon="⚠️"
+          caption="Pago pendiente"
+          trend={pastDueSubsCount > 0 ? 'down' : 'neutral'}
+          change={pastDueSubsCount > 0 ? 'Riesgo' : '0'}
+        />
+        <StatCard
+          label="Escalas Oficiales"
+          value={editableScales.length}
+          icon="📊"
+          caption="Categorías A a K"
+          trend="neutral"
+          change="Sembradas"
+        />
+      </StatGrid>
 
       {/* Tabs */}
-      <div className="admin-tabs">
+      <div className="admin-tabs" style={{ marginBottom: '1.5rem' }}>
         <button
           type="button"
           className={`admin-tab-btn ${activeTab === 'scales' ? 'active' : ''}`}
@@ -146,181 +174,155 @@ export default function SuperAdminDashboard({
       </div>
 
       {toastMessage && (
-        <div className="admin-toast">
+        <div style={{ marginBottom: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: '10px', color: '#34d399', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <CheckCircleIcon size={16} /> {toastMessage}
         </div>
       )}
 
       {/* Sección 1: Escalas de Monotributo */}
       {activeTab === 'scales' && (
-        <div className="admin-card">
-          <div className="admin-card-header">
+        <TableContainer>
+          <TableToolbar>
             <div>
-              <h2>Escalas Oficiales de Monotributo (A a K)</h2>
-              <p style={{ margin: '0.25rem 0 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: '#fff' }}>
+                Escalas Oficiales de Monotributo (A a K)
+              </h2>
+              <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>
                 Modifica los topes anuales. Las variaciones se aplican en caliente a todos los clientes sin reiniciar el sistema.
-              </p>
+              </span>
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <div className="bulk-increase-tool">
-                <span style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600 }}>Ajuste Inflación:</span>
-                <button
-                  type="button"
-                  className="btn-scale-chip"
-                  onClick={() => handleBulkIncrease(10)}
-                  title="Aumentar todos los topes un 10%"
-                >
-                  +10%
-                </button>
-                <button
-                  type="button"
-                  className="btn-scale-chip"
-                  onClick={() => handleBulkIncrease(15)}
-                  title="Aumentar todos los topes un 15%"
-                >
-                  +15%
-                </button>
-                <button
-                  type="button"
-                  className="btn-scale-chip"
-                  onClick={() => handleBulkIncrease(25)}
-                  title="Aumentar todos los topes un 25%"
-                >
-                  +25%
-                </button>
+            <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(255,255,255,0.04)', padding: '0.25rem 0.5rem', borderRadius: '8px' }}>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Ajuste Inflación:</span>
+                <Button variant="secondary" size="sm" onClick={() => handleBulkIncrease(10)}>+10%</Button>
+                <Button variant="secondary" size="sm" onClick={() => handleBulkIncrease(15)}>+15%</Button>
+                <Button variant="secondary" size="sm" onClick={() => handleBulkIncrease(25)}>+25%</Button>
               </div>
 
-              <button
-                type="button"
-                className="btn-save-admin"
+              <Button
+                variant="primary"
+                size="md"
                 onClick={handleSave}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+                iconLeading={<CheckCircleIcon size={16} />}
               >
-                <CheckCircleIcon size={16} /> Guardar Escalas en Caliente
-              </button>
+                Guardar Escalas en Caliente
+              </Button>
             </div>
-          </div>
+          </TableToolbar>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Categoría</th>
-                  <th>Tope Anual (ARS)</th>
-                  <th>Promedio Mensual (Calculado)</th>
-                  <th>Formato Visual</th>
-                </tr>
-              </thead>
-              <tbody>
-                {editableScales.map((item) => (
-                  <tr key={item.category}>
-                    <td>
-                      <span className="scale-cat-badge">
-                        Categoría {item.category}
-                      </span>
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        className="admin-scale-input"
-                        data-testid={`scale-input-${item.category}`}
-                        value={item.max_annual_billing}
-                        onChange={(e) => handleScaleChange(item.category, e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <span style={{ color: '#94a3b8', fontWeight: 600 }}>
-                        {formatCurrencyARS(item.max_monthly_average)}
-                      </span>
-                    </td>
-                    <td>
-                      <span style={{ fontWeight: 700, color: '#10b981' }}>
-                        {formatCurrencyARS(item.max_annual_billing)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Categoría</TableHead>
+                <TableHead>Tope Anual (ARS)</TableHead>
+                <TableHead>Promedio Mensual (Calculado)</TableHead>
+                <TableHead>Formato Visual</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {editableScales.map((item) => (
+                <TableRow key={item.category}>
+                  <TableCell>
+                    <Badge variant="brand">Categoría {item.category}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <input
+                      type="number"
+                      className="admin-scale-input"
+                      data-testid={`scale-input-${item.category}`}
+                      value={item.max_annual_billing}
+                      onChange={(e) => handleScaleChange(item.category, e.target.value)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <span style={{ color: '#94a3b8', fontWeight: 600 }}>
+                      {formatCurrencyARS(item.max_monthly_average)}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span style={{ fontWeight: 700, color: '#10b981' }}>
+                      {formatCurrencyARS(item.max_annual_billing)}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {/* Sección 2: Usuarios y Suscripciones */}
       {activeTab === 'users' && (
-        <div className="admin-card">
-          <div className="admin-card-header">
+        <TableContainer>
+          <TableToolbar>
             <div>
-              <h2>Gestión de Usuarios y Estado de Suscripción</h2>
-              <p style={{ margin: '0.25rem 0 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: '#fff' }}>
+                Gestión de Usuarios y Estado de Suscripción
+              </h2>
+              <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>
                 Administra permisos, roles y estados de cuenta comercial
-              </p>
+              </span>
             </div>
-            <input
-              type="text"
+            <SearchInput
               placeholder="Buscar por nombre, email o rol..."
-              className="admin-search-input"
               value={userSearchQuery}
               onChange={(e) => setUserSearchQuery(e.target.value)}
             />
-          </div>
+          </TableToolbar>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Email</th>
-                  <th>Rol</th>
-                  <th>Estado de Suscripción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
-                      No se encontraron usuarios.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredUsers.map((u) => (
-                    <tr key={u.id}>
-                      <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                          <div className="admin-user-avatar">
-                            {u.full_name?.charAt(0) || 'U'}
-                          </div>
-                          <strong>{u.full_name}</strong>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Usuario</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Rol</TableHead>
+                <TableHead>Estado de Suscripción</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredUsers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+                    No se encontraron usuarios.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredUsers.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div className="admin-user-avatar">
+                          {u.full_name?.charAt(0) || 'U'}
                         </div>
-                      </td>
-                      <td><code>{u.email}</code></td>
-                      <td>
-                        <span className={`admin-role-badge role-${u.role}`}>
-                          {u.role === 'client' ? 'Comercio' : u.role === 'accountant' ? 'Contador' : 'SuperAdmin'}
-                        </span>
-                      </td>
-                      <td>
-                        <select
-                          className="admin-sub-select"
-                          data-testid={`sub-select-${u.id}`}
-                          value={u.subscription_status}
-                          onChange={(e) => handleSubChange(u.id, e.target.value)}
-                        >
-                          <option value="active">Activo (Al día)</option>
-                          <option value="trial">Período de Prueba</option>
-                          <option value="past_due">Suspendido / Pago Pendiente</option>
-                          <option value="cancelled">Cancelado</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                        <strong>{u.full_name}</strong>
+                      </div>
+                    </TableCell>
+                    <TableCell><code>{u.email}</code></TableCell>
+                    <TableCell>
+                      <Badge variant={u.role === 'client' ? 'brand' : u.role === 'accountant' ? 'purple' : 'gray'}>
+                        {u.role === 'client' ? 'Comercio' : u.role === 'accountant' ? 'Contador' : 'SuperAdmin'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <select
+                        className="admin-sub-select"
+                        data-testid={`sub-select-${u.id}`}
+                        value={u.subscription_status}
+                        onChange={(e) => handleSubChange(u.id, e.target.value)}
+                      >
+                        <option value="active">Activo (Al día)</option>
+                        <option value="trial">Período de Prueba</option>
+                        <option value="past_due">Suspendido / Pago Pendiente</option>
+                        <option value="cancelled">Cancelado</option>
+                      </select>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </div>
   );
 }
-

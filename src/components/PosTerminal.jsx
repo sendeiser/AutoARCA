@@ -17,7 +17,12 @@ import {
   VolumeOffIcon,
   UserIcon
 } from './Icons.jsx';
+import { Badge } from './untitled-ui/Badge.jsx';
+import { Modal } from './untitled-ui/Modal.jsx';
+import { Button } from './untitled-ui/Button.jsx';
+import { InputField } from './untitled-ui/InputField.jsx';
 import '../styles/posTerminal.css';
+import '../styles/untitled-ui.css';
 
 // 1. Contexto Compartido del Terminal POS
 const PosTerminalContext = createContext(null);
@@ -211,7 +216,9 @@ export function PosHeader() {
         >
           {isMuted ? <VolumeOffIcon size={16} /> : <VolumeOnIcon size={16} />}
         </button>
-        <div className="pos-header-badge">Factura C</div>
+        <Badge variant="brand" hasDot={true}>
+          Factura C
+        </Badge>
       </div>
     </div>
   );
@@ -347,17 +354,26 @@ export function PosCustomerModal() {
   if (!showClientModal) return null;
 
   return (
-    <div className="auth-overlay">
-      <div className="auth-card" style={{ maxWidth: '440px' }}>
-        <h3 style={{ marginTop: 0, fontSize: '1.25rem' }}>Identificación del Cliente</h3>
-        <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-          Para ventas mayores a ${anonymousMaxLimit.toLocaleString('es-AR')} o a pedido del cliente, registra sus datos fiscales exigidos por ARCA.
-        </p>
-
-        <div className="auth-form-group">
-          <label className="auth-label">Tipo Documento</label>
+    <Modal
+      isOpen={showClientModal}
+      onClose={() => setShowClientModal(false)}
+      title="Identificación del Cliente"
+      subtitle={`Para ventas mayores a $${anonymousMaxLimit.toLocaleString('es-AR')} o a pedido del cliente, registra sus datos fiscales exigidos por ARCA.`}
+      footer={
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => setShowClientModal(false)}
+        >
+          Confirmar Datos
+        </Button>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="uui-input-wrap">
+          <label className="uui-input-label">Tipo Documento</label>
           <select
-            className="auth-select"
+            className="uui-input-box"
             value={customerDocType}
             onChange={(e) => setCustomerDocType(e.target.value)}
           >
@@ -367,40 +383,23 @@ export function PosCustomerModal() {
           </select>
         </div>
 
-        <div className="auth-form-group">
-          <label className="auth-label">Número de Documento</label>
-          <input
-            type="text"
-            className="auth-input"
-            value={customerDocNumber}
-            onChange={(e) => setCustomerDocNumber(e.target.value.replace(/[^0-9]/g, ''))}
-            placeholder="Ej. 30712345678"
-          />
-        </div>
+        <InputField
+          label="Número de Documento"
+          type="text"
+          value={customerDocNumber}
+          onChange={(e) => setCustomerDocNumber(e.target.value.replace(/[^0-9]/g, ''))}
+          placeholder="Ej. 30712345678"
+        />
 
-        <div className="auth-form-group">
-          <label className="auth-label">Nombre o Razón Social</label>
-          <input
-            type="text"
-            className="auth-input"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            placeholder="Ej. Juan Pérez"
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1.25rem' }}>
-          <button
-            type="button"
-            className="auth-btn-primary"
-            onClick={() => setShowClientModal(false)}
-            style={{ margin: 0, padding: '0.65rem 1.25rem' }}
-          >
-            Confirmar Datos
-          </button>
-        </div>
+        <InputField
+          label="Nombre o Razón Social"
+          type="text"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
+          placeholder="Ej. Juan Pérez"
+        />
       </div>
-    </div>
+    </Modal>
   );
 }
 

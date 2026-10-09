@@ -10,6 +10,10 @@ import {
 } from './Icons.jsx';
 import { supabaseDataService } from '../services/supabaseDataService.js';
 import { soundService } from '../services/soundService.js';
+import { Modal } from './untitled-ui/Modal.jsx';
+import { Button } from './untitled-ui/Button.jsx';
+import { Badge } from './untitled-ui/Badge.jsx';
+import '../styles/untitled-ui.css';
 
 export default function SupabaseStatusModal({ isOpen, onClose }) {
   const [health, setHealth] = useState(null);
@@ -60,122 +64,130 @@ export default function SupabaseStatusModal({ isOpen, onClose }) {
   ];
 
   return (
-    <div className="apple-modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="apple-modal-sheet" onClick={(e) => e.stopPropagation()}>
-        <div className="apple-sheet-header">
-          <div className="apple-sheet-title-group">
-            <div className="apple-icon-bubble">
-              <DatabaseIcon size={20} />
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      icon={<DatabaseIcon size={22} />}
+      title="Configuración Supabase Cloud"
+      subtitle="Base de Datos PostgreSQL Conectada · AutoARCA"
+      maxWidth="560px"
+      footer={
+        <div style={{ display: 'flex', gap: '0.65rem', width: '100%', justifyContent: 'flex-end' }}>
+          <Button variant="secondary" size="md" onClick={onClose}>
+            Cerrar
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              soundService.playKeyTap();
+              checkStatus();
+            }}
+            disabled={loading}
+            isLoading={loading}
+            iconLeading={<RefreshIcon size={14} />}
+          >
+            Verificar Estado
+          </Button>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Tarjeta de Conexión Live */}
+        <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Badge variant={health?.isOnline ? 'success' : 'brand'} hasDot={true}>
+                {loading ? 'Comprobando enlace...' : health?.isOnline ? 'En Línea & Conectado' : 'Conectando'}
+              </Badge>
+            </div>
+            {health?.latencyMs && (
+              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                Ping: <strong>{health.latencyMs} ms</strong>
+              </span>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', fontSize: '0.78rem' }}>
+            <div>
+              <span style={{ color: '#64748b', display: 'block' }}>Project ID</span>
+              <code style={{ color: '#cbd5e1' }}>oqwzldvbvdigilcekhmo</code>
             </div>
             <div>
-              <h3 className="apple-sheet-title">Configuración Supabase Cloud</h3>
-              <p className="apple-sheet-subtitle">Base de Datos PostgreSQL Conectada</p>
+              <span style={{ color: '#64748b', display: 'block' }}>Endpoint REST</span>
+              <code style={{ color: '#cbd5e1' }}>/rest/v1</code>
             </div>
           </div>
-          <button className="apple-btn-close" onClick={onClose} aria-label="Cerrar modal">
-            ✕
-          </button>
         </div>
 
-        <div className="apple-sheet-body">
-          {/* Tarjeta de Conexión Live */}
-          <div className="apple-card-section">
-            <div className="apple-status-row">
-              <div className="apple-status-indicator-wrap">
-                <span className={`apple-status-dot ${health?.isOnline ? 'online' : 'offline'}`} />
-                <span className="apple-status-text">
-                  {loading ? 'Comprobando enlace...' : health?.isOnline ? 'En Línea & Conectado' : 'Conectando'}
-                </span>
-              </div>
-              <button
-                className="apple-btn-secondary"
-                onClick={() => {
-                  soundService.playKeyTap();
-                  checkStatus();
-                }}
-                disabled={loading}
-              >
-                <RefreshIcon size={13} />
-                <span>Actualizar</span>
-              </button>
-            </div>
-
-            <div className="apple-meta-grid">
-              <div className="apple-meta-item">
-                <span className="apple-meta-label">Supabase URL</span>
-                <span className="apple-meta-val font-mono">
-                  https://oqwzldvbvdigilcekhmo.supabase.co
-                </span>
-              </div>
-              <div className="apple-meta-item">
-                <span className="apple-meta-label">Project ID</span>
-                <span className="apple-meta-val font-mono">oqwzldvbvdigilcekhmo</span>
-              </div>
-              <div className="apple-meta-item">
-                <span className="apple-meta-label">Latencia Ping</span>
-                <span className="apple-meta-val font-mono">
-                  {health?.latencyMs ? `${health.latencyMs} ms` : 'Verificando...'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Lista de Tablas y Esquema */}
-          <h4 className="apple-section-title">Esquema Nuclear (5 Tablas)</h4>
-          <div className="apple-tables-list">
+        {/* Lista de Tablas y Esquema */}
+        <div>
+          <h4 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: '#94a3b8', margin: '0 0 0.65rem 0' }}>
+            Esquema Nuclear (5 Tablas en Vivo)
+          </h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {tablesList.map((tbl) => {
               const isAvailable = health?.tables?.[tbl.key];
               return (
-                <div key={tbl.key} className="apple-table-row">
-                  <div className="apple-table-info">
-                    <span className="apple-table-name font-mono">{tbl.label}</span>
-                    <span className="apple-table-desc">{tbl.desc}</span>
+                <div
+                  key={tbl.key}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.6rem 0.85rem',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <div>
+                    <div className="font-mono" style={{ fontSize: '0.82rem', fontWeight: 600, color: '#f8fafc' }}>
+                      {tbl.label}
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{tbl.desc}</div>
                   </div>
-                  <div className="apple-table-badge">
-                    {isAvailable ? (
-                      <span className="apple-badge-active">
-                        <CheckCircleIcon size={13} /> Listo en BD
-                      </span>
-                    ) : (
-                      <span className="apple-badge-sync">
-                        <CloudSyncIcon size={13} /> Auto-Sync Offline
-                      </span>
-                    )}
-                  </div>
+                  <Badge variant={isAvailable ? 'success' : 'brand'}>
+                    {isAvailable ? '✓ Listo en BD' : '☁️ Local Sync'}
+                  </Badge>
                 </div>
               );
             })}
           </div>
+        </div>
 
-          {/* Instrucciones y Acciones Rápidas */}
-          <div className="apple-callout-card">
-            <div className="apple-callout-header">
-              <CloudSyncIcon size={16} />
-              <span>Sincronización Local-First & Supabase Cloud</span>
-            </div>
-            <p className="apple-callout-text">
-              AutoARCA opera con persistencia local y sincronización en segundo plano con tu proyecto de Supabase.
-              Las 5 tablas, RLS y datos semillas de monotributo están compilados en <code>supabase/FULL_SETUP.sql</code>.
-            </p>
-            <div className="apple-actions-group">
-              <a
-                href="https://supabase.com/dashboard/project/oqwzldvbvdigilcekhmo/sql/new"
-                target="_blank"
-                rel="noreferrer"
-                className="apple-btn-primary"
-                onClick={() => soundService.playKeyTap()}
+        {/* Callout de Acciones Rápidas */}
+        <div style={{ background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.25)', borderRadius: '12px', padding: '0.85rem' }}>
+          <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.8rem', color: '#c4b5fd', lineHeight: 1.45 }}>
+            AutoARCA opera con persistencia local y sincronización en segundo plano con Supabase Cloud.
+            Las 5 tablas y datos semillas están en <code>supabase/FULL_SETUP.sql</code>.
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleCopySql}
+              iconLeading={<CopyIcon size={13} />}
+            >
+              {copied ? '¡Copiado!' : 'Copiar Referencia SQL'}
+            </Button>
+            <a
+              href="https://supabase.com/dashboard/project/oqwzldvbvdigilcekhmo/sql/new"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              <Button
+                variant="primary"
+                size="sm"
+                iconLeading={<ExternalLinkIcon size={13} />}
               >
-                <ExternalLinkIcon size={14} />
-                <span>Abrir SQL Editor en Supabase</span>
-              </a>
-              <button className="apple-btn-outline" onClick={handleCopySql}>
-                <CopyIcon size={14} />
-                <span>{copied ? '¡Copiado!' : 'Copiar Referencia SQL'}</span>
-              </button>
-            </div>
+                Abrir SQL Editor
+              </Button>
+            </a>
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

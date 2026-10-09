@@ -6,7 +6,7 @@
 import React from 'react';
 import '../../styles/untitled-ui.css';
 
-export default function Badge({
+export function Badge({
   variant = 'brand',
   hasDot = true,
   children,
@@ -19,3 +19,5 @@ export default function Badge({
     </span>
   );
 }
+
+export default Badge;

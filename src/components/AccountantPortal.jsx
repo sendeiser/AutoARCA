@@ -4,7 +4,13 @@ import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
 import { SearchIcon, DownloadIcon, PlusIcon, TableIcon, GridIcon, LinkIcon, CopyIcon } from './Icons.jsx';
 import AccountantLinkModal from './AccountantLinkModal.jsx';
+import { Button } from './untitled-ui/Button.jsx';
+import { Badge } from './untitled-ui/Badge.jsx';
+import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
+import { Card } from './untitled-ui/Card.jsx';
+import { SearchInput } from './untitled-ui/SearchInput.jsx';
 import '../styles/accountantPortal.css';
+import '../styles/untitled-ui.css';
 
 export default function AccountantPortal({
   clients = [],
@@ -141,105 +147,114 @@ export default function AccountantPortal({
           </p>
         </div>
         <div className="accountant-actions-header">
-          <button
-            type="button"
-            className="btn-add-client-top"
+          <Button
+            variant="secondary"
+            size="md"
             onClick={() => { soundService.playKeyTap(); setShowAddClientModal(true); }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
+            iconLeading={<PlusIcon size={15} />}
           >
-            <PlusIcon size={15} /> Vincular Cliente por CUIT
-          </button>
-          <button
-            type="button"
-            className="bulk-zip-btn"
+            Vincular Cliente por CUIT
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
             onClick={handleBulkZip}
             disabled={isGeneratingZip}
+            isLoading={isGeneratingZip}
+            iconLeading={<DownloadIcon size={16} />}
           >
-            <DownloadIcon size={16} /> Descargar Lotes del Día (ZIP Masivo)
-          </button>
+            Descargar Lotes del Día (ZIP Masivo)
+          </Button>
         </div>
       </div>
 
-      {/* Banner de Código de Vinculación Profesional */}
-      <div className="accountant-link-banner" style={{ background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.28)', borderRadius: '12px', padding: '0.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ background: '#2563eb', color: '#fff', borderRadius: '8px', padding: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LinkIcon size={18} />
+      {/* Banner de Código de Vinculación Profesional estilo Untitled UI */}
+      <Card style={{ marginBottom: '1.5rem', background: 'rgba(30, 27, 75, 0.45)', borderColor: 'rgba(124, 58, 237, 0.3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.2)', color: '#c4b5fd', border: '1px solid rgba(124, 58, 237, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <LinkIcon size={20} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                <span style={{ fontSize: '0.75rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Código de Vinculación Profesional para Clientes
+                </span>
+                <Badge variant="brand" hasDot={true}>Activo</Badge>
+              </div>
+              <div className="font-mono" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '0.05em' }}>
+                {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
+              </div>
+            </div>
           </div>
-          <div>
-            <div style={{ fontSize: '0.76rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase' }}>
-              Código de Vinculación Profesional para Clientes
-            </div>
-            <div className="font-mono" style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '0.04em' }}>
-              {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
-            </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(accountantProfile.link_code || 'CONT-MENDEZ-9876');
+                  alert('¡Código copiado al portapapeles!');
+                }
+              }}
+              iconLeading={<CopyIcon size={14} />}
+            >
+              Copiar Código
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => { soundService.playKeyTap(); setShowLinkModal(true); }}
+              iconLeading={<LinkIcon size={14} />}
+            >
+              Gestionar Vinculaciones
+            </Button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button
-            type="button"
-            className="btn-add-client-top"
-            onClick={() => {
-              if (navigator.clipboard) {
-                navigator.clipboard.writeText(accountantProfile.link_code || 'CONT-MENDEZ-9876');
-                alert('¡Código copiado al portapapeles!');
-              }
-            }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.08)' }}
-          >
-            <CopyIcon size={14} /> Copiar Código
-          </button>
-          <button
-            type="button"
-            className="btn-add-client-top"
-            onClick={() => { soundService.playKeyTap(); setShowLinkModal(true); }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-          >
-            <LinkIcon size={14} /> Gestionar Vinculaciones
-          </button>
-        </div>
-      </div>
+      </Card>
 
-      {/* KPI Cards Banner */}
-      <div className="accountant-kpi-grid">
-        <div className="kpi-metric-card">
-          <div className="kpi-metric-label">Clientes Monitoreados</div>
-          <div className="kpi-metric-val">{totalClients}</div>
-          <div className="kpi-metric-sub">Bajo gestión fiscal</div>
-        </div>
-        <div className="kpi-metric-card">
-          <div className="kpi-metric-label">En Zona Segura</div>
-          <div className="kpi-metric-val" style={{ color: '#10b981' }}>
-            {totalClients - inRiskClients - inWarningClients}
-          </div>
-          <div className="kpi-metric-sub">Categoría en orden</div>
-        </div>
-        <div className="kpi-metric-card">
-          <div className="kpi-metric-label">Alerta o Peligro</div>
-          <div className="kpi-metric-val" style={{ color: inRiskClients > 0 ? '#ef4444' : '#f59e0b' }}>
-            {inRiskClients + inWarningClients}
-          </div>
-          <div className="kpi-metric-sub">{inRiskClients} al borde del límite</div>
-        </div>
-        <div className="kpi-metric-card">
-          <div className="kpi-metric-label">Lotes Listos para Descarga</div>
-          <div className="kpi-metric-val" style={{ color: '#38bdf8' }}>{readyBatchesCount}</div>
-          <div className="kpi-metric-sub">CSV ARCA generados</div>
-        </div>
-      </div>
+      {/* KPI Cards Banner estilo Untitled UI Metrics */}
+      <StatGrid>
+        <StatCard
+          label="Clientes Monitoreados"
+          value={totalClients}
+          icon="👥"
+          caption="Bajo gestión fiscal"
+          trend="neutral"
+        />
+        <StatCard
+          label="En Zona Segura"
+          value={totalClients - inRiskClients - inWarningClients}
+          icon="🟢"
+          caption="Categoría en orden"
+          trend="up"
+          change="Al día"
+        />
+        <StatCard
+          label="Alerta o Peligro"
+          value={inRiskClients + inWarningClients}
+          icon="⚠️"
+          caption={`${inRiskClients} al borde del límite`}
+          trend={inRiskClients > 0 ? 'down' : 'neutral'}
+          change={inRiskClients > 0 ? 'Riesgo' : 'Atención'}
+        />
+        <StatCard
+          label="Lotes Listos para Descarga"
+          value={readyBatchesCount}
+          icon="📦"
+          caption="CSV ARCA generados"
+          trend={readyBatchesCount > 0 ? 'up' : 'neutral'}
+          change={`${readyBatchesCount} listos`}
+        />
+      </StatGrid>
 
       {/* Toolbar con Buscador, Filtros y Selector de Fecha */}
       <div className="accountant-toolbar">
-        <div className="toolbar-search-wrap">
-          <span className="search-icon"><SearchIcon size={16} /></span>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Buscar por CUIT o Razón Social..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        <SearchInput
+          placeholder="Buscar por CUIT o Razón Social..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
 
         {/* Status Filter Chips */}
         <div className="status-filter-chips">
