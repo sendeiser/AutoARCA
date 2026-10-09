@@ -144,3 +144,61 @@ export function QrTransferIcon({ size = 16, className = '' }) {
     </svg>
   );
 }
+
+export function AppleLogoIcon({ size = 16, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 170 170" fill="currentColor" className={className}>
+      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.6-7.85-11.72-14.44-6.08-9.74-10.9-20.73-14.46-32.98-3.56-12.25-5.34-23.75-5.34-34.5 0-14.28 3.56-26.06 10.68-35.34 7.12-9.28 16.14-14.07 27.06-14.37 4.9.11 10.22 1.32 15.96 3.63 5.74 2.31 9.77 3.58 12.09 3.82 2.12-.24 6.33-1.57 12.63-3.99 6.3-2.42 11.66-3.48 16.08-3.18 12.39 1.15 22.39 6.2 30 15.15-10.88 6.55-16.2 15.68-15.97 27.38.23 9.4 3.96 17.26 11.19 23.59 7.23 6.32 15.82 9.94 25.77 10.86-2.22 6.64-4.8 13.04-7.75 19.2zm-28.78-106.1c.14-7.59 2.87-14.54 8.19-20.85 5.32-6.31 11.96-10.3 19.92-11.98.37 1.54.55 3.06.55 4.56 0 7.42-2.93 14.43-8.8 21.03-5.86 6.6-12.74 10.35-20.63 11.26-.27-1.34-.43-2.68-.43-4.02z" />
+    </svg>
+  );
+}
+
+export function CloudSyncIcon({ size = 16, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
+      <polyline points="12 12 12 17 15 15" />
+      <path d="m9 15 3 2" />
+    </svg>
+  );
+}
+
+export function DatabaseIcon({ size = 16, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+    </svg>
+  );
+}
+
+export function CopyIcon({ size = 15, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
+export function ExternalLinkIcon({ size = 14, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  );
+}
+
+export function RefreshIcon({ size = 15, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <polyline points="23 4 23 10 17 10" />
+      <polyline points="1 20 1 14 7 14" />
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+    </svg>
+  );
+}
+

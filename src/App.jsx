@@ -5,10 +5,12 @@ import AccountantPortal from './components/AccountantPortal.jsx';
 import SuperAdminDashboard from './components/SuperAdminDashboard.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import UserProfileModal from './components/UserProfileModal.jsx';
-import { BoltIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon } from './components/Icons.jsx';
+import SupabaseStatusModal from './components/SupabaseStatusModal.jsx';
+import { BoltIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, AppleLogoIcon, CloudSyncIcon } from './components/Icons.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
+import { supabaseDataService } from './services/supabaseDataService.js';
 import { soundService } from './services/soundService.js';
 import './index.css';
 
@@ -23,6 +25,7 @@ export default function App() {
   // Modales
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   // Ventas de demostración
@@ -65,6 +68,13 @@ export default function App() {
       if (loadedUsers && loadedUsers.length > 0) {
         setUsers(loadedUsers);
       }
+
+      // Sincronizar escalas oficiales desde Supabase si están disponibles
+      supabaseDataService.fetchScales().then((remoteScales) => {
+        if (remoteScales && remoteScales.length > 0) {
+          setScales(remoteScales);
+        }
+      }).catch(() => {});
     } catch {
       // Ignorar errores en entornos sin localStorage
     }
@@ -229,10 +239,12 @@ export default function App() {
 
   return (
     <div>
-      {/* Barra de Navegación Principal */}
+      {/* Barra de Navegación Principal estilo Apple macOS / iPadOS */}
       <header className="app-shell-navbar">
         <div className="app-brand" onClick={() => setClientView('pos')}>
-          <span style={{ display: 'inline-flex', alignItems: 'center' }}><BoltIcon size={20} /></span> AutoARCA <span className="brand-badge">SaaS Cloud</span>
+          <AppleLogoIcon size={19} />
+          <span>AutoARCA</span>
+          <span className="brand-apple-badge">Apple HIG</span>
         </div>
 
         {/* Pestañas de Navegación para el rol cliente */}
@@ -257,6 +269,18 @@ export default function App() {
 
         {/* Controles de Usuario, Audio y Rol */}
         <div className="app-user-controls">
+          {/* Supabase Cloud Live Sync Pill */}
+          <button
+            type="button"
+            className="supabase-cloud-pill"
+            onClick={() => { soundService.playKeyTap(); setIsSupabaseModalOpen(true); }}
+            title="Ver estado de base de datos Supabase PostgreSQL y auto-sync"
+          >
+            <span className="live-pulse-dot" />
+            <CloudSyncIcon size={14} />
+            <span>Supabase DB</span>
+          </button>
+
           {/* Audio Toggle */}
           <button
             type="button"
@@ -366,6 +390,12 @@ export default function App() {
         businessProfile={businessProfile}
         onUserUpdated={handleUserUpdated}
         onLogout={handleLogout}
+      />
+
+      {/* Modal de Estado de Supabase Database */}
+      <SupabaseStatusModal
+        isOpen={isSupabaseModalOpen}
+        onClose={() => setIsSupabaseModalOpen(false)}
       />
     </div>
   );

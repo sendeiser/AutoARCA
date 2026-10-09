@@ -1,48 +1,50 @@
-/* Estilos Avanzados del Terminal POS Táctil (UI/UX Pro Max) */
+/* Apple Human Interface Guidelines (HIG) — Terminal POS Táctil */
 :root {
-  --pos-bg: #0b1120;
-  --pos-card-bg: rgba(30, 41, 59, 0.7);
-  --pos-card-border: rgba(255, 255, 255, 0.1);
-  --pos-primary: #10b981;
-  --pos-primary-glow: rgba(16, 185, 129, 0.35);
-  --pos-accent: #38bdf8;
-  --pos-text-main: #f8fafc;
-  --pos-text-muted: #94a3b8;
-  --pos-btn-bg: rgba(30, 41, 59, 0.8);
-  --pos-btn-hover: rgba(51, 65, 85, 0.9);
-  --pos-btn-active: rgba(71, 85, 105, 1);
+  --pos-bg: #000000;
+  --pos-card-bg: rgba(28, 28, 30, 0.78);
+  --pos-card-border: rgba(255, 255, 255, 0.12);
+  --pos-primary: #30d158;
+  --pos-primary-glow: rgba(48, 209, 88, 0.35);
+  --pos-accent: #0a84ff;
+  --pos-text-main: #ffffff;
+  --pos-text-muted: rgba(235, 235, 245, 0.65);
+  --pos-btn-bg: rgba(44, 44, 46, 0.85);
+  --pos-btn-hover: rgba(58, 58, 60, 0.95);
+  --pos-btn-active: rgba(72, 72, 74, 1);
 }
 
 .pos-container {
   display: flex;
   flex-direction: column;
-  max-width: 520px;
+  max-width: 500px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 3rem 1rem;
-  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  padding: 1.5rem 1rem 3.5rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
   color: var(--pos-text-main);
   box-sizing: border-box;
 }
 
-/* Cabecera del POS */
+/* Cabecera del POS al estilo Apple iOS Navigation Bar */
 .pos-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.25rem;
   padding: 0.85rem 1.25rem;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid var(--pos-card-border);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
+  background: var(--pos-card-bg);
+  border: 0.5px solid var(--pos-card-border);
+  border-radius: 18px;
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .pos-header-info h2 {
   font-size: 1.15rem;
   margin: 0;
-  font-weight: 800;
+  font-weight: 700;
   color: #ffffff;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .pos-header-info small {
@@ -57,70 +59,70 @@
 }
 
 .sound-toggle-btn {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--pos-card-border);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0.5px solid var(--pos-card-border);
+  border-radius: 10px;
   color: var(--pos-text-muted);
   font-size: 0.85rem;
-  padding: 0.35rem 0.6rem;
+  padding: 0.35rem 0.65rem;
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .pos-header-badge {
   font-size: 0.75rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(48, 209, 88, 0.15);
   color: var(--pos-primary);
   font-weight: 700;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  border: 0.5px solid rgba(48, 209, 88, 0.35);
+  box-shadow: 0 0 12px rgba(48, 209, 88, 0.2);
 }
 
-/* Visor Digital de Importe (OLED Glow) */
+/* Visor Digital al estilo Apple Calculator / Wallet */
 .pos-display-card {
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.8));
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: 20px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1rem;
+  background: rgba(28, 28, 30, 0.92);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.1rem;
   text-align: right;
-  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: border-color 0.2s ease;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .pos-display-card.pulsing {
   border-color: var(--pos-primary);
-  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 0 30px rgba(48, 209, 88, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .pos-display-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--pos-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
 }
 
 .pos-amount-display {
   font-family: var(--font-mono, monospace);
-  font-size: 2.85rem;
-  font-weight: 800;
+  font-size: 3.1rem;
+  font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 1.05;
   word-break: break-all;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
 }
 
 .pos-amount-display span {
   color: var(--pos-primary);
-  font-weight: 700;
-  margin-right: 0.25rem;
+  font-weight: 600;
+  margin-right: 0.35rem;
 }
 
 /* Fila de Cliente */
@@ -128,11 +130,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid var(--pos-card-border);
-  padding: 0.5rem 0.85rem;
-  border-radius: 12px;
-  margin-bottom: 0.85rem;
+  background: rgba(28, 28, 30, 0.65);
+  border: 0.5px solid var(--pos-card-border);
+  padding: 0.55rem 0.95rem;
+  border-radius: 14px;
+  margin-bottom: 0.95rem;
   font-size: 0.85rem;
 }
 
@@ -140,40 +142,40 @@
   color: var(--pos-accent);
   cursor: pointer;
   text-decoration: none;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  padding: 0.25rem 0.6rem;
+  background: rgba(10, 132, 255, 0.12);
+  border: 0.5px solid rgba(10, 132, 255, 0.3);
+  padding: 0.25rem 0.65rem;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   transition: all 0.15s;
 }
 
 .pos-client-link:hover {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(10, 132, 255, 0.22);
 }
 
-/* Selector de Medios de Pago */
+/* Selector de Medios de Pago (Apple Segmented Matrix) */
 .pos-payment-selector {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.95rem;
 }
 
 .payment-chip {
   height: 48px;
-  background: var(--pos-btn-bg);
-  border: 1px solid var(--pos-card-border);
+  background: rgba(44, 44, 46, 0.65);
+  border: 0.5px solid var(--pos-card-border);
   border-radius: 14px;
   color: var(--pos-text-muted);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
   user-select: none;
   touch-action: manipulation;
 }
@@ -184,11 +186,11 @@
 }
 
 .payment-chip.active {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #ffffff;
-  border-color: #10b981;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
-  transform: translateY(-1px);
+  background: var(--pos-primary);
+  color: #000000;
+  font-weight: 700;
+  border-color: var(--pos-primary);
+  box-shadow: 0 4px 16px rgba(48, 209, 88, 0.4);
 }
 
 /* Atajos Rápidos de Dinero */
@@ -196,93 +198,94 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.95rem;
 }
 
 .quick-amount-chip {
-  height: 44px;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  height: 42px;
+  background: rgba(44, 44, 46, 0.55);
+  border: 0.5px solid rgba(10, 132, 255, 0.25);
   border-radius: 12px;
-  color: #38bdf8;
+  color: var(--pos-accent);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .quick-amount-chip:hover {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: #38bdf8;
+  background: rgba(10, 132, 255, 0.15);
+  border-color: var(--pos-accent);
 }
 
 .quick-amount-chip:active {
   transform: scale(0.95);
 }
 
-/* Botonera Numérica Ergonómica (48px+ Touch Targets) */
+/* Botonera Numérica Ergonómica al estilo Apple Calculator / Phone */
 .pos-keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.65rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
 }
 
 .keypad-btn {
-  height: 62px;
+  height: 64px;
   background: var(--pos-btn-bg);
-  border: 1px solid var(--pos-card-border);
-  border-radius: 16px;
+  border: 0.5px solid var(--pos-card-border);
+  border-radius: 18px;
   color: #ffffff;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.65rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s;
   user-select: none;
   touch-action: manipulation;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .keypad-btn:hover {
   background: var(--pos-btn-hover);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .keypad-btn:active {
-  transform: scale(0.94);
+  transform: scale(0.92);
   background: var(--pos-btn-active);
   box-shadow: none;
 }
 
 .keypad-btn.action {
-  color: #f87171;
+  color: #ff453a;
   font-size: 1.3rem;
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(255, 69, 58, 0.12);
+  border-color: rgba(255, 69, 58, 0.25);
 }
 
 .keypad-btn.action:hover {
-  background: rgba(239, 68, 68, 0.25);
+  background: rgba(255, 69, 58, 0.22);
 }
 
-/* Botón Grande de Emisión */
+/* Botón de Emisión Principal (Estilo Apple Pay / Wallet) */
 .pos-emit-btn {
-  height: 60px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  height: 62px;
+  background: var(--pos-primary);
   border: none;
-  border-radius: 16px;
-  color: #ffffff;
+  border-radius: 9999px;
+  color: #000000;
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-  transition: all 0.15s ease;
+  box-shadow: 0 8px 24px rgba(48, 209, 88, 0.35);
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,35 +295,38 @@
 }
 
 .pos-emit-btn:hover {
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
-  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(48, 209, 88, 0.45);
+  filter: brightness(1.05);
 }
 
 .pos-emit-btn:active {
-  transform: scale(0.98);
-  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+  transform: scale(0.97);
+  box-shadow: 0 4px 14px rgba(48, 209, 88, 0.3);
 }
 
-/* Toast de Confirmación */
+/* Toast de Confirmación al estilo Dynamic Island / Apple Notification */
 .pos-toast {
   position: fixed;
-  bottom: 2rem;
+  top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #10b981, #047857);
+  background: rgba(30, 30, 32, 0.92);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
   padding: 0.85rem 1.75rem;
   border-radius: 9999px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.95rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(48, 209, 88, 0.3);
   z-index: 1000;
-  animation: toastSlide 1.5s ease forwards;
+  animation: appleToastSlide 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-@keyframes toastSlide {
-  0% { opacity: 0; transform: translate(-50%, 20px); }
-  15% { opacity: 1; transform: translate(-50%, 0); }
-  85% { opacity: 1; transform: translate(-50%, 0); }
-  100% { opacity: 0; transform: translate(-50%, -15px); }
+@keyframes appleToastSlide {
+  0% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+  15% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -15px) scale(0.95); }
 }

@@ -4,6 +4,7 @@
  */
 
 import { generateArcaBatchFile, validateReceiptForArca } from './arcaExportService.js';
+import { supabaseDataService } from './supabaseDataService.js';
 
 /**
  * Crea un almacén de datos en memoria para pruebas y modo local-first
@@ -73,6 +74,14 @@ export async function recordSaleReceipt(receiptData, options = {}) {
   };
 
   store.receipts.push(newReceipt);
+
+  // Sincronización en segundo plano con Supabase si está disponible
+  if (options.syncToSupabase !== false) {
+    try {
+      supabaseDataService.syncReceipt(newReceipt).catch(() => {});
+    } catch {}
+  }
+
   return newReceipt;
 }
 
@@ -134,6 +143,14 @@ export async function closeDailyBatch(businessId, date, closedBy = 'manual', opt
   });
 
   store.batches.push(newBatch);
+
+  // Sincronización en segundo plano con Supabase si está disponible
+  if (options.syncToSupabase !== false) {
+    try {
+      supabaseDataService.syncBatch(newBatch).catch(() => {});
+    } catch {}
+  }
+
   return newBatch;
 }
 
