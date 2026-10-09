@@ -40,9 +40,9 @@ export const supabaseDataService = {
 
       for (const tName of tableNames) {
         try {
-          const { error } = await supabase.from(tName).select('count', { count: 'exact', head: true });
-          // Si el código de error no es PGRST205 (tabla inexistente), consideramos la tabla disponible
-          result.tables[tName] = !error || error.code !== 'PGRST205';
+          const { error } = await supabase.from(tName).select('id').limit(1);
+          // Si el código de error no es PGRST205 ni 42P01 (tabla inexistente), consideramos la tabla creada
+          result.tables[tName] = !error || (error.code !== 'PGRST205' && error.code !== '42P01');
         } catch {
           result.tables[tName] = false;
         }
