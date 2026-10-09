@@ -167,7 +167,7 @@ INSERT INTO public.profiles (id, role, full_name, email, phone, subscription_sta
 VALUES
   ('c1000000-0000-0000-0000-000000000001', 'client', 'Martín González', 'martin@comercio.com', '+54 3826 401234', 'active'),
   ('a1000000-0000-0000-0000-000000000001', 'accountant', 'Estudio Contable Méndez & Asoc.', 'mendez@estudiocontable.com', '+54 11 4321 9876', 'active'),
-  ('s1000000-0000-0000-0000-000000000001', 'superadmin', 'SuperAdmin General', 'admin@autoarca.com', '+54 11 5000 0000', 'active')
+  ('d1000000-0000-0000-0000-000000000001', 'superadmin', 'SuperAdmin General', 'admin@autoarca.com', '+54 11 5000 0000', 'active')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO public.business_profiles (

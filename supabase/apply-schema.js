@@ -69,7 +69,7 @@ async function main() {
         console.log('✓ ¡Esquema y datos semillas aplicados exitosamente!');
         await client.end();
         connected = true;
-        process.exit(0);
+          return;
       } catch (err) {
         console.warn(`Aviso con host probado: ${err.message}`);
         try { await client.end(); } catch {}
@@ -96,7 +96,7 @@ async function main() {
 
       if (response.ok) {
         console.log('✓ ¡Esquema ejecutado exitosamente a través de la API de Supabase!');
-        process.exit(0);
+          return;
       } else {
         const errorText = await response.text();
         console.error('Error en Supabase API:', response.status, errorText);
