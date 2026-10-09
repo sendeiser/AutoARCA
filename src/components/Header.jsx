@@ -62,22 +62,6 @@ export default function Header({
           <span className="control-label-desktop">{theme === 'light' ? 'Oscuro' : 'Claro'}</span>
         </button>
 
-        {/* Píldora de Sincronización Supabase Cloud en Vivo */}
-        <button
-          type="button"
-          className="supabase-cloud-pill"
-          onClick={() => {
-            soundService.playKeyTap();
-            if (onOpenSupabaseModal) onOpenSupabaseModal();
-          }}
-          title="Estado en vivo de base de datos Supabase PostgreSQL"
-          aria-label="Estado Supabase Cloud"
-        >
-          <span className="live-pulse-dot" />
-          <CloudSyncIcon size={14} />
-          <span className="control-label-desktop">Supabase DB</span>
-          <span className="control-label-mobile">DB</span>
-        </button>
 
         {/* Toggle de Audio Háptico / Táctil */}
         <button

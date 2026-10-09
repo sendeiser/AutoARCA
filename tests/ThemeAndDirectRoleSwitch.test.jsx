@@ -92,4 +92,9 @@ describe('Impeccable UI: Modo Claro y Selector Directo de Rol (Sin Acordeón)', 
     );
     expect(screen.getByTestId('theme-toggle-btn')).toHaveTextContent(/Oscuro/i);
   });
+
+  it('no muestra el boton de Supabase DB en el Header', () => {
+    render(<App />);
+    expect(screen.queryByText(/Supabase DB/i)).not.toBeInTheDocument();
+  });
 });

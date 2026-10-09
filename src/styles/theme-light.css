@@ -1,5 +1,5 @@
 /**
- * AutoARCA — Modo Claro (Light Theme)
+ * AutoARCA — Modo Claro Integral (Light Theme)
  * Especificación de diseño Impeccable (Craft Floor, WCAG AAA Contrast & Soft Elevation)
  * Activado cuando el elemento raíz o body tiene [data-theme="light"]
  */
@@ -55,6 +55,19 @@ body[data-theme="light"] {
   --text-muted: #475569;
   --text-subtle: #64748b;
 
+  /* Variables específicas de POS Terminal */
+  --pos-bg: #f8fafc;
+  --pos-card-bg: #ffffff;
+  --pos-card-border: rgba(15, 23, 42, 0.08);
+  --pos-primary: #10b981;
+  --pos-primary-glow: rgba(16, 185, 129, 0.25);
+  --pos-accent: #007aff;
+  --pos-text-main: #0f172a;
+  --pos-text-muted: #64748b;
+  --pos-btn-bg: #f8fafc;
+  --pos-btn-hover: #f1f5f9;
+  --pos-btn-active: #e2e8f0;
+
   /* Untitled UI Sombras Suaves */
   --uui-shadow-xs: 0px 1px 2px rgba(16, 24, 40, 0.05);
   --uui-shadow-sm: 0px 1px 3px rgba(16, 24, 40, 0.08), 0px 1px 2px rgba(16, 24, 40, 0.04);
@@ -78,7 +91,7 @@ body[data-theme="light"] {
    3. Header y Navegación en Modo Claro
    ============================================================================== */
 [data-theme="light"] .app-shell-navbar {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04) !important;
 }
@@ -121,13 +134,13 @@ body[data-theme="light"] {
 
 [data-theme="light"] .role-seg-btn:hover {
   color: #0f172a !important;
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 0.6) !important;
 }
 
 [data-theme="light"] .role-seg-btn.active {
   background: #ffffff !important;
   color: #0f172a !important;
-  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12) !important;
 }
 
 [data-theme="light"] .user-profile-chip {
@@ -152,7 +165,7 @@ body[data-theme="light"] {
 
 /* Navbar Segmented Control Desktop */
 [data-theme="light"] .navbar-desktop-segment {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
   border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
 }
 
@@ -191,7 +204,469 @@ body[data-theme="light"] {
 }
 
 /* ==============================================================================
-   4. Untitled UI Componentes en Modo Claro
+   4. Terminal POS en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .pos-container {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .pos-header {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(16, 24, 40, 0.06) !important;
+}
+
+[data-theme="light"] .pos-header-info h2 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .pos-header-info small {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .pos-display-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 25px rgba(16, 24, 40, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+[data-theme="light"] .pos-display-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .pos-amount-display {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .pos-amount-display span {
+  color: #10b981 !important;
+}
+
+[data-theme="light"] .pos-client-badge-row {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .pos-client-link {
+  background: rgba(0, 122, 255, 0.08) !important;
+  border-color: rgba(0, 122, 255, 0.25) !important;
+  color: #007aff !important;
+}
+
+[data-theme="light"] .payment-chip {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .payment-chip:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+[data-theme="light"] .payment-chip.active {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .quick-amount-chip {
+  background: #f1f5f9 !important;
+  border-color: rgba(0, 122, 255, 0.25) !important;
+  color: #007aff !important;
+}
+
+[data-theme="light"] .quick-amount-chip:hover {
+  background: #e2e8f0 !important;
+  border-color: #007aff !important;
+  color: #0056b3 !important;
+}
+
+[data-theme="light"] .keypad-btn {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+}
+
+[data-theme="light"] .keypad-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .keypad-btn:active {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .keypad-btn.action {
+  background: #fef2f2 !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] .pos-emit-btn {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .pos-toast {
+  background: rgba(15, 23, 42, 0.9) !important;
+  color: #ffffff !important;
+}
+
+/* ==============================================================================
+   5. Semáforo Fiscal (TaxTrafficLight) en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .traffic-light-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: var(--uui-shadow-sm) !important;
+}
+
+[data-theme="light"] .traffic-light-card::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.2), transparent) !important;
+}
+
+[data-theme="light"] .traffic-category-badge {
+  background: rgba(0, 122, 255, 0.08) !important;
+  border-color: rgba(0, 122, 255, 0.2) !important;
+  color: #007aff !important;
+}
+
+[data-theme="light"] .progress-labels {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .progress-pct-value {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .progress-track {
+  background: #e2e8f0 !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .traffic-metrics-grid {
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .metric-item {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .metric-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .metric-value {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .traffic-status-badge.color-green {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border-color: #a7f3d0 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .traffic-status-badge.color-yellow {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border-color: #fde68a !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .traffic-status-badge.color-red {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fecaca !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .traffic-alert-msg.msg-green {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme="light"] .traffic-alert-msg.msg-yellow {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border-color: #fde68a !important;
+}
+
+[data-theme="light"] .traffic-alert-msg.msg-red {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fecaca !important;
+}
+
+/* ==============================================================================
+   6. Portal del Contador (AccountantPortal) en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .accountant-portal-container {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .accountant-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .accountant-title h1 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .accountant-title p {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .kpi-metric-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .kpi-metric-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .kpi-metric-val {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .kpi-metric-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .search-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .search-input:focus {
+  border-color: #007aff !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15) !important;
+}
+
+[data-theme="light"] .filter-chip {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .filter-chip:hover {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .filter-chip.active {
+  background: #007aff !important;
+  color: #ffffff !important;
+  border-color: #007aff !important;
+}
+
+[data-theme="light"] .view-mode-toggle {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .view-toggle-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .view-toggle-btn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+[data-theme="light"] .date-selector-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .clients-table-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-sm) !important;
+}
+
+[data-theme="light"] .clients-table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .clients-table td {
+  color: #1e293b !important;
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .clients-table tr:hover td {
+  background: #f8fafc !important;
+}
+
+[data-theme="light"] .client-grid-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .client-grid-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .client-grid-sub {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .client-cat-badge {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #166534 !important;
+}
+
+[data-theme="light"] .btn-add-client-top {
+  background: #f0f9ff !important;
+  border-color: #bae6fd !important;
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .btn-download-single {
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .btn-download-single:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+/* ==============================================================================
+   7. SuperAdmin Dashboard en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .admin-container {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .admin-header h1 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-kpi-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-xs) !important;
+}
+
+[data-theme="light"] .admin-kpi-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .admin-kpi-val {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-kpi-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .admin-tab-btn {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .admin-tab-btn:hover {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-tab-btn.active {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  border-color: #7c3aed !important;
+}
+
+[data-theme="light"] .admin-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--uui-shadow-sm) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-card-header h2 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .bulk-increase-tool {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .btn-scale-chip {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1d4ed8 !important;
+}
+
+[data-theme="light"] .admin-search-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .admin-table td {
+  color: #1e293b !important;
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .admin-table tr:hover td {
+  background: #f8fafc !important;
+}
+
+[data-theme="light"] .admin-user-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-user-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-user-email {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .admin-sub-select {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* ==============================================================================
+   8. Untitled UI Componentes en Modo Claro
    ============================================================================== */
 [data-theme="light"] .uui-card {
   background: #ffffff !important;
@@ -225,7 +700,6 @@ body[data-theme="light"] {
   color: #64748b !important;
 }
 
-/* Botones Secundarios y Terciarios */
 [data-theme="light"] .uui-btn-secondary {
   background: #ffffff !important;
   color: #1e293b !important;
@@ -247,7 +721,6 @@ body[data-theme="light"] {
   color: #0f172a !important;
 }
 
-/* Campos de Texto e Inputs */
 [data-theme="light"] .uui-input-box {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
@@ -277,7 +750,6 @@ body[data-theme="light"] {
   color: #0f172a !important;
 }
 
-/* Tablas de Datos Untitled UI */
 [data-theme="light"] .uui-table-container {
   background: #ffffff !important;
   border-color: rgba(15, 23, 42, 0.08) !important;
@@ -303,7 +775,6 @@ body[data-theme="light"] {
   background: #f8fafc !important;
 }
 
-/* Modales Untitled UI */
 [data-theme="light"] .uui-modal-overlay {
   background: rgba(15, 23, 42, 0.45) !important;
 }
@@ -332,73 +803,100 @@ body[data-theme="light"] {
 }
 
 /* ==============================================================================
-   5. Terminal POS en Modo Claro
+   9. Modales de Perfil, Autenticación y Vinculación
    ============================================================================== */
-[data-theme="light"] .pos-card,
-[data-theme="light"] .pos-display-card,
-[data-theme="light"] .pos-keypad-card,
-[data-theme="light"] .pos-terminal-card {
+[data-theme="light"] .auth-overlay,
+[data-theme="light"] .accountant-link-overlay {
+  background: rgba(15, 23, 42, 0.45) !important;
+}
+
+[data-theme="light"] .auth-card,
+[data-theme="light"] .profile-modal-card,
+[data-theme="light"] .accountant-link-sheet {
   background: #ffffff !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: var(--uui-shadow-sm) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+  box-shadow: 0 20px 40px rgba(16, 24, 40, 0.12) !important;
 }
 
-[data-theme="light"] .pos-amount-display,
-[data-theme="light"] .pos-display-amount {
+[data-theme="light"] .auth-title,
+[data-theme="light"] .profile-modal-card h3,
+[data-theme="light"] .accountant-link-title {
   color: #0f172a !important;
 }
 
-[data-theme="light"] .keypad-btn,
-[data-theme="light"] .pos-keypad-btn {
-  background: #f8fafc !important;
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+[data-theme="light"] .auth-subtitle,
+[data-theme="light"] .accountant-link-subtitle {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .auth-input,
+[data-theme="light"] .auth-select {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
   color: #0f172a !important;
 }
 
-[data-theme="light"] .keypad-btn:hover,
-[data-theme="light"] .pos-keypad-btn:hover {
-  background: #f1f5f9 !important;
-}
-
-[data-theme="light"] .keypad-btn:active,
-[data-theme="light"] .pos-keypad-btn:active {
-  background: #e2e8f0 !important;
-}
-
-[data-theme="light"] .keypad-btn.action-btn {
-  background: rgba(239, 68, 68, 0.08) !important;
-  color: #dc2626 !important;
-  border-color: rgba(239, 68, 68, 0.2) !important;
-}
-
-[data-theme="light"] .quick-amount-chip,
-[data-theme="light"] .pos-chip {
-  background: #f1f5f9 !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
+[data-theme="light"] .auth-label {
   color: #334155 !important;
 }
 
-[data-theme="light"] .quick-amount-chip:hover,
-[data-theme="light"] .pos-chip:hover {
-  background: #e2e8f0 !important;
+[data-theme="light"] .auth-tabs {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .auth-tab-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .auth-tab-btn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+[data-theme="light"] .demo-chip {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .demo-chip:hover {
+  background: #f1f5f9 !important;
   color: #0f172a !important;
 }
 
-[data-theme="light"] .payment-method-chip {
-  background: #f8fafc !important;
-  border-color: rgba(15, 23, 42, 0.1) !important;
-  color: #475569 !important;
+[data-theme="light"] .accountant-link-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
 }
 
-[data-theme="light"] .payment-method-chip.active {
-  background: #f5f3ff !important;
-  border-color: #7c3aed !important;
-  color: #7c3aed !important;
-  box-shadow: 0 0 0 1px #7c3aed !important;
+[data-theme="light"] .accountant-link-tabs {
+  background: #f8fafc !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .accountant-tab-btn {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .accountant-tab-btn.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1) !important;
+}
+
+[data-theme="light"] .accountant-code-box {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .accountant-code-text {
+  color: #0f172a !important;
 }
 
 /* ==============================================================================
-   6. Pantalla AuthScreen Split-Screen en Modo Claro
+   10. Pantalla AuthScreen Split-Screen en Modo Claro
    ============================================================================== */
 [data-theme="light"] .uui-auth-container {
   background: #ffffff !important;
@@ -490,19 +988,20 @@ body[data-theme="light"] {
 }
 
 /* ==============================================================================
-   7. Portales y Dashboards en Modo Claro
+   11. Subscription Lock Banner
    ============================================================================== */
-[data-theme="light"] .dashboard-section-title,
-[data-theme="light"] .portal-section-title {
-  color: #0f172a !important;
+[data-theme="light"] .subscription-lock-banner {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #991b1b !important;
 }
 
-[data-theme="light"] .client-card,
-[data-theme="light"] .admin-card,
-[data-theme="light"] .metric-card {
-  background: #ffffff !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: var(--uui-shadow-xs) !important;
+[data-theme="light"] .subscription-lock-banner h3 {
+  color: #991b1b !important;
+}
+
+[data-theme="light"] .subscription-lock-banner p {
+  color: #b91c1c !important;
 }
 
 /* Custom Scrollbar en Modo Claro */
