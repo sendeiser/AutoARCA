@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PosTerminal from '../src/components/PosTerminal.jsx';
 
@@ -53,7 +53,9 @@ describe('PosTerminal Component', () => {
     fireEvent.click(screen.getByText('0'));
 
     const emitBtn = screen.getByText(/Emitir Comprobante/i);
-    fireEvent.click(emitBtn);
+    await act(async () => {
+      fireEvent.click(emitBtn);
+    });
 
     expect(handleRecordSale).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -61,5 +63,8 @@ describe('PosTerminal Component', () => {
         payment_method: 'cash'
       })
     );
+    await waitFor(() => {
+      expect(screen.getByTestId('pos-amount-display')).toHaveTextContent('$ 0');
+    });
   });
 });
