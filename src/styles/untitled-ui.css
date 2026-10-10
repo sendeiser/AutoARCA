@@ -531,6 +531,125 @@
   }
 }
 
+@media (max-width: 768px) {
+  .uui-auth-container {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  .uui-auth-left {
+    padding: clamp(0.35rem, 1.4vh, 0.75rem) clamp(0.75rem, 2.5vw, 1.25rem) !important;
+    overflow: hidden !important;
+    overflow-y: clip !important;
+    justify-content: center !important;
+    max-width: 100% !important;
+  }
+
+  .uui-auth-box {
+    max-width: 440px !important;
+  }
+
+  .uui-auth-header {
+    margin-bottom: clamp(0.2rem, 0.8vh, 0.45rem) !important;
+  }
+
+  .uui-auth-header .uui-auth-logo-badge {
+    margin-bottom: 0.15rem !important;
+  }
+
+  .uui-auth-title {
+    font-size: clamp(1.1rem, 2vh, 1.35rem) !important;
+    margin-bottom: 0.1rem !important;
+  }
+
+  .uui-auth-subtitle {
+    font-size: clamp(0.68rem, 1.1vh, 0.76rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  .uui-auth-segmented {
+    margin-bottom: clamp(0.25rem, 0.8vh, 0.5rem) !important;
+    padding: 2px !important;
+    gap: 2px !important;
+  }
+
+  .uui-auth-tab {
+    padding: clamp(0.22rem, 0.6vh, 0.32rem) !important;
+    font-size: clamp(0.72rem, 1.1vh, 0.78rem) !important;
+  }
+
+  .uui-role-selector {
+    gap: 0.35rem !important;
+    margin-bottom: clamp(0.25rem, 0.8vh, 0.5rem) !important;
+  }
+
+  .uui-role-card {
+    padding: clamp(0.25rem, 0.6vh, 0.4rem) 0.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+  }
+
+  .uui-role-icon {
+    font-size: 0.95rem !important;
+    margin-bottom: 0 !important;
+  }
+
+  .uui-role-title {
+    font-size: 0.75rem !important;
+  }
+
+  .uui-role-desc {
+    display: none !important;
+  }
+
+  .uui-auth-box form {
+    gap: clamp(0.3rem, 0.8vh, 0.55rem) !important;
+  }
+
+  .uui-input-wrap {
+    gap: 0.15rem !important;
+  }
+
+  .uui-input-label {
+    font-size: 0.7rem !important;
+  }
+
+  .uui-input-box {
+    padding: clamp(0.28rem, 0.65vh, 0.38rem) 0.6rem !important;
+    font-size: 0.78rem !important;
+    border-radius: 7px !important;
+  }
+
+  .uui-input-hint {
+    font-size: 0.66rem !important;
+    margin-top: 0.05rem !important;
+  }
+
+  .uui-btn-lg {
+    padding: clamp(0.38rem, 0.9vh, 0.52rem) 0.85rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
+  }
+
+  .uui-demo-section {
+    margin-top: clamp(0.35rem, 0.9vh, 0.65rem) !important;
+    padding-top: clamp(0.25rem, 0.7vh, 0.45rem) !important;
+  }
+
+  .uui-demo-label {
+    font-size: 0.68rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .uui-demo-btn {
+    padding: 0.3rem 0.2rem !important;
+    font-size: 0.7rem !important;
+  }
+}
+
 /* ==============================================================================
    6. Untitled UI Cards & Stat Cards
    https://www.untitledui.com/react/components/metrics

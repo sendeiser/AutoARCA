@@ -145,11 +145,17 @@ describe('Untitled UI — AuthScreen Split Layout & User Flow', () => {
     fireEvent.change(screen.getByPlaceholderText(/Mín. 4 caracteres/i), {
       target: { value: 'claveSegura123' }
     });
+    fireEvent.change(screen.getByPlaceholderText(/Confirma clave/i), {
+      target: { value: 'claveSegura123' }
+    });
     fireEvent.change(screen.getByLabelText(/CUIT/i), {
       target: { value: '20445566778' }
     });
     fireEvent.change(screen.getByLabelText(/Nombre de Fantasía/i), {
       target: { value: 'Café Del Test' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Ej. CONT-MENDEZ-9876/i), {
+      target: { value: 'CONT-MENDEZ-9876' }
     });
 
     // Enviar registro
@@ -163,6 +169,56 @@ describe('Untitled UI — AuthScreen Split Layout & User Flow', () => {
         role: 'client'
       })
     );
+  });
+
+  it('valida que las contraseñas coincidan en el registro', () => {
+    render(<AuthScreen />);
+    fireEvent.click(screen.getByRole('tab', { name: /Registrarse/i }));
+
+    fireEvent.change(screen.getByLabelText(/Nombre Completo o Razón Social/i), {
+      target: { value: 'Cliente Validacion' }
+    });
+    fireEvent.change(screen.getByLabelText(/Email/i), {
+      target: { value: 'valida@comercio.com' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Mín. 4 caracteres/i), {
+      target: { value: 'clave1234' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Confirma clave/i), {
+      target: { value: 'distinta99' }
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Completar Registro/i }));
+    expect(screen.getByText(/Las contraseñas no coinciden/i)).toBeInTheDocument();
+  });
+
+  it('valida que el cliente ingrese obligatoriamente el código del contador registrado', () => {
+    render(<AuthScreen />);
+    fireEvent.click(screen.getByRole('tab', { name: /Registrarse/i }));
+
+    fireEvent.change(screen.getByLabelText(/Nombre Completo o Razón Social/i), {
+      target: { value: 'Cliente Sin Contador' }
+    });
+    fireEvent.change(screen.getByLabelText(/Email/i), {
+      target: { value: 'sincontador@comercio.com' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Mín. 4 caracteres/i), {
+      target: { value: '1234' }
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Confirma clave/i), {
+      target: { value: '1234' }
+    });
+
+    // Sin código
+    fireEvent.click(screen.getByRole('button', { name: /Completar Registro/i }));
+    expect(screen.getByText(/código de vinculación de tu contador es obligatorio/i)).toBeInTheDocument();
+
+    // Código inválido
+    fireEvent.change(screen.getByPlaceholderText(/Ej. CONT-MENDEZ-9876/i), {
+      target: { value: 'CODIGO-INEXISTENTE' }
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Completar Registro/i }));
+    expect(screen.getByText(/No se encontró ningún estudio contable/i)).toBeInTheDocument();
   });
 });
 

@@ -14,6 +14,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [regFullName, setRegFullName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regRole, setRegRole] = useState('client');
   const [regCuit, setRegCuit] = useState('');
@@ -21,7 +22,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   const [regCategory, setRegCategory] = useState('D');
   const [regActivityType, setRegActivityType] = useState('products');
   const [regMatricula, setRegMatricula] = useState('');
-  const [regJurisdiccion, setRegJurisdiccion] = useState('CPCECABA');
+  const [regJurisdiccion, setRegJurisdiccion] = useState('CPCELR');
   const [regAccountantCode, setRegAccountantCode] = useState('');
 
   if (!isOpen) return null;
@@ -45,19 +46,33 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         setErrorMsg('Por favor completa los campos obligatorios.');
         return;
       }
+      if (!regPassword || regPassword.length < 4) {
+        setErrorMsg('La contraseña debe tener al menos 4 caracteres.');
+        return;
+      }
+      if (regPassword !== regConfirmPassword) {
+        setErrorMsg('Las contraseñas no coinciden. Por favor verifícalas.');
+        return;
+      }
 
       let assignedAccountantId = null;
-      if (regRole === 'client' && regAccountantCode.trim()) {
-        const foundAcc = authService.findAccountant(regAccountantCode.trim());
-        if (foundAcc) {
-          assignedAccountantId = foundAcc.id;
+      if (regRole === 'client') {
+        if (!regAccountantCode.trim()) {
+          setErrorMsg('El código de vinculación de tu contador es obligatorio para registrar un comercio.');
+          return;
         }
+        const foundAcc = authService.findAccountant(regAccountantCode.trim());
+        if (!foundAcc) {
+          setErrorMsg('No se encontró ningún estudio contable con ese código. (Ej demo: CONT-MENDEZ-9876)');
+          return;
+        }
+        assignedAccountantId = foundAcc.id;
       }
 
       const user = authService.register({
         fullName: regFullName,
         email: regEmail,
-        password: regPassword || '1234',
+        password: regPassword,
         role: regRole,
         phone: regPhone,
         cuit: regCuit,
@@ -231,18 +246,19 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               />
             </div>
 
+            <div className="auth-form-group">
+              <label className="auth-label">Email</label>
+              <input
+                type="email"
+                className="auth-input"
+                placeholder="correo@ejemplo.com"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
+                required
+              />
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-              <div className="auth-form-group">
-                <label className="auth-label">Email</label>
-                <input
-                  type="email"
-                  className="auth-input"
-                  placeholder="correo@ejemplo.com"
-                  value={regEmail}
-                  onChange={(e) => setRegEmail(e.target.value)}
-                  required
-                />
-              </div>
               <div className="auth-form-group">
                 <label className="auth-label">Contraseña</label>
                 <input
@@ -251,6 +267,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   placeholder="Mín. 4 caracteres"
                   value={regPassword}
                   onChange={(e) => setRegPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="auth-form-group">
+                <label className="auth-label">Repetir Contraseña</label>
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Confirma clave"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
                   required
                 />
               </div>
@@ -277,10 +304,12 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                       value={regJurisdiccion}
                       onChange={(e) => setRegJurisdiccion(e.target.value)}
                     >
+                      <option value="CPCELR">CPCELR (La Rioja)</option>
                       <option value="CPCECABA">CPCECABA (CABA)</option>
                       <option value="CPCEBA">CPCEBA (Bs. As.)</option>
-                      <option value="CPCESFE">CPCESFE (Santa Fe)</option>
                       <option value="CPCECBA">CPCECBA (Córdoba)</option>
+                      <option value="CPCESFE">CPCESFE (Santa Fe)</option>
+                      <option value="CPCEMZA">CPCEMZA (Mendoza)</option>
                       <option value="OTRA">Otro Consejo</option>
                     </select>
                   </div>
@@ -361,16 +390,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                 </div>
 
                 <div className="auth-form-group">
-                  <label className="auth-label">Código de tu Contador (Opcional)</label>
+                  <label className="auth-label">Código de tu Contador (Obligatorio)</label>
                   <input
                     type="text"
                     className="auth-input font-mono"
                     placeholder="Ej. CONT-MENDEZ-9876 o CUIT de tu contador"
                     value={regAccountantCode}
                     onChange={(e) => setRegAccountantCode(e.target.value)}
+                    required
                   />
                   <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    Si tu contador te dio su código, ingrésalo para vincularte a su estudio automáticamente.
+                    Requerido para vincularte con tu contador. (Ej. demo: CONT-MENDEZ-9876)
                   </span>
                 </div>
               </>

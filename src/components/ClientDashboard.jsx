@@ -16,6 +16,8 @@ import {
   TableCell
 } from './untitled-ui/Table.jsx';
 import { BoltIcon, DownloadIcon } from './Icons.jsx';
+import { reportPdfService } from '../services/reportPdfService.js';
+import { soundService } from '../services/soundService.js';
 
 export default function ClientDashboard({
   metrics,
@@ -66,6 +68,22 @@ export default function ClientDashboard({
     document.body.removeChild(link);
   };
 
+  const handleDownloadReportPdf = () => {
+    soundService.playKeyTap();
+    try {
+      reportPdfService.generateClientFiscalReport({
+        businessProfile,
+        metrics,
+        sales: pendingSales,
+        batchHistory
+      });
+      soundService.playSuccessChime();
+    } catch (err) {
+      console.error('Error generando reporte PDF:', err);
+      alert('Error al generar el reporte PDF: ' + err.message);
+    }
+  };
+
   return (
     <div className="client-dashboard-wrap" style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem' }}>
       {/* Barra de Encabezado Principal */}
@@ -84,14 +102,25 @@ export default function ClientDashboard({
           </span>
         </div>
 
-        <Button
-          variant="primary"
-          size="md"
-          onClick={onNavigateToPos}
-          iconLeading={<BoltIcon size={16} />}
-        >
-          Terminal POS ⚡
-        </Button>
+        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleDownloadReportPdf}
+            iconLeading={<DownloadIcon size={16} />}
+            title="Descargar informe fiscal en PDF para enviar a tu contador"
+          >
+            Reporte PDF Contador 📄
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={onNavigateToPos}
+            iconLeading={<BoltIcon size={16} />}
+          >
+            Terminal POS ⚡
+          </Button>
+        </div>
       </div>
 
       {/* Métricas Estadísticas de Untitled UI */}

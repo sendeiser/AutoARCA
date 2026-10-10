@@ -27,6 +27,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
   const [regFullName, setRegFullName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regCuit, setRegCuit] = useState('');
   const [regFantasyName, setRegFantasyName] = useState('');
@@ -36,7 +37,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
 
   // Contador specific fields
   const [regMatricula, setRegMatricula] = useState('');
-  const [regJurisdiccion, setRegJurisdiccion] = useState('CPCECABA');
+  const [regJurisdiccion, setRegJurisdiccion] = useState('CPCELR');
 
   // Handle Login Submit
   const handleLogin = (e) => {
@@ -78,6 +79,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
     const cleanName = regFullName.trim();
     const cleanEmail = regEmail.trim();
     const cleanPass = regPassword.trim();
+    const cleanConfirm = regConfirmPassword.trim();
 
     if (!cleanName) {
       setErrorMsg('Por favor ingresa tu nombre completo o razón social.');
@@ -91,19 +93,30 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
       setErrorMsg('La contraseña debe tener al menos 4 caracteres.');
       return;
     }
+    if (cleanPass !== cleanConfirm) {
+      setErrorMsg('Las contraseñas no coinciden. Por favor verifícalas.');
+      return;
+    }
+
+    // Regla obligatoria: Para clientes, el código de vinculación con el contador es OBLIGATORIO
+    let assignedAccountantId = null;
+    if (regRole === 'client') {
+      if (!regAccountantCode.trim()) {
+        setErrorMsg('El código de vinculación de tu contador es obligatorio para registrar un comercio.');
+        return;
+      }
+      const foundAcc = authService.findAccountant(regAccountantCode.trim());
+      if (!foundAcc) {
+        setErrorMsg('No se encontró ningún estudio contable registrado con ese código. Por favor verifica el código con tu contador (Tip demo: usa CONT-MENDEZ-9876).');
+        return;
+      }
+      assignedAccountantId = foundAcc.id;
+    }
 
     setIsLoading(true);
 
     try {
       soundService.playKeyTap();
-
-      let assignedAccountantId = null;
-      if (regRole === 'client' && regAccountantCode.trim()) {
-        const foundAcc = authService.findAccountant(regAccountantCode.trim());
-        if (foundAcc) {
-          assignedAccountantId = foundAcc.id;
-        }
-      }
 
       const user = authService.register({
         fullName: cleanName,
@@ -224,7 +237,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
 
           {/* 1. Formulario de Inicio de Sesión */}
           {mode === 'login' && (
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleLogin} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <InputField
                 label="Correo Electrónico"
                 type="email"
@@ -286,7 +299,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
 
           {/* 2. Formulario de Registro */}
           {mode === 'register' && (
-            <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleRegister} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Tarjetas de Selección de Rol (Untitled UI) */}
               <div className="uui-role-selector">
                 <div
@@ -321,15 +334,17 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                 required
               />
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.75rem' }}>
-                <InputField
-                  label="Email"
-                  type="email"
-                  placeholder="correo@ejemplo.com"
-                  value={regEmail}
-                  onChange={(e) => setRegEmail(e.target.value)}
-                  required
-                />
+              <InputField
+                label="Email / Correo Electrónico"
+                type="email"
+                placeholder="correo@ejemplo.com"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
+                required
+              />
+
+              {/* Contraseña y Confirmación de Contraseña */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                 <InputField
                   label="Contraseña"
                   type="password"
@@ -339,12 +354,21 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                   isPasswordToggle={true}
                   required
                 />
+                <InputField
+                  label="Repetir Contraseña"
+                  type="password"
+                  placeholder="Confirma clave"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
+                  isPasswordToggle={true}
+                  required
+                />
               </div>
 
               {/* Campos específicos para Comercio */}
               {regRole === 'client' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                     <InputField
                       label="CUIT (11 Dígitos)"
                       type="text"
@@ -362,7 +386,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                     <div className="uui-input-wrap">
                       <label className="uui-input-label">Categoría Monotributo</label>
                       <select
@@ -392,13 +416,15 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                     </div>
                   </div>
 
+                  {/* Código del Contador Obligatorio para Clientes */}
                   <InputField
-                    label="Código de tu Contador (Opcional)"
+                    label="Código de tu Contador (Obligatorio)"
                     type="text"
                     placeholder="Ej. CONT-MENDEZ-9876 o CUIT"
                     value={regAccountantCode}
                     onChange={(e) => setRegAccountantCode(e.target.value)}
-                    hint="Si tu contador ya usa AutoARCA, ingrésalo para vincularte de inmediato."
+                    hint="Requerido para vincularte con tu contador. (Tip prueba: CONT-MENDEZ-9876)"
+                    required
                   />
                 </>
               )}
@@ -406,7 +432,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
               {/* Campos específicos para Contador */}
               {regRole === 'accountant' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.65rem' }}>
                     <InputField
                       label="Matrícula Profesional"
                       type="text"
@@ -421,10 +447,12 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                         value={regJurisdiccion}
                         onChange={(e) => setRegJurisdiccion(e.target.value)}
                       >
+                        <option value="CPCELR">CPCELR (La Rioja)</option>
                         <option value="CPCECABA">CPCECABA (CABA)</option>
                         <option value="CPCEBA">CPCEBA (Bs. As.)</option>
-                        <option value="CPCESFE">CPCESFE (Santa Fe)</option>
                         <option value="CPCECBA">CPCECBA (Córdoba)</option>
+                        <option value="CPCESFE">CPCESFE (Santa Fe)</option>
+                        <option value="CPCEMZA">CPCEMZA (Mendoza)</option>
                         <option value="OTRA">Otro Consejo</option>
                       </select>
                     </div>

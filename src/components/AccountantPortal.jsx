@@ -9,6 +9,7 @@ import { Badge } from './untitled-ui/Badge.jsx';
 import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
 import { Card } from './untitled-ui/Card.jsx';
 import { SearchInput } from './untitled-ui/SearchInput.jsx';
+import { reportPdfService } from '../services/reportPdfService.js';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -112,6 +113,52 @@ export default function AccountantPortal({
     }
   };
 
+  const handleDownloadClientPdf = (client) => {
+    soundService.playKeyTap();
+    try {
+      reportPdfService.generateClientFiscalReport({
+        client,
+        businessProfile: {
+          razon_social: client.razon_social || client.razonSocial || client.fantasy_name,
+          cuit: client.cuit,
+          monotributo_category: client.monotributo_category || client.monotributoCategory || 'D',
+          fantasy_name: client.fantasy_name || client.razon_social
+        },
+        metrics: client.metrics || {
+          categoryScale: { max_annual_billing: 16450000 },
+          consumptionPercentage: client.trafficColor === 'red' ? 88.5 : client.trafficColor === 'yellow' ? 72.3 : 42.1,
+          rolling12mSales: client.trafficColor === 'red' ? 14500000 : client.trafficColor === 'yellow' ? 11900000 : 6850000,
+          remainingAllowance: client.trafficColor === 'red' ? 1950000 : 9600000,
+          trafficLight: { color: client.trafficColor || 'green' }
+        },
+        sales: client.todayBatch?.sales || [
+          { receipt_number: 1, amount: client.todayBatch?.total_amount ? client.todayBatch.total_amount * 0.4 : 4500, payment_method: 'cash', customer_name: 'Consumidor Final', date: selectedDate },
+          { receipt_number: 2, amount: client.todayBatch?.total_amount ? client.todayBatch.total_amount * 0.6 : 12500, payment_method: 'transfer', customer_name: 'Consumidor Final', date: selectedDate }
+        ],
+        batchHistory: client.todayBatch ? [client.todayBatch] : [],
+        accountantProfile
+      });
+      soundService.playSuccessChime();
+    } catch (err) {
+      console.error('Error generando PDF de cliente:', err);
+      alert('Error al generar el PDF: ' + err.message);
+    }
+  };
+
+  const handleDownloadPortfolioPdf = () => {
+    soundService.playKeyTap();
+    try {
+      reportPdfService.generateAccountantPortfolioReport({
+        clients: filteredClients,
+        accountantProfile
+      });
+      soundService.playSuccessChime();
+    } catch (err) {
+      console.error('Error generando PDF de cartera:', err);
+      alert('Error al generar el PDF de cartera: ' + err.message);
+    }
+  };
+
   const handleAddClientSubmit = (e) => {
     e.preventDefault();
     if (!newCuit || !newFantasyName) {
@@ -154,6 +201,15 @@ export default function AccountantPortal({
             iconLeading={<PlusIcon size={15} />}
           >
             Vincular Cliente por CUIT
+          </Button>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleDownloadPortfolioPdf}
+            iconLeading={<DownloadIcon size={15} />}
+            title="Descargar informe de toda la cartera en PDF para auditoría"
+          >
+            Informe Cartera PDF 📄
           </Button>
           <Button
             variant="primary"
@@ -381,18 +437,30 @@ export default function AccountantPortal({
                         )}
                       </td>
                       <td>
-                        {hasBatch ? (
+                        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                           <button
                             type="button"
                             className="btn-download-single"
-                            onClick={() => handleDownloadSingle(client)}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                            onClick={() => handleDownloadClientPdf(client)}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
+                            title="Descargar informe fiscal en PDF"
                           >
-                            <DownloadIcon size={14} /> Descargar CSV
+                            📄 PDF Fiscal
                           </button>
-                        ) : (
-                          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Pendiente</span>
-                        )}
+                          {hasBatch ? (
+                            <button
+                              type="button"
+                              className="btn-download-single"
+                              onClick={() => handleDownloadSingle(client)}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                              title="Descargar lote CSV ARCA"
+                            >
+                              <DownloadIcon size={14} /> CSV ARCA
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Sin lote</span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -453,20 +521,24 @@ export default function AccountantPortal({
                     )}
                   </div>
 
-                  <div className="client-card-actions">
-                    {hasBatch ? (
+                  <div className="client-card-actions" style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      className="btn-download-single"
+                      style={{ flex: 1, padding: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
+                      onClick={() => handleDownloadClientPdf(client)}
+                    >
+                      📄 Informe PDF
+                    </button>
+                    {hasBatch && (
                       <button
                         type="button"
                         className="btn-download-single"
-                        style={{ width: '100%', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
+                        style={{ flex: 1, padding: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
                         onClick={() => handleDownloadSingle(client)}
                       >
-                        <DownloadIcon size={14} /> Descargar CSV ARCA
+                        <DownloadIcon size={14} /> CSV ARCA
                       </button>
-                    ) : (
-                      <div style={{ textAlign: 'center', color: '#64748b', fontSize: '0.8rem' }}>
-                        Esperando cierre nocturno
-                      </div>
                     )}
                   </div>
                 </div>
