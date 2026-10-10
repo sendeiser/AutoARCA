@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { EyeIcon, EyeOffIcon } from '../Icons.jsx';
 import '../../styles/untitled-ui.css';
 
 export function InputField({
@@ -61,7 +62,7 @@ export function InputField({
             title={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
             aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
           >
-            {showPassword ? '👁️' : '🙈'}
+            {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
           </button>
         ) : (
           trailingIcon && (

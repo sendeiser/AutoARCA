@@ -117,7 +117,7 @@ describe('Untitled UI — AuthScreen Split Layout & User Flow', () => {
     const handleAuthSuccess = vi.fn();
     render(<AuthScreen onAuthSuccess={handleAuthSuccess} />);
 
-    const demoClientBtn = screen.getByRole('button', { name: /👤 Cliente/i });
+    const demoClientBtn = screen.getByRole('button', { name: /Cliente/i });
     fireEvent.click(demoClientBtn);
 
     expect(handleAuthSuccess).toHaveBeenCalledWith(
@@ -232,7 +232,7 @@ describe('App Auth Gate & Logout Cycle', () => {
     expect(screen.queryByTestId('pos-amount-display')).not.toBeInTheDocument();
 
     // Login demo
-    const demoClientBtn = screen.getByRole('button', { name: /👤 Cliente/i });
+    const demoClientBtn = screen.getByRole('button', { name: /Cliente/i });
     fireEvent.click(demoClientBtn);
 
     // Ahora entra a la app principal

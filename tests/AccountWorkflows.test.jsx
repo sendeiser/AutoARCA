@@ -260,7 +260,7 @@ describe('Flujo de Trabajo 5: Ciclo de Sesión, Auth Gate y Desconexión', () =>
     expect(screen.queryByTestId('pos-amount-display')).not.toBeInTheDocument();
 
     // 2. Iniciar sesión mediante Demo 1-Click
-    const clientDemoBtn = screen.getByRole('button', { name: /👤 Cliente/i });
+    const clientDemoBtn = screen.getByRole('button', { name: /Cliente/i });
     fireEvent.click(clientDemoBtn);
 
     // Entra a la aplicación y renderiza el POS

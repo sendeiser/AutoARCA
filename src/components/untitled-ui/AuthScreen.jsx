@@ -8,7 +8,18 @@ import React, { useState } from 'react';
 import Button from './Button.jsx';
 import InputField from './InputField.jsx';
 import Badge from './Badge.jsx';
-import { AppleLogoIcon, BoltIcon, CheckCircleIcon, SunIcon, MoonIcon } from '../Icons.jsx';
+import {
+  AutoArcaLogoIcon,
+  BoltIcon,
+  CheckCircleIcon,
+  SunIcon,
+  MoonIcon,
+  StoreIcon,
+  BriefcaseIcon,
+  CrownIcon,
+  UserIcon,
+  ShieldCheckIcon
+} from '../Icons.jsx';
 import { authService, INITIAL_SCALES } from '../../services/authService.js';
 import { soundService } from '../../services/soundService.js';
 import '../../styles/untitled-ui.css';
@@ -169,7 +180,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
           <div className="uui-auth-header">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div className="uui-auth-logo-badge" style={{ marginBottom: 0 }}>
-                <AppleLogoIcon size={24} />
+                <AutoArcaLogoIcon size={25} />
                 <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'inherit' }}>
                   AutoARCA
                 </span>
@@ -264,7 +275,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                 isBlock={true}
                 isLoading={isLoading}
               >
-                Ingresar al Sistema ⚡
+                Ingresar al Sistema
               </Button>
 
               {/* Accesos Rápidos Demo 1-Click */}
@@ -276,21 +287,24 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                     className="uui-demo-btn"
                     onClick={() => handleDemoLogin('martin@comercio.com', '1234')}
                   >
-                    👤 Cliente
+                    <UserIcon size={13} />
+                    <span>Cliente</span>
                   </button>
                   <button
                     type="button"
                     className="uui-demo-btn"
                     onClick={() => handleDemoLogin('mendez@estudiocontable.com', '1234')}
                   >
-                    📑 Contador
+                    <BriefcaseIcon size={13} />
+                    <span>Contador</span>
                   </button>
                   <button
                     type="button"
                     className="uui-demo-btn"
                     onClick={() => handleDemoLogin('admin@autoarca.com', '1234')}
                   >
-                    👑 Admin
+                    <CrownIcon size={13} />
+                    <span>Admin</span>
                   </button>
                 </div>
               </div>
@@ -308,7 +322,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                   role="button"
                   tabIndex={0}
                 >
-                  <div className="uui-role-icon">🏪</div>
+                  <div className="uui-role-icon"><StoreIcon size={20} /></div>
                   <div className="uui-role-title">Comercio / Monotributo</div>
                   <div className="uui-role-desc">Punto de venta y control fiscal</div>
                 </div>
@@ -319,11 +333,12 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                   role="button"
                   tabIndex={0}
                 >
-                  <div className="uui-role-icon">📊</div>
+                  <div className="uui-role-icon"><BriefcaseIcon size={20} /></div>
                   <div className="uui-role-title">Estudio Contable</div>
                   <div className="uui-role-desc">Gestión y lotes multi-cliente</div>
                 </div>
               </div>
+
 
               <InputField
                 label="Nombre Completo o Razón Social"
@@ -467,8 +482,9 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                     maxLength={11}
                   />
 
-                  <div style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.25)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#c4b5fd', lineHeight: '1.4' }}>
-                    🔑 Se creará tu cuenta profesional y se asignará automáticamente tu <strong>Código de Vinculación</strong> para compartir con tus clientes.
+                  <div style={{ background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.25)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#c4b5fd', lineHeight: '1.4', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <ShieldCheckIcon size={16} />
+                    <span>Se creará tu cuenta profesional y se asignará automáticamente tu <strong>Código de Vinculación</strong> para tus clientes.</span>
                   </div>
                 </>
               )}
@@ -480,7 +496,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
                 isBlock={true}
                 isLoading={isLoading}
               >
-                Completar Registro y Empezar 🚀
+                Completar Registro y Empezar
               </Button>
             </form>
           )}

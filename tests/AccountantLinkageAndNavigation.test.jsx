@@ -56,8 +56,7 @@ describe('Sistema de Registro de Contadores y Vinculación de Clientes', () => {
     expect(unlinked.accountant_id).toBeNull();
   });
 
-  it('renderiza Header con marca, selector de rol y controles de estado', () => {
-    const handleRoleChange = vi.fn();
+  it('renderiza Header profesional con badge de rol oficial para cliente', () => {
     const handleToggleSound = vi.fn();
 
     render(
@@ -65,19 +64,13 @@ describe('Sistema de Registro de Contadores y Vinculación de Clientes', () => {
         role="client"
         currentUser={{ full_name: 'Martín González', role: 'client' }}
         soundEnabled={true}
-        onRoleChange={handleRoleChange}
         onToggleSound={handleToggleSound}
       />
     );
 
     expect(screen.getByText(/AutoARCA/i)).toBeInTheDocument();
-    expect(screen.getByTestId('role-switcher-select')).toBeInTheDocument();
     expect(screen.getByText('Martín González')).toBeInTheDocument();
-
-    // Probar interacción con el selector de rol
-    const select = screen.getByTestId('role-switcher-select');
-    fireEvent.change(select, { target: { value: 'accountant' } });
-    expect(handleRoleChange).toHaveBeenCalledWith('accountant');
+    expect(screen.queryByTestId('header-role-badge')).not.toBeInTheDocument();
   });
 
   it('renderiza Navbar con pestañas adaptativas para cliente', () => {

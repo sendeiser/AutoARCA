@@ -1,0 +1,406 @@
+/* Estilos del Previsualizador Oficial de Factura C (ARCA / AFIP RG 4892) */
+
+.factura-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.factura-modal-container {
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 94vh;
+  overflow-y: auto;
+}
+
+.factura-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.modal-actions-left {
+  display: flex;
+  align-items: center;
+}
+
+.factura-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #10b981;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.modal-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.factura-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.95rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.factura-action-btn.primary {
+  background: #38bdf8;
+  color: #0f172a;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+.factura-action-btn.primary:hover {
+  background: #7dd3fc;
+  transform: translateY(-1px);
+}
+
+.factura-action-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.factura-action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.factura-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.factura-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hoja de Factura (Papel Fiscal Oficial ARCA) */
+.factura-paper-sheet {
+  background: #ffffff;
+  color: #0f172a;
+  border: 2px solid #0f172a;
+  border-radius: 4px;
+  padding: 1.85rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.factura-header-box {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  border: 1.5px solid #0f172a;
+  position: relative;
+  margin-bottom: 0.65rem;
+}
+
+.factura-emitter-box {
+  padding: 1rem 1.15rem;
+  border-right: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.factura-emitter-name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+}
+
+.factura-emitter-fantasy {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.factura-emitter-detail {
+  font-size: 0.78rem;
+  color: #334155;
+  margin-top: 0.15rem;
+}
+
+/* Letra C Central */
+.factura-center-badge {
+  width: 60px;
+  background: #ffffff;
+  border-left: 1.5px solid #0f172a;
+  border-right: 1.5px solid #0f172a;
+  border-bottom: 1.5px solid #0f172a;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 0.25rem 0;
+  z-index: 10;
+}
+
+.factura-letter-c {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.factura-code-tag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: -0.02em;
+}
+
+.factura-doc-box {
+  padding: 1rem 1.15rem;
+  border-left: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.factura-doc-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #0f172a;
+}
+
+.factura-doc-number,
+.factura-doc-date,
+.factura-doc-cuit,
+.factura-doc-detail {
+  font-size: 0.8rem;
+  color: #334155;
+}
+
+/* Período Facturado */
+.factura-period-box {
+  border: 1px solid #0f172a;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.78rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+  background: #f8fafc;
+}
+
+/* Datos del Receptor */
+.factura-receptor-box {
+  border: 1px solid #0f172a;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.receptor-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Tabla de Ítems */
+.factura-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #0f172a;
+  margin-bottom: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.factura-items-table th {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.55rem 0.75rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.factura-items-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+/* Totales */
+.factura-totals-box {
+  border: 1px solid #0f172a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  background: #f8fafc;
+  margin-bottom: 0.85rem;
+}
+
+.totals-left {
+  max-width: 60%;
+}
+
+.totals-legend {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.totals-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-row.main {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.total-label {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.total-amount {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pie Fiscal Oficial */
+.factura-footer-fiscal {
+  border: 1px solid #0f172a;
+  padding: 0.95rem 1.15rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.footer-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.arca-qr-svg {
+  border: 1px solid #cbd5e1;
+  padding: 2px;
+}
+
+.qr-caption {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #475569;
+}
+
+.footer-cae-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cae-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #0284c7;
+  font-weight: 800;
+  font-size: 0.82rem;
+  margin-bottom: 0.25rem;
+}
+
+.cae-data-row {
+  font-size: 0.84rem;
+  color: #0f172a;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.cae-notice {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+  line-height: 1.35;
+}
+
+/* ESTILOS DE IMPRESIÓN (CTRL + P / window.print()) */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-invoice,
+  .printable-invoice * {
+    visibility: visible;
+  }
+
+  .printable-invoice {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 1.5cm;
+    border: 2px solid #000000;
+    box-shadow: none;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

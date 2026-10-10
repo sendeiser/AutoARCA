@@ -15,9 +15,22 @@ import {
   TableHead,
   TableCell
 } from './untitled-ui/Table.jsx';
-import { BoltIcon, DownloadIcon } from './Icons.jsx';
+import {
+  BoltIcon,
+  DownloadIcon,
+  ReceiptTaxIcon,
+  TrendingUpIcon,
+  ShieldCheckIcon,
+  ChartBarIcon,
+  FileTextIcon,
+  CheckCircleIcon,
+  FileSpreadsheetIcon,
+  EyeIcon
+} from './Icons.jsx';
 import { reportPdfService } from '../services/reportPdfService.js';
+import { generateLibroVentasExcelCsv } from '../services/arcaExportService.js';
 import { soundService } from '../services/soundService.js';
+import OfficialFacturaCModal from './OfficialFacturaCModal.jsx';
 
 export default function ClientDashboard({
   metrics,
@@ -29,6 +42,7 @@ export default function ClientDashboard({
 }) {
   const [isClosing, setIsClosing] = useState(false);
   const [closeSuccess, setCloseSuccess] = useState(null);
+  const [selectedSaleForInvoice, setSelectedSaleForInvoice] = useState(null);
 
   const pendingCount = pendingSales.length;
   const pendingTotal = pendingSales.reduce((acc, s) => acc + Number(s.amount || 0), 0);
@@ -84,6 +98,24 @@ export default function ClientDashboard({
     }
   };
 
+  const handleExportLibroVentasExcel = () => {
+    soundService.playKeyTap();
+    try {
+      const { filename, content } = generateLibroVentasExcelCsv(pendingSales, businessProfile);
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      soundService.playSuccessChime();
+    } catch (err) {
+      alert('Error exportando Libro de Ventas: ' + err.message);
+    }
+  };
+
   return (
     <div className="client-dashboard-wrap" style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem' }}>
       {/* Barra de Encabezado Principal */}
@@ -106,11 +138,20 @@ export default function ClientDashboard({
           <Button
             variant="secondary"
             size="md"
+            onClick={handleExportLibroVentasExcel}
+            iconLeading={<FileSpreadsheetIcon size={16} />}
+            title="Exportar Libro de Ventas en formato Excel/CSV para tu contador o software contable"
+          >
+            Libro de Ventas Excel
+          </Button>
+          <Button
+            variant="secondary"
+            size="md"
             onClick={handleDownloadReportPdf}
-            iconLeading={<DownloadIcon size={16} />}
+            iconLeading={<FileTextIcon size={16} />}
             title="Descargar informe fiscal en PDF para enviar a tu contador"
           >
-            Reporte PDF Contador 📄
+            Reporte PDF Contador
           </Button>
           <Button
             variant="primary"
@@ -118,7 +159,7 @@ export default function ClientDashboard({
             onClick={onNavigateToPos}
             iconLeading={<BoltIcon size={16} />}
           >
-            Terminal POS ⚡
+            Terminal POS
           </Button>
         </div>
       </div>
@@ -128,7 +169,7 @@ export default function ClientDashboard({
         <StatCard
           label="Emisión Pendiente Hoy"
           value={formatCurrencyARS(pendingTotal)}
-          icon="🧾"
+          icon={<ReceiptTaxIcon size={20} />}
           caption={`${pendingCount} comprobantes`}
           trend={pendingCount > 0 ? 'up' : 'neutral'}
           change={pendingCount > 0 ? `+${pendingCount}` : '0'}
@@ -137,25 +178,25 @@ export default function ClientDashboard({
         <StatCard
           label="Acumulado Móvil 12 Meses"
           value={formatCurrencyARS(metrics?.rolling12mSales || 0)}
-          icon="📈"
+          icon={<TrendingUpIcon size={20} />}
           caption={`Tope Cat. ${businessProfile.monotributo_category || 'D'}`}
           trend="neutral"
-          change={`${(metrics?.percentageConsumed || 0).toFixed(1)}%`}
+          change={`${(metrics?.annualConsumptionPercentage ?? metrics?.percentageConsumed ?? 0).toFixed(1)}%`}
         />
 
         <StatCard
           label="Margen de Seguridad ARCA"
-          value={formatCurrencyARS(metrics?.safetyMarginARS || 0)}
-          icon="🛡️"
+          value={formatCurrencyARS(metrics?.remainingAnnualMargin ?? metrics?.safetyMarginARS ?? 0)}
+          icon={<ShieldCheckIcon size={20} />}
           caption="Disponible antes de recategorizar"
-          trend={metrics?.safetyMarginARS > 0 ? 'up' : 'down'}
+          trend={(metrics?.remainingAnnualMargin ?? metrics?.safetyMarginARS ?? 0) > 0 ? 'up' : 'down'}
           change={metrics?.trafficLight?.label || 'Estable'}
         />
 
         <StatCard
           label="Proyección Fin de Período"
-          value={formatCurrencyARS(metrics?.projectedAnnualSales || 0)}
-          icon="🎯"
+          value={formatCurrencyARS(metrics?.projectedMonthTotal ?? metrics?.projectedAnnualSales ?? 0)}
+          icon={<ChartBarIcon size={20} />}
           caption="Estimación lineal"
           trend="neutral"
         />
@@ -191,14 +232,87 @@ export default function ClientDashboard({
             isLoading={isClosing}
             iconLeading={<DownloadIcon size={16} />}
           >
-            {isClosing ? 'Generando Lote...' : '📥 Cerrar Jornada y Enviar al Contador'}
+            {isClosing ? 'Generando Lote...' : 'Cerrar Jornada y Enviar al Contador'}
           </Button>
         </div>
 
         {closeSuccess && (
           <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: '8px', color: '#34d399', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>✓</span>
+            <CheckCircleIcon size={16} />
             <span>{closeSuccess}</span>
+          </div>
+        )}
+        {/* Lista interactiva de comprobantes de la jornada con acceso a Factura C Oficial */}
+        {pendingCount > 0 && (
+          <div style={{ marginTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
+            <div style={{ fontSize: '0.86rem', fontWeight: 700, color: 'var(--text-main, #ffffff)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>Comprobantes Emitidos en la Jornada de Hoy ({pendingCount})</span>
+              <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 500 }}>Hacé clic en cualquier venta para ver o imprimir su Factura C oficial</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '240px', overflowY: 'auto' }}>
+              {pendingSales.map((sale, idx) => (
+                <div
+                  key={sale.id || idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.65rem 0.85rem',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '10px',
+                    fontSize: '0.82rem',
+                    gap: '0.5rem',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem' }}>
+                      C
+                    </div>
+                    <div>
+                      <strong style={{ color: 'var(--text-main, #ffffff)', display: 'block' }}>
+                        {sale.customer_name || 'Consumidor Final'}
+                      </strong>
+                      <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                        {sale.date || 'Hoy'} · {sale.payment_method === 'cash' ? 'Efectivo' : sale.payment_method === 'card' ? 'Tarjeta' : 'Transferencia QR'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-main, #ffffff)' }}>
+                      {formatCurrencyARS(sale.amount)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundService.playKeyTap();
+                        setSelectedSaleForInvoice(sale);
+                      }}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        padding: '0.32rem 0.65rem',
+                        borderRadius: '6px',
+                        background: 'rgba(56, 189, 248, 0.14)',
+                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                        color: '#38bdf8',
+                        fontSize: '0.76rem',
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                      title="Ver e imprimir la Factura C oficial con QR y CAE de ARCA"
+                    >
+                      <EyeIcon size={13} />
+                      <span>Ver Factura C</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </Card>
@@ -263,6 +377,14 @@ export default function ClientDashboard({
           </Table>
         )}
       </TableContainer>
+
+      {/* Modal de Previsualización Oficial de Factura C (ARCA RG 4892) */}
+      <OfficialFacturaCModal
+        isOpen={Boolean(selectedSaleForInvoice)}
+        onClose={() => setSelectedSaleForInvoice(null)}
+        sale={selectedSaleForInvoice}
+        businessProfile={businessProfile}
+      />
     </div>
   );
 }

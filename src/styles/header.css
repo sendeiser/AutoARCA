@@ -150,6 +150,32 @@
   transform: translateY(-1px);
 }
 
+/* Indicador de Rol Oficial (Solo Lectura - Sin pasaje manual entre cuentas) */
+.header-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.28rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  user-select: none;
+  letter-spacing: -0.01em;
+}
+
+[data-theme="light"] .header-role-badge {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.role-badge-text {
+  white-space: nowrap;
+}
+
 /* Selector Directo de Rol Segmentado (Sin acordeón) */
 .role-switcher-wrap {
   position: relative;

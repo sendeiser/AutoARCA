@@ -7,18 +7,25 @@
  */
 
 import React from 'react';
-import { AppleLogoIcon, CloudSyncIcon, VolumeOnIcon, VolumeOffIcon, PlusIcon, LogoutIcon, SunIcon, MoonIcon } from './Icons.jsx';
+import {
+  AutoArcaLogoIcon,
+  CloudSyncIcon,
+  VolumeOnIcon,
+  VolumeOffIcon,
+  PlusIcon,
+  LogoutIcon,
+  SunIcon,
+  MoonIcon
+} from './Icons.jsx';
 import { soundService } from '../services/soundService.js';
 import '../styles/header.css';
 
 export default function Header({
-  role = 'client',
   currentUser = null,
   theme = 'dark',
   onToggleTheme,
   soundEnabled = true,
   onToggleSound,
-  onRoleChange,
   onOpenSupabaseModal,
   onOpenProfile,
   onOpenAuth,
@@ -38,7 +45,7 @@ export default function Header({
           }}
           aria-label="Ir a la vista principal"
         >
-          <AppleLogoIcon size={18} />
+          <AutoArcaLogoIcon size={19} />
           <span className="brand-title">AutoARCA</span>
           <span className="brand-apple-badge">PRO</span>
         </button>
@@ -77,74 +84,6 @@ export default function Header({
           <span className="control-label-desktop">{soundEnabled ? 'Audio' : 'Silencio'}</span>
         </button>
 
-        {/* Selector Directo de Rol Segmentado (Sin acordeón ni desplegables) */}
-        <div className="role-switcher-wrap">
-          <div className="role-switcher-segmented" role="tablist" aria-label="Cambiar cuenta">
-            <button
-              type="button"
-              className={`role-seg-btn ${role === 'client' ? 'active' : ''}`}
-              onClick={() => {
-                soundService.playKeyTap();
-                if (onRoleChange) onRoleChange('client');
-              }}
-              data-testid="role-pill-client"
-              role="tab"
-              aria-selected={role === 'client'}
-              title="Ir a cuenta Comercio / Monotributo"
-            >
-              <span className="role-seg-icon">👤</span>
-              <span className="role-seg-text">Cliente</span>
-            </button>
-
-            <button
-              type="button"
-              className={`role-seg-btn ${role === 'accountant' ? 'active' : ''}`}
-              onClick={() => {
-                soundService.playKeyTap();
-                if (onRoleChange) onRoleChange('accountant');
-              }}
-              data-testid="role-pill-accountant"
-              role="tab"
-              aria-selected={role === 'accountant'}
-              title="Ir a cuenta Estudio Contable"
-            >
-              <span className="role-seg-icon">📑</span>
-              <span className="role-seg-text">Contador</span>
-            </button>
-
-            <button
-              type="button"
-              className={`role-seg-btn ${role === 'superadmin' ? 'active' : ''}`}
-              onClick={() => {
-                soundService.playKeyTap();
-                if (onRoleChange) onRoleChange('superadmin');
-              }}
-              data-testid="role-pill-superadmin"
-              role="tab"
-              aria-selected={role === 'superadmin'}
-              title="Ir a cuenta SuperAdmin"
-            >
-              <span className="role-seg-icon">👑</span>
-              <span className="role-seg-text">Admin</span>
-            </button>
-          </div>
-
-          {/* Select sincronizado para accesibilidad y tests automatizados */}
-          <select
-            data-testid="role-switcher-select"
-            className="role-switcher-select-sr-only"
-            value={role}
-            onChange={(e) => {
-              if (onRoleChange) onRoleChange(e.target.value);
-            }}
-            aria-label="Seleccionar rol activo"
-            tabIndex={-1}
-          >
-            <option value="client">👤 Cliente</option>
-            <option value="accountant">📑 Contador</option>
-            <option value="superadmin">👑 Admin</option>
-          </select>
-        </div>
 
         {/* Chip de Perfil de Usuario o Botón de Ingreso */}
         {currentUser ? (

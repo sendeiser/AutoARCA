@@ -334,6 +334,29 @@
   font-size: 0.8rem;
 }
 
+.status-dot-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot-indicator.dot-green {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.status-dot-indicator.dot-yellow {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+}
+
+.status-dot-indicator.dot-red {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
 .dot-badge.green {
   background: rgba(16, 185, 129, 0.18);
   color: #10b981;

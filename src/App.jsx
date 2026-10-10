@@ -132,20 +132,6 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     }
   }, []);
 
-  // Sincronizar usuario activo cuando se cambia el rol en el selector
-  const handleRoleChange = (newRole) => {
-    soundService.playKeyTap();
-    setRole(newRole);
-    if (currentUser && currentUser.role === newRole) {
-      return;
-    }
-    const targetUser = users.find((u) => u.role === newRole) || users[0];
-    if (targetUser) {
-      setCurrentUser(targetUser);
-      authService.switchUser(targetUser.id);
-    }
-  };
-
   // Toggle de sonido
   const handleToggleSound = () => {
     const nextState = soundService.toggleSound();
@@ -313,13 +299,11 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
       {/* Barra de Navegación Principal estilo Apple macOS / iPadOS */}
       {/* Barra Superior Header */}
       <Header
-        role={role}
         currentUser={currentUser}
         theme={theme}
         onToggleTheme={handleToggleTheme}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
-        onRoleChange={handleRoleChange}
         onOpenSupabaseModal={() => setIsSupabaseModalOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}

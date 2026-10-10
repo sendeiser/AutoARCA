@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
-import { TableIcon, UserIcon, CheckCircleIcon } from './Icons.jsx';
+import {
+  TableIcon,
+  UserIcon,
+  CheckCircleIcon,
+  UsersIcon,
+  ShieldCheckIcon,
+  AlertTriangleIcon
+} from './Icons.jsx';
 import { Button } from './untitled-ui/Button.jsx';
 import { Badge } from './untitled-ui/Badge.jsx';
 import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
@@ -123,14 +130,14 @@ export default function SuperAdminDashboard({
         <StatCard
           label="Usuarios Registrados"
           value={totalUsersCount}
-          icon="👥"
+          icon={<UsersIcon size={18} />}
           caption="Comercios y contadores"
           trend="neutral"
         />
         <StatCard
           label="Suscripciones Activas"
           value={activeSubsCount}
-          icon="🟢"
+          icon={<ShieldCheckIcon size={18} />}
           caption="Cuentas al día"
           trend="up"
           change="Al día"
@@ -138,7 +145,7 @@ export default function SuperAdminDashboard({
         <StatCard
           label="Cuentas Suspendidas"
           value={pastDueSubsCount}
-          icon="⚠️"
+          icon={<AlertTriangleIcon size={18} />}
           caption="Pago pendiente"
           trend={pastDueSubsCount > 0 ? 'down' : 'neutral'}
           change={pastDueSubsCount > 0 ? 'Riesgo' : '0'}
@@ -146,7 +153,7 @@ export default function SuperAdminDashboard({
         <StatCard
           label="Escalas Oficiales"
           value={editableScales.length}
-          icon="📊"
+          icon={<TableIcon size={18} />}
           caption="Categorías A a K"
           trend="neutral"
           change="Sembradas"

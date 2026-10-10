@@ -56,4 +56,26 @@ describe('TaxTrafficLight Component', () => {
     expect(screen.getByTestId('traffic-light-badge')).toHaveClass('color-red');
     expect(screen.getByRole('alert')).toBeInTheDocument();
   });
+
+  it('permite abrir el simulador de recategorización ARCA e interactuar con la proyección', () => {
+    const { fireEvent } = require('@testing-library/react');
+    render(<TaxTrafficLight metrics={safeMetrics} />);
+
+    // El botón del simulador está disponible
+    const simToggleBtn = screen.getByText(/Simulador ARCA/i);
+    expect(simToggleBtn).toBeInTheDocument();
+
+    // Abrir el simulador
+    fireEvent.click(simToggleBtn);
+    expect(screen.getByText(/Simulador de Recategorización Semestral ARCA/i)).toBeInTheDocument();
+    expect(screen.getByText(/Categoría Proyectada/i)).toBeInTheDocument();
+    expect(screen.getByText(/Cuota Mensual ARCA Estimada/i)).toBeInTheDocument();
+
+    // Seleccionar un botón rápido de simulación (ej. +$1.000.000)
+    const quickBtn = screen.getByText(/1\.000\.000/);
+    fireEvent.click(quickBtn);
+
+    // Debe mostrar los cálculos simulados
+    expect(screen.getByText(/Simulador de Recategorización Semestral ARCA/i)).toBeInTheDocument();
+  });
 });

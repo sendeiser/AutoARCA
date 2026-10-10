@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { authService, INITIAL_SCALES } from '../services/authService.js';
+import {
+  AutoArcaLogoIcon,
+  StoreIcon,
+  BriefcaseIcon,
+  CrownIcon,
+  UserIcon,
+  ShieldCheckIcon
+} from './Icons.jsx';
 import '../styles/auth.css';
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
@@ -103,7 +111,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       <div className="auth-card">
         {/* Cabecera */}
         <div className="auth-header">
-          <div className="auth-brand-logo">⚡</div>
+          <div className="auth-brand-logo" style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AutoArcaLogoIcon size={28} />
+          </div>
           <h2 className="auth-title">AutoARCA</h2>
           <p className="auth-subtitle">
             Plataforma Cloud para Monotributistas y Estudios Contables
@@ -162,7 +172,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             </div>
 
             <button type="submit" className="auth-btn-primary">
-              Ingresar al Sistema 🚀
+              Ingresar al Sistema
             </button>
 
             {/* Accesos Rápidos de Prueba */}
@@ -174,21 +184,24 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   className="demo-chip"
                   onClick={() => handleQuickDemoLogin('martin@comercio.com', '1234')}
                 >
-                  👤 Martín (Cliente Monotributo)
+                  <UserIcon size={13} />
+                  <span>Martín (Comercio)</span>
                 </button>
                 <button
                   type="button"
                   className="demo-chip"
                   onClick={() => handleQuickDemoLogin('mendez@estudiocontable.com', '1234')}
                 >
-                  📑 Estudio Méndez (Contador)
+                  <BriefcaseIcon size={13} />
+                  <span>Estudio Méndez (Contador)</span>
                 </button>
                 <button
                   type="button"
                   className="demo-chip"
                   onClick={() => handleQuickDemoLogin('admin@autoarca.com', '1234')}
                 >
-                  👑 SuperAdmin (Global)
+                  <CrownIcon size={13} />
+                  <span>SuperAdmin</span>
                 </button>
               </div>
             </div>
@@ -205,21 +218,23 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   type="button"
                   className={`role-seg-btn ${regRole === 'client' ? 'active' : ''}`}
                   onClick={() => setRegRole('client')}
-                  style={{ flex: 1, justifyContent: 'center', padding: '0.45rem' }}
+                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: '0.4rem', padding: '0.45rem' }}
                   role="tab"
                   aria-selected={regRole === 'client'}
                 >
-                  🏪 Comercio / Monotributo
+                  <StoreIcon size={14} />
+                  <span>Comercio / Monotributo</span>
                 </button>
                 <button
                   type="button"
                   className={`role-seg-btn ${regRole === 'accountant' ? 'active' : ''}`}
                   onClick={() => setRegRole('accountant')}
-                  style={{ flex: 1, justifyContent: 'center', padding: '0.45rem' }}
+                  style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: '0.4rem', padding: '0.45rem' }}
                   role="tab"
                   aria-selected={regRole === 'accountant'}
                 >
-                  📊 Estudio Contable
+                  <BriefcaseIcon size={14} />
+                  <span>Estudio Contable</span>
                 </button>
               </div>
               <select
@@ -327,8 +342,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
                   />
                 </div>
 
-                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#bae6fd', marginBottom: '1rem', lineHeight: '1.4' }}>
-                  🛡️ <strong>Portal Profesional:</strong> Se generará automáticamente tu <strong>Código de Vinculación</strong> para que tus clientes te autoricen la descarga diaria de comprobantes ARCA.
+                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '0.65rem 0.85rem', borderRadius: '8px', fontSize: '0.78rem', color: '#bae6fd', marginBottom: '1rem', lineHeight: '1.4', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ShieldCheckIcon size={16} />
+                  <span><strong>Portal Profesional:</strong> Se generará automáticamente tu <strong>Código de Vinculación</strong> para que tus clientes te autoricen.</span>
                 </div>
               </>
             )}
@@ -407,7 +423,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
             )}
 
             <button type="submit" className="auth-btn-primary">
-              Completar Registro y Empezar ⚡
+              Completar Registro y Empezar
             </button>
           </form>
         )}

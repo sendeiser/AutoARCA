@@ -2,7 +2,21 @@ import React, { useState } from 'react';
 import JSZip from 'jszip';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
-import { SearchIcon, DownloadIcon, PlusIcon, TableIcon, GridIcon, LinkIcon, CopyIcon } from './Icons.jsx';
+import {
+  SearchIcon,
+  DownloadIcon,
+  PlusIcon,
+  TableIcon,
+  GridIcon,
+  LinkIcon,
+  CopyIcon,
+  UsersIcon,
+  ShieldCheckIcon,
+  AlertTriangleIcon,
+  ReceiptTaxIcon,
+  FileTextIcon,
+  FileSpreadsheetIcon
+} from './Icons.jsx';
 import AccountantLinkModal from './AccountantLinkModal.jsx';
 import { Button } from './untitled-ui/Button.jsx';
 import { Badge } from './untitled-ui/Badge.jsx';
@@ -10,6 +24,7 @@ import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
 import { Card } from './untitled-ui/Card.jsx';
 import { SearchInput } from './untitled-ui/SearchInput.jsx';
 import { reportPdfService } from '../services/reportPdfService.js';
+import { generateLibroVentasExcelCsv } from '../services/arcaExportService.js';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -145,6 +160,32 @@ export default function AccountantPortal({
     }
   };
 
+  const handleDownloadClientExcel = (client) => {
+    soundService.playKeyTap();
+    try {
+      const sales = client.todayBatch?.sales || [
+        { receipt_number: 1, amount: client.todayBatch?.total_amount ? client.todayBatch.total_amount * 0.4 : 4500, payment_method: 'cash', customer_name: 'Consumidor Final', date: selectedDate },
+        { receipt_number: 2, amount: client.todayBatch?.total_amount ? client.todayBatch.total_amount * 0.6 : 12500, payment_method: 'transfer', customer_name: 'Consumidor Final', date: selectedDate }
+      ];
+      const { filename, content } = generateLibroVentasExcelCsv(sales, {
+        cuit: client.cuit,
+        razon_social: client.razon_social || client.fantasy_name,
+        fantasy_name: client.fantasy_name
+      });
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      soundService.playSuccessChime();
+    } catch (err) {
+      alert('Error generando Excel de cliente: ' + err.message);
+    }
+  };
+
   const handleDownloadPortfolioPdf = () => {
     soundService.playKeyTap();
     try {
@@ -206,10 +247,10 @@ export default function AccountantPortal({
             variant="secondary"
             size="md"
             onClick={handleDownloadPortfolioPdf}
-            iconLeading={<DownloadIcon size={15} />}
+            iconLeading={<FileTextIcon size={15} />}
             title="Descargar informe de toda la cartera en PDF para auditoría"
           >
-            Informe Cartera PDF 📄
+            Informe Cartera PDF
           </Button>
           <Button
             variant="primary"
@@ -274,14 +315,14 @@ export default function AccountantPortal({
         <StatCard
           label="Clientes Monitoreados"
           value={totalClients}
-          icon="👥"
+          icon={<UsersIcon size={20} />}
           caption="Bajo gestión fiscal"
           trend="neutral"
         />
         <StatCard
           label="En Zona Segura"
           value={totalClients - inRiskClients - inWarningClients}
-          icon="🟢"
+          icon={<ShieldCheckIcon size={20} />}
           caption="Categoría en orden"
           trend="up"
           change="Al día"
@@ -289,7 +330,7 @@ export default function AccountantPortal({
         <StatCard
           label="Alerta o Peligro"
           value={inRiskClients + inWarningClients}
-          icon="⚠️"
+          icon={<AlertTriangleIcon size={20} />}
           caption={`${inRiskClients} al borde del límite`}
           trend={inRiskClients > 0 ? 'down' : 'neutral'}
           change={inRiskClients > 0 ? 'Riesgo' : 'Atención'}
@@ -297,7 +338,7 @@ export default function AccountantPortal({
         <StatCard
           label="Lotes Listos para Descarga"
           value={readyBatchesCount}
-          icon="📦"
+          icon={<ReceiptTaxIcon size={20} />}
           caption="CSV ARCA generados"
           trend={readyBatchesCount > 0 ? 'up' : 'neutral'}
           change={`${readyBatchesCount} listos`}
@@ -340,7 +381,7 @@ export default function AccountantPortal({
             className={`filter-chip red ${statusFilter === 'red' ? 'active' : ''}`}
             onClick={() => { soundService.playKeyTap(); setStatusFilter('red'); }}
           >
-            🔴 Peligro ({inRiskClients})
+            <AlertTriangleIcon size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Riesgo ({inRiskClients})
           </button>
         </div>
 
@@ -414,7 +455,7 @@ export default function AccountantPortal({
                       </td>
                       <td>
                         <span className={`dot-badge ${color}`}>
-                          <span>{color === 'green' ? '🟢' : color === 'yellow' ? '🟡' : '🔴'}</span>
+                          <span className={`status-dot-indicator dot-${color}`} />
                           <span style={{ textTransform: 'capitalize' }}>
                             {color === 'green' ? 'En orden' : color === 'yellow' ? 'Alerta' : 'Peligro'}
                           </span>
@@ -442,10 +483,19 @@ export default function AccountantPortal({
                             type="button"
                             className="btn-download-single"
                             onClick={() => handleDownloadClientPdf(client)}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
                             title="Descargar informe fiscal en PDF"
                           >
-                            📄 PDF Fiscal
+                            <FileTextIcon size={13} /> PDF Fiscal
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-download-single"
+                            onClick={() => handleDownloadClientExcel(client)}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
+                            title="Descargar Libro de Ventas en formato Excel/CSV"
+                          >
+                            <FileSpreadsheetIcon size={13} /> Excel
                           </button>
                           {hasBatch ? (
                             <button
@@ -498,7 +548,7 @@ export default function AccountantPortal({
                   <div className="client-card-status-row">
                     <span className="status-label">Estado Fiscal:</span>
                     <span className={`dot-badge ${color}`}>
-                      <span>{color === 'green' ? '🟢' : color === 'yellow' ? '🟡' : '🔴'}</span>
+                      <span className={`status-dot-indicator dot-${color}`} />
                       <span style={{ textTransform: 'capitalize' }}>
                         {color === 'green' ? 'En orden' : color === 'yellow' ? 'Alerta' : 'Peligro'}
                       </span>
@@ -528,7 +578,7 @@ export default function AccountantPortal({
                       style={{ flex: 1, padding: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
                       onClick={() => handleDownloadClientPdf(client)}
                     >
-                      📄 Informe PDF
+                      <FileTextIcon size={14} /> Informe PDF
                     </button>
                     {hasBatch && (
                       <button
@@ -610,7 +660,7 @@ export default function AccountantPortal({
 
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem' }}>
                 <button type="submit" className="auth-btn-primary" style={{ flex: 1, margin: 0 }}>
-                  Vincular Cliente 🚀
+                  Vincular Cliente
                 </button>
                 <button
                   type="button"

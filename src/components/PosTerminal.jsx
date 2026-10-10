@@ -15,12 +15,15 @@ import {
   BackspaceIcon,
   VolumeOnIcon,
   VolumeOffIcon,
-  UserIcon
+  UserIcon,
+  BoltIcon,
+  EyeIcon
 } from './Icons.jsx';
 import { Badge } from './untitled-ui/Badge.jsx';
 import { Modal } from './untitled-ui/Modal.jsx';
 import { Button } from './untitled-ui/Button.jsx';
 import { InputField } from './untitled-ui/InputField.jsx';
+import OfficialFacturaCModal from './OfficialFacturaCModal.jsx';
 import '../styles/posTerminal.css';
 import '../styles/untitled-ui.css';
 
@@ -48,6 +51,8 @@ export function PosTerminalProvider({
   const [customerDocNumber, setCustomerDocNumber] = useState('0');
   const [customerName, setCustomerName] = useState('Consumidor Final');
   const [showClientModal, setShowClientModal] = useState(false);
+  const [lastSale, setLastSale] = useState(null);
+  const [showFacturaModal, setShowFacturaModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -140,16 +145,20 @@ export function PosTerminalProvider({
 
       setIsSubmitting(true);
       try {
+        const saleRecord = {
+          id: Date.now(),
+          amount: numericAmount,
+          payment_method: paymentMethod,
+          customer_doc_type: customerDocType,
+          customer_doc_number: customerDocNumber,
+          customer_name: customerName,
+          date: new Date().toISOString().slice(0, 10),
+          cae: '74291823910293'
+        };
         if (onRecordSale) {
-          await onRecordSale({
-            amount: numericAmount,
-            payment_method: paymentMethod,
-            customer_doc_type: customerDocType,
-            customer_doc_number: customerDocNumber,
-            customer_name: customerName,
-            date: new Date().toISOString().slice(0, 10)
-          });
+          await onRecordSale(saleRecord);
         }
+        setLastSale(saleRecord);
         soundService.playSuccess();
         actions.showToast('¡Comprobante emitido con éxito!');
         setAmountRaw('0');
@@ -162,7 +171,8 @@ export function PosTerminalProvider({
       } finally {
         setIsSubmitting(false);
       }
-    }
+    },
+    setShowFacturaModal
   }), [numericAmount, customerDocType, customerDocNumber, customerName, paymentMethod, anonymousMaxLimit, onRecordSale]);
 
   const value = {
@@ -175,6 +185,8 @@ export function PosTerminalProvider({
       customerDocNumber,
       customerName,
       showClientModal,
+      lastSale,
+      showFacturaModal,
       toastMessage,
       isSubmitting,
       isMuted,
@@ -191,6 +203,12 @@ export function PosTerminalProvider({
     <PosTerminalContext.Provider value={value}>
       <div className="pos-container">
         {children}
+        <OfficialFacturaCModal
+          isOpen={showFacturaModal}
+          onClose={() => setShowFacturaModal(false)}
+          sale={lastSale}
+          businessProfile={businessProfile}
+        />
       </div>
     </PosTerminalContext.Provider>
   );
@@ -239,8 +257,8 @@ export function PosDisplay() {
 
 export function PosCustomerBadge() {
   const {
-    state: { customerName, customerDocType, customerDocNumber },
-    actions: { setShowClientModal }
+    state: { customerName, customerDocType, customerDocNumber, lastSale },
+    actions: { setShowClientModal, setShowFacturaModal }
   } = usePosTerminal();
 
   return (
@@ -249,13 +267,41 @@ export function PosCustomerBadge() {
         <UserIcon size={14} />
         {customerName} {customerDocType !== 'SIN_IDENTIFICAR' ? `(${customerDocType} ${customerDocNumber})` : ''}
       </span>
-      <button
-        type="button"
-        className="pos-client-link"
-        onClick={() => setShowClientModal(true)}
-      >
-        {customerDocType === 'SIN_IDENTIFICAR' ? '+ Identificar Cliente' : 'Editar Cliente'}
-      </button>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+        {lastSale && (
+          <button
+            type="button"
+            className="pos-last-invoice-btn"
+            onClick={() => {
+              soundService.playKeyTap();
+              setShowFacturaModal(true);
+            }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              background: 'rgba(56, 189, 248, 0.15)',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              color: '#38bdf8',
+              fontSize: '0.72rem',
+              padding: '0.15rem 0.45rem',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: 600
+            }}
+            title="Ver o imprimir Factura C oficial del último cobro emitido"
+          >
+            <EyeIcon size={12} /> Factura C
+          </button>
+        )}
+        <button
+          type="button"
+          className="pos-client-link"
+          onClick={() => setShowClientModal(true)}
+        >
+          {customerDocType === 'SIN_IDENTIFICAR' ? '+ Identificar Cliente' : 'Editar Cliente'}
+        </button>
+      </div>
     </div>
   );
 }
@@ -338,8 +384,10 @@ export function PosSubmitButton() {
       className="pos-emit-btn"
       onClick={emitSale}
       disabled={isSubmitting}
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem' }}
     >
-      ⚡ Emitir Comprobante
+      <BoltIcon size={17} />
+      <span>Emitir Comprobante</span>
     </button>
   );
 }

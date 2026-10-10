@@ -537,36 +537,83 @@
     min-height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 
   .uui-auth-left {
-    padding: clamp(0.35rem, 1.4vh, 0.75rem) clamp(0.75rem, 2.5vw, 1.25rem) !important;
+    padding: clamp(0.35rem, 1.2vh, 0.75rem) clamp(0.75rem, 2.5vw, 1.25rem) !important;
     overflow: hidden !important;
     overflow-y: clip !important;
+    display: flex !important;
+    flex-direction: column !important;
     justify-content: center !important;
+    align-items: center !important;
     max-width: 100% !important;
+    width: 100% !important;
   }
 
   .uui-auth-box {
     max-width: 440px !important;
+    width: 100% !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    padding: clamp(0.5rem, 1.4vh, 0.85rem) clamp(0.75rem, 3vw, 1.25rem) !important;
+    margin: 0 auto !important;
+  }
+
+  [data-theme="light"] .uui-auth-left {
+    background: #f8fafc !important;
+  }
+
+  [data-theme="light"] .uui-auth-box {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04) !important;
   }
 
   .uui-auth-header {
     margin-bottom: clamp(0.2rem, 0.8vh, 0.45rem) !important;
+    text-align: center !important;
+  }
+
+  .uui-auth-header > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    margin-bottom: clamp(0.35rem, 0.9vh, 0.65rem) !important;
   }
 
   .uui-auth-header .uui-auth-logo-badge {
-    margin-bottom: 0.15rem !important;
+    justify-content: center !important;
+    margin-bottom: 0 !important;
+  }
+
+  .uui-auth-header .theme-toggle-btn {
+    position: absolute !important;
+    right: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.72rem !important;
   }
 
   .uui-auth-title {
     font-size: clamp(1.1rem, 2vh, 1.35rem) !important;
     margin-bottom: 0.1rem !important;
+    text-align: center !important;
   }
 
   .uui-auth-subtitle {
     font-size: clamp(0.68rem, 1.1vh, 0.76rem) !important;
     line-height: 1.2 !important;
+    text-align: center !important;
   }
 
   .uui-auth-segmented {
@@ -595,6 +642,9 @@
   .uui-role-icon {
     font-size: 0.95rem !important;
     margin-bottom: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .uui-role-title {
@@ -642,13 +692,26 @@
   .uui-demo-label {
     font-size: 0.68rem !important;
     margin-bottom: 0.25rem !important;
+    text-align: center !important;
+  }
+
+  .uui-demo-buttons {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4rem !important;
   }
 
   .uui-demo-btn {
-    padding: 0.3rem 0.2rem !important;
-    font-size: 0.7rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    padding: 0.32rem 0.2rem !important;
+    font-size: 0.72rem !important;
+    border-radius: 7px !important;
   }
 }
+
 
 /* ==============================================================================
    6. Untitled UI Cards & Stat Cards

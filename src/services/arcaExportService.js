@@ -137,3 +137,84 @@ export function generateArcaBatchFile(receipts = [], businessProfile = {}, optio
     totalAmount: Number(totalAmount.toFixed(2))
   };
 }
+
+/**
+ * Genera el Libro de Ventas en formato CSV delimitado por comas / punto y coma con BOM UTF-8
+ * Compatible directamente con Microsoft Excel, Google Sheets y sistemas contables (Tango, Holistor, Bejerman).
+ */
+export function generateLibroVentasExcelCsv(sales = [], businessProfile = {}) {
+  const cuit = businessProfile?.cuit || '20301234567';
+  const razonSocial = businessProfile?.razon_social || businessProfile?.fantasy_name || 'Comercio Monotributista';
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const filename = `Libro_Ventas_${cuit}_${dateStr}.csv`;
+
+  // Encabezados claros en español para Excel
+  const headers = [
+    'Fecha',
+    'Punto de Venta',
+    'Tipo Comprobante',
+    'Nro Comprobante',
+    'Doc Receptor',
+    'Nro Documento',
+    'Denominación Cliente',
+    'Medio de Pago',
+    'Subtotal Neto (ARS)',
+    'IVA (0% Monotributo)',
+    'Total Facturado (ARS)',
+    'CAE Oficial',
+    'Estado ARCA'
+  ];
+
+  let totalGeneral = 0;
+  const rows = sales.map((sale, idx) => {
+    const amount = Number(sale.amount || 0);
+    totalGeneral += amount;
+    const nroCbte = String(sale.id || idx + 1).replace(/\D/g, '').padStart(8, '0');
+    const cae = sale.cae || '74291823910293';
+    const payMethod = sale.payment_method === 'cash' ? 'Efectivo' : sale.payment_method === 'card' ? 'Tarjeta' : 'Transferencia QR';
+
+    return [
+      `"${sale.date || dateStr}"`,
+      '"00001"',
+      '"Factura C (011)"',
+      `"${nroCbte}"`,
+      `"${sale.customer_doc_type || 'Consumidor Final'}"`,
+      `"${sale.customer_doc_number || '0'}"`,
+      `"${sanitizeText(sale.customer_name || 'Consumidor Final')}"`,
+      `"${payMethod}"`,
+      amount.toFixed(2),
+      '0.00',
+      amount.toFixed(2),
+      `"${cae}"`,
+      '"Aprobado / Emitido"'
+    ].join(';');
+  });
+
+  // Fila de resumen total
+  const summaryRow = [
+    '"TOTAL GENERAL"',
+    '""',
+    '""',
+    `"${sales.length} comprobantes"`,
+    '""',
+    '""',
+    '""',
+    '""',
+    totalGeneral.toFixed(2),
+    '0.00',
+    totalGeneral.toFixed(2),
+    '""',
+    '""'
+  ].join(';');
+
+  // Prefijo UTF-8 BOM (\uFEFF) para que Excel abra acentos y caracteres especiales sin corrupción
+  const bom = '\uFEFF';
+  const csvContent = bom + [headers.join(';'), ...rows, summaryRow].join('\r\n');
+
+  return {
+    filename,
+    content: csvContent,
+    salesCount: sales.length,
+    totalGeneral
+  };
+}

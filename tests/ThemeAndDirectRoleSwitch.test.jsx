@@ -32,34 +32,15 @@ describe('Impeccable UI: Modo Claro y Selector Directo de Rol (Sin Acordeón)', 
     expect(localStorage.getItem('autoarca_theme')).toBe('dark');
   });
 
-  it('permite pasar de Cliente a Contador con un solo clic directo en los botones segmentados sin acordeón ni desplegable', () => {
+  it('no expone selectores ni conmutadores de roles en el Header, manteniendo la sesión protegida', () => {
     render(<App />);
 
-    // El botón directo de Cliente está activo inicialmente
-    const clientPill = screen.getByTestId('role-pill-client');
-    const accountantPill = screen.getByTestId('role-pill-accountant');
-    const adminPill = screen.getByTestId('role-pill-superadmin');
-
-    expect(clientPill).toHaveClass('active');
-    expect(accountantPill).not.toHaveClass('active');
-    expect(screen.getByTestId('pos-amount-display')).toBeInTheDocument();
-
-    // Clic directo en Contador (sin abrir ningún acordeón o dropdown)
-    fireEvent.click(accountantPill);
-
-    // Debe activarse inmediatamente la vista de Estudio Contable
-    expect(accountantPill).toHaveClass('active');
-    expect(clientPill).not.toHaveClass('active');
-    expect(screen.getByText(/Panel de Control del Contador/i)).toBeInTheDocument();
-
-    // Clic directo en Admin
-    fireEvent.click(adminPill);
-    expect(adminPill).toHaveClass('active');
-    expect(screen.getByText(/Escalas Oficiales de Monotributo/i)).toBeInTheDocument();
-
-    // Clic directo de regreso a Cliente
-    fireEvent.click(clientPill);
-    expect(clientPill).toHaveClass('active');
+    // El Header no expone selectores, ni pills, ni dropdowns ni badges de conmutación
+    expect(screen.queryByTestId('role-pill-client')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('role-pill-accountant')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('role-pill-superadmin')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('role-switcher-select')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('header-role-badge')).not.toBeInTheDocument();
     expect(screen.getByTestId('pos-amount-display')).toBeInTheDocument();
   });
 

@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { authService, INITIAL_SCALES } from '../services/authService.js';
+import {
+  CheckCircleIcon,
+  BriefcaseIcon,
+  ShieldCheckIcon,
+  AlertTriangleIcon
+} from './Icons.jsx';
 import '../styles/auth.css';
 
 export default function UserProfileModal({
@@ -48,9 +54,25 @@ export default function UserProfileModal({
   };
 
   const getSubBadge = (status) => {
-    if (status === 'active') return <span style={{ color: '#10b981', fontWeight: 700 }}>🟢 Activa (Al día)</span>;
-    if (status === 'trial') return <span style={{ color: '#38bdf8', fontWeight: 700 }}>🔵 Período de Prueba</span>;
-    return <span style={{ color: '#ef4444', fontWeight: 700 }}>🔴 Suspendida</span>;
+    if (status === 'active') {
+      return (
+        <span style={{ color: '#10b981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+          <CheckCircleIcon size={14} /> Activa (Al día)
+        </span>
+      );
+    }
+    if (status === 'trial') {
+      return (
+        <span style={{ color: '#38bdf8', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+          <ShieldCheckIcon size={14} /> Período de Prueba
+        </span>
+      );
+    }
+    return (
+      <span style={{ color: '#ef4444', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+        <AlertTriangleIcon size={14} /> Suspendida
+      </span>
+    );
   };
 
   return (
@@ -75,8 +97,8 @@ export default function UserProfileModal({
         </div>
 
         {savedSuccess && (
-          <div style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#10b981', padding: '0.6rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.85rem' }}>
-            ✓ ¡Datos de perfil guardados correctamente!
+          <div style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#10b981', padding: '0.6rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+            <CheckCircleIcon size={15} /> ¡Datos de perfil guardados correctamente!
           </div>
         )}
 
@@ -133,8 +155,8 @@ export default function UserProfileModal({
 
               {/* Estudio Contable Vinculado */}
               <div style={{ background: 'rgba(37, 99, 235, 0.1)', border: '1px solid rgba(37, 99, 235, 0.25)', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.25rem' }}>
-                <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
-                  📑 Estudio Contable Asignado
+                <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <BriefcaseIcon size={13} /> Estudio Contable Asignado
                 </div>
                 {authService.getAccountantForClient(currentUser.id) ? (
                   <div style={{ fontSize: '0.85rem', color: '#e2e8f0' }}>
@@ -166,8 +188,8 @@ export default function UserProfileModal({
           {/* Datos para Contadores */}
           {currentUser.role === 'accountant' && (
             <div style={{ background: 'rgba(37, 99, 235, 0.1)', border: '1px solid rgba(37, 99, 235, 0.25)', padding: '0.85rem', borderRadius: '12px', marginBottom: '1.25rem' }}>
-              <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
-                🔑 Tu Código de Vinculación para Clientes
+              <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <ShieldCheckIcon size={14} /> Tu Código de Vinculación para Clientes
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
                 <span className="font-mono" style={{ fontSize: '1.1rem', fontWeight: 700, color: '#38bdf8' }}>
@@ -224,7 +246,7 @@ export default function UserProfileModal({
             onClick={onClose}
             style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.85rem', cursor: 'pointer' }}
           >
-            Cerrar Ventana ✕
+            Cerrar Ventana
           </button>
         </div>
       </div>
