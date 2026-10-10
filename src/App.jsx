@@ -10,6 +10,7 @@ import UserProfileModal from './components/UserProfileModal.jsx';
 import SupabaseStatusModal from './components/SupabaseStatusModal.jsx';
 import AccountantLinkModal from './components/AccountantLinkModal.jsx';
 import AuthScreen from './components/untitled-ui/AuthScreen.jsx';
+import SystemOverviewModal from './components/SystemOverviewModal.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
@@ -44,6 +45,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
+  const [isSystemOverviewOpen, setIsSystemOverviewOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   // Modo de visualización: Claro (Light) / Oscuro (Dark)
@@ -312,6 +314,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
         onOpenSupabaseModal={() => setIsSupabaseModalOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenSystemOverview={() => setIsSystemOverviewOpen(true)}
         onLogout={handleLogout}
         onBrandClick={() => setClientView('pos')}
       />
@@ -397,6 +400,14 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
       <SupabaseStatusModal
         isOpen={isSupabaseModalOpen}
         onClose={() => setIsSupabaseModalOpen(false)}
+      />
+
+      {/* Modal de Guía del Sistema y Módulos por Rol */}
+      <SystemOverviewModal
+        isOpen={isSystemOverviewOpen}
+        onClose={() => setIsSystemOverviewOpen(false)}
+        currentRole={role}
+        currentUser={currentUser}
       />
     </div>
   );

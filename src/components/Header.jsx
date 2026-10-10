@@ -15,7 +15,8 @@ import {
   PlusIcon,
   LogoutIcon,
   SunIcon,
-  MoonIcon
+  MoonIcon,
+  HelpCircleIcon
 } from './Icons.jsx';
 import { soundService } from '../services/soundService.js';
 import '../styles/header.css';
@@ -29,6 +30,7 @@ export default function Header({
   onOpenSupabaseModal,
   onOpenProfile,
   onOpenAuth,
+  onOpenSystemOverview,
   onLogout,
   onBrandClick
 }) {
@@ -51,8 +53,23 @@ export default function Header({
         </button>
       </div>
 
-      {/* Zona Derecha: Controles de Sistema, Modo Claro/Oscuro, Sonido, Rol Directo y Perfil */}
+      {/* Zona Derecha: Controles de Sistema, Guía, Modo Claro/Oscuro, Sonido y Perfil */}
       <div className="app-user-controls">
+        {/* Botón "¿Cómo funciona?" / Guía General del Sistema y Módulos */}
+        <button
+          type="button"
+          className="system-guide-btn"
+          data-testid="system-guide-btn"
+          onClick={() => {
+            soundService.playKeyTap();
+            if (onOpenSystemOverview) onOpenSystemOverview();
+          }}
+          title="¿Cómo funciona el sistema? Conoce todos los módulos y herramientas disponibles"
+          aria-label="Abrir guía de funcionamiento y módulos del sistema"
+        >
+          <HelpCircleIcon size={14} />
+          <span className="control-label-desktop">¿Cómo funciona?</span>
+        </button>
         {/* Conmutador de Modo Claro / Modo Oscuro */}
         <button
           type="button"
