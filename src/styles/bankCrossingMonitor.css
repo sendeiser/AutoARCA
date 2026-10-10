@@ -217,3 +217,15 @@
   border-color: var(--color-brand-500, #444ce7);
   color: var(--color-brand-600, #2e90fa);
 }
+
+@media (max-width: 640px) {
+  .bank-crossing-body {
+    padding: 1rem 0.75rem;
+  }
+  .bank-crossing-kpis {
+    grid-template-columns: 1fr;
+  }
+  .bank-controls-grid {
+    grid-template-columns: 1fr;
+  }
+}

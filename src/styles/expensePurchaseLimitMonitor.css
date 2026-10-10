@@ -216,3 +216,19 @@
   border-color: var(--color-brand-500, #444ce7);
   color: var(--color-brand-600, #2e90fa);
 }
+
+@media (max-width: 640px) {
+  .expense-limit-body {
+    padding: 1rem 0.75rem;
+  }
+  .expense-kpis-grid {
+    grid-template-columns: 1fr;
+  }
+  .expense-activity-toggle {
+    width: 100%;
+  }
+  .expense-toggle-btn {
+    flex: 1;
+    text-align: center;
+  }
+}

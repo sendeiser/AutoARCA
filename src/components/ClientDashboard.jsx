@@ -47,12 +47,19 @@ export default function ClientDashboard({
   batchHistory = [],
   onCloseBatch,
   onNavigateToPos,
-  onBatchEmitRecurring
+  onBatchEmitRecurring,
+  activeSubtab: controlledSubtab,
+  onSubtabChange: controlledOnSubtabChange
 }) {
   const [isClosing, setIsClosing] = useState(false);
   const [closeSuccess, setCloseSuccess] = useState(null);
   const [selectedSaleForInvoice, setSelectedSaleForInvoice] = useState(null);
-  const [activeSubtab, setActiveSubtab] = useState('fiscal'); // 'fiscal' | 'bancos' | 'compras' | 'dfe' | 'recurrentes'
+  const [internalSubtab, setInternalSubtab] = useState('fiscal');
+  const activeSubtab = controlledSubtab !== undefined ? controlledSubtab : internalSubtab;
+  const setActiveSubtab = (newTab) => {
+    setInternalSubtab(newTab);
+    if (controlledOnSubtabChange) controlledOnSubtabChange(newTab);
+  };
   const [showVepModal, setShowVepModal] = useState(false);
   const [showConstanciaModal, setShowConstanciaModal] = useState(false);
 
@@ -129,7 +136,7 @@ export default function ClientDashboard({
   };
 
   return (
-    <div className="client-dashboard-wrap" style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem' }}>
+    <div className="client-dashboard-wrap">
       {/* Barra de Encabezado Principal */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>

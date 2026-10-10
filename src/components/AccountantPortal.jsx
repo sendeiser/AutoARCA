@@ -39,7 +39,9 @@ import '../styles/untitled-ui.css';
 export default function AccountantPortal({
   clients = [],
   onDownloadZip,
-  accountantProfile = {}
+  accountantProfile = {},
+  activeTab: controlledActiveTab,
+  onTabChange: controlledOnTabChange
 }) {
   const [clientList, setClientList] = useState(clients);
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,7 +58,12 @@ export default function AccountantPortal({
   const [selectedClientForConstancia, setSelectedClientForConstancia] = useState(null);
   const [selectedClientForCert, setSelectedClientForCert] = useState(null);
   const [selectedClientForExport, setSelectedClientForExport] = useState(null);
-  const [activeTab, setActiveTab] = useState('clientes'); // 'clientes' | 'recategorizacion' | 'dfe' | 'riesgo_bancario' | 'calendario' | 'honorarios'
+  const [internalActiveTab, setInternalActiveTab] = useState('clientes'); // 'clientes' | 'recategorizacion' | 'dfe' | 'riesgo_bancario' | 'calendario' | 'honorarios'
+  const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
+  const setActiveTab = (tab) => {
+    setInternalActiveTab(tab);
+    if (controlledOnTabChange) controlledOnTabChange(tab);
+  };
 
   // Sync state if props change
   React.useEffect(() => {

@@ -38,6 +38,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
 
   const [role, setRole] = useState(() => currentUser?.role || 'client');
   const [clientView, setClientView] = useState('pos');
+  const [accountantTab, setAccountantTab] = useState('clientes');
   const [scales, setScales] = useState(INITIAL_SCALES);
   const [users, setUsers] = useState(INITIAL_USERS);
   const [businessProfile, setBusinessProfile] = useState(INITIAL_BUSINESS);
@@ -322,8 +323,14 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
       {/* Navegación Inteligente Adaptativa (Desktop Segmented Control & Mobile Bottom Bar) */}
       <Navbar
         role={role}
-        activeTab={clientView}
-        onTabChange={(newTab) => setClientView(newTab)}
+        activeTab={role === 'client' ? clientView : (role === 'accountant' ? accountantTab : undefined)}
+        onTabChange={(newTab) => {
+          if (role === 'client') {
+            setClientView(newTab);
+          } else if (role === 'accountant') {
+            setAccountantTab(newTab);
+          }
+        }}
         isClientSuspended={isClientSuspended}
         badges={{
           posSalesCount: pendingSales.length,
@@ -354,6 +361,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
                 businessProfile={businessProfile}
                 pendingSales={pendingSales}
                 batchHistory={batchHistory}
+                activeSubtab={clientView === 'pos' ? 'fiscal' : (clientView === 'dashboard' ? 'fiscal' : clientView)}
+                onSubtabChange={(newSubtab) => setClientView(newSubtab)}
                 onCloseBatch={handleCloseBatch}
                 onNavigateToPos={() => { soundService.playKeyTap(); setClientView('pos'); }}
                 onBatchEmitRecurring={handleBatchEmitRecurring}
@@ -366,6 +375,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
           <AccountantPortal
             clients={accountantClientsList}
             accountantProfile={currentUser?.role === 'accountant' ? currentUser : (users.find((u) => u.role === 'accountant') || currentUser)}
+            activeTab={accountantTab}
+            onTabChange={setAccountantTab}
           />
         )}
 
