@@ -212,6 +212,11 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     return newReceipt;
   };
 
+  // Emisión en lote de abonos recurrentes mensuales
+  const handleBatchEmitRecurring = async (newSales) => {
+    setPendingSales((prev) => [...prev, ...newSales]);
+  };
+
   // Cierre de jornada diario
   const handleCloseBatch = async () => {
     soundService.playKeyTap();
@@ -348,6 +353,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
                 batchHistory={batchHistory}
                 onCloseBatch={handleCloseBatch}
                 onNavigateToPos={() => { soundService.playKeyTap(); setClientView('pos'); }}
+                onBatchEmitRecurring={handleBatchEmitRecurring}
               />
             )}
           </>

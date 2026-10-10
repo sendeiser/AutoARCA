@@ -25,6 +25,7 @@ import { Card } from './untitled-ui/Card.jsx';
 import { SearchInput } from './untitled-ui/SearchInput.jsx';
 import { reportPdfService } from '../services/reportPdfService.js';
 import { generateLibroVentasExcelCsv } from '../services/arcaExportService.js';
+import OfficialConstanciaInscripcionModal from './OfficialConstanciaInscripcionModal.jsx';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -45,6 +46,7 @@ export default function AccountantPortal({
   const [newFantasyName, setNewFantasyName] = useState('');
   const [newRazonSocial, setNewRazonSocial] = useState('');
   const [newCategory, setNewCategory] = useState('D');
+  const [selectedClientForConstancia, setSelectedClientForConstancia] = useState(null);
 
   // Sync state if props change
   React.useEffect(() => {
@@ -497,6 +499,18 @@ export default function AccountantPortal({
                           >
                             <FileSpreadsheetIcon size={13} /> Excel
                           </button>
+                          <button
+                            type="button"
+                            className="btn-download-single"
+                            onClick={() => {
+                              soundService.playKeyTap();
+                              setSelectedClientForConstancia(client);
+                            }}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(124, 58, 237, 0.12)', borderColor: 'rgba(124, 58, 237, 0.3)', color: '#c4b5fd' }}
+                            title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
+                          >
+                            <ShieldCheckIcon size={13} /> Constancia
+                          </button>
                           {hasBatch ? (
                             <button
                               type="button"
@@ -692,6 +706,24 @@ export default function AccountantPortal({
           // Si el padre pasó clients, se mantendrá actualizado
         }}
       />
+
+      {/* Modal de Constancia de Inscripción Oficial ARCA */}
+      {selectedClientForConstancia && (
+        <OfficialConstanciaInscripcionModal
+          isOpen={Boolean(selectedClientForConstancia)}
+          onClose={() => setSelectedClientForConstancia(null)}
+          businessProfile={{
+            cuit: selectedClientForConstancia.cuit || '20-38491029-4',
+            razon_social: selectedClientForConstancia.razon_social || selectedClientForConstancia.fantasy_name,
+            fantasy_name: selectedClientForConstancia.fantasy_name || selectedClientForConstancia.razon_social,
+            category: selectedClientForConstancia.monotributo_category || 'D',
+            fiscal_address: selectedClientForConstancia.fiscal_address || 'Av. Corrientes 1240, CABA',
+            activity_name: selectedClientForConstancia.activity_name || 'Servicios profesionales y comerciales',
+            activity_code: selectedClientForConstancia.activity_code || '620900',
+            cur: '1029384'
+          }}
+        />
+      )}
     </div>
   );
 }

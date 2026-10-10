@@ -1,0 +1,114 @@
+.recurring-billing-card {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.recurring-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.recurring-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.recurring-sub-pill {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-surface-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+}
+
+.recurring-body {
+  padding: 0;
+}
+
+.recurring-toast-banner {
+  background: rgba(18, 183, 106, 0.1);
+  border-bottom: 1px solid rgba(18, 183, 106, 0.2);
+  color: #027a48;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .recurring-toast-banner {
+  color: #6ce9a6;
+}
+
+.recurring-table-container {
+  overflow-x: auto;
+}
+
+.recurring-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.recurring-table th {
+  background: var(--bg-surface-subtle);
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recurring-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.recurring-row-inactive {
+  opacity: 0.55;
+  background: var(--bg-surface-subtle);
+}
+
+.recurring-status-toggle {
+  border: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.recurring-status-toggle.active {
+  background: rgba(18, 183, 106, 0.15);
+  color: #027a48;
+}
+
+.recurring-status-toggle.paused {
+  background: rgba(100, 116, 139, 0.15);
+  color: #475467;
+}
+
+[data-theme="dark"] .recurring-status-toggle.active {
+  color: #6ce9a6;
+}
+
+.recurring-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

@@ -43,7 +43,7 @@ export function PosTerminalProvider({
   children,
   businessProfile = {},
   onRecordSale,
-  anonymousMaxLimit = 250000
+  anonymousMaxLimit = 10000000 // RG ARCA 5700/2025: Unificado en $10.000.000
 }) {
   const [amountRaw, setAmountRaw] = useState('0');
   const [paymentMethod, setPaymentMethod] = useState('cash');
@@ -461,7 +461,7 @@ export function PosToast() {
 export default function PosTerminal({
   businessProfile = {},
   onRecordSale,
-  anonymousMaxLimit = 250000
+  anonymousMaxLimit = 10000000
 }) {
   return (
     <PosTerminalProvider

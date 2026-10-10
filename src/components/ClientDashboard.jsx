@@ -31,6 +31,14 @@ import { reportPdfService } from '../services/reportPdfService.js';
 import { generateLibroVentasExcelCsv } from '../services/arcaExportService.js';
 import { soundService } from '../services/soundService.js';
 import OfficialFacturaCModal from './OfficialFacturaCModal.jsx';
+import BankCrossingMonitor from './BankCrossingMonitor.jsx';
+import ExpensePurchaseLimitMonitor from './ExpensePurchaseLimitMonitor.jsx';
+import DfeNotificationCenter from './DfeNotificationCenter.jsx';
+import VepPaymentModal from './VepPaymentModal.jsx';
+import OfficialConstanciaInscripcionModal from './OfficialConstanciaInscripcionModal.jsx';
+import RecurringBillingManager from './RecurringBillingManager.jsx';
+import { CreditCardIcon } from './Icons.jsx';
+import '../styles/clientDashboard.css';
 
 export default function ClientDashboard({
   metrics,
@@ -38,11 +46,15 @@ export default function ClientDashboard({
   pendingSales = [],
   batchHistory = [],
   onCloseBatch,
-  onNavigateToPos
+  onNavigateToPos,
+  onBatchEmitRecurring
 }) {
   const [isClosing, setIsClosing] = useState(false);
   const [closeSuccess, setCloseSuccess] = useState(null);
   const [selectedSaleForInvoice, setSelectedSaleForInvoice] = useState(null);
+  const [activeSubtab, setActiveSubtab] = useState('fiscal'); // 'fiscal' | 'bancos' | 'compras' | 'dfe' | 'recurrentes'
+  const [showVepModal, setShowVepModal] = useState(false);
+  const [showConstanciaModal, setShowConstanciaModal] = useState(false);
 
   const pendingCount = pendingSales.length;
   const pendingTotal = pendingSales.reduce((acc, s) => acc + Number(s.amount || 0), 0);
@@ -134,7 +146,25 @@ export default function ClientDashboard({
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+        <div className="dashboard-header-actions">
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => { soundService.playKeyTap(); setShowVepModal(true); }}
+            iconLeading={<CreditCardIcon size={16} />}
+            title="Ver vencimiento de cuota mensual y pagar con VEP o QR Interoperable"
+          >
+            Pagar Cuota VEP
+          </Button>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => { soundService.playKeyTap(); setShowConstanciaModal(true); }}
+            iconLeading={<ShieldCheckIcon size={16} />}
+            title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
+          >
+            Constancia ARCA
+          </Button>
           <Button
             variant="secondary"
             size="md"
@@ -151,7 +181,7 @@ export default function ClientDashboard({
             iconLeading={<FileTextIcon size={16} />}
             title="Descargar informe fiscal en PDF para enviar a tu contador"
           >
-            Reporte PDF Contador
+            Reporte PDF
           </Button>
           <Button
             variant="primary"
@@ -164,6 +194,47 @@ export default function ClientDashboard({
         </div>
       </div>
 
+      {/* Barra de Subnavegación del Panel del Contribuyente */}
+      <div className="client-subnav-bar">
+        <button
+          type="button"
+          className={`client-subnav-btn ${activeSubtab === 'fiscal' ? 'active' : ''}`}
+          onClick={() => { soundService.playTap(); setActiveSubtab('fiscal'); }}
+        >
+          <ReceiptTaxIcon size={15} /> Panel Fiscal & Ventas
+        </button>
+        <button
+          type="button"
+          className={`client-subnav-btn ${activeSubtab === 'bancos' ? 'active' : ''}`}
+          onClick={() => { soundService.playTap(); setActiveSubtab('bancos'); }}
+        >
+          <ShieldCheckIcon size={15} /> Cruce Bancario (Anti-Exclusión)
+        </button>
+        <button
+          type="button"
+          className={`client-subnav-btn ${activeSubtab === 'compras' ? 'active' : ''}`}
+          onClick={() => { soundService.playTap(); setActiveSubtab('compras'); }}
+        >
+          <ChartBarIcon size={15} /> Control de Compras (80%/40%)
+        </button>
+        <button
+          type="button"
+          className={`client-subnav-btn ${activeSubtab === 'dfe' ? 'active' : ''}`}
+          onClick={() => { soundService.playTap(); setActiveSubtab('dfe'); }}
+        >
+          <FileTextIcon size={15} /> E-Ventanilla DFE (15 Días)
+        </button>
+        <button
+          type="button"
+          className={`client-subnav-btn ${activeSubtab === 'recurrentes' ? 'active' : ''}`}
+          onClick={() => { soundService.playTap(); setActiveSubtab('recurrentes'); }}
+        >
+          <BoltIcon size={15} /> Abonos Recurrentes
+        </button>
+      </div>
+
+      {activeSubtab === 'fiscal' && (
+        <>
       {/* Métricas Estadísticas de Untitled UI */}
       <StatGrid>
         <StatCard
@@ -377,6 +448,44 @@ export default function ClientDashboard({
           </Table>
         )}
       </TableContainer>
+        </>
+      )}
+
+      {/* Vista de Cruce Bancario & Billeteras Virtuales */}
+      {activeSubtab === 'bancos' && (
+        <BankCrossingMonitor
+          currentInvoiced={metrics?.rolling12mSales || 6850000}
+          categoryScale={{
+            category: businessProfile.monotributo_category || 'D',
+            max_annual_billing: metrics?.maxAnnualBilling || 16450000
+          }}
+          categoryKMax={68000000}
+        />
+      )}
+
+      {/* Vista de Control de Compras e Insumos Máximos */}
+      {activeSubtab === 'compras' && (
+        <ExpensePurchaseLimitMonitor
+          categoryKMax={68000000}
+          initialActivity={businessProfile.activity_type || 'servicios'}
+        />
+      )}
+
+      {/* Vista de Central DFE (E-Ventanilla ARCA) */}
+      {activeSubtab === 'dfe' && (
+        <DfeNotificationCenter
+          cuit={businessProfile.cuit}
+          businessName={businessProfile.razon_social || businessProfile.fantasy_name}
+        />
+      )}
+
+      {/* Vista de Facturación Recurrente de Abonos */}
+      {activeSubtab === 'recurrentes' && (
+        <RecurringBillingManager
+          onEmitBatchSales={onBatchEmitRecurring}
+          businessProfile={businessProfile}
+        />
+      )}
 
       {/* Modal de Previsualización Oficial de Factura C (ARCA RG 4892) */}
       <OfficialFacturaCModal
@@ -385,6 +494,33 @@ export default function ClientDashboard({
         sale={selectedSaleForInvoice}
         businessProfile={businessProfile}
       />
+
+      {/* Modal de Pago de Cuota VEP con QR Interoperable */}
+      <VepPaymentModal
+        isOpen={showVepModal}
+        onClose={() => setShowVepModal(false)}
+        cuit={businessProfile.cuit}
+        businessName={businessProfile.razon_social || businessProfile.fantasy_name}
+        category={businessProfile.monotributo_category || 'D'}
+        cuotaAmount={52800}
+      />
+
+      {/* Modal de Constancia de Inscripción Oficial ARCA & F. 152 */}
+      <OfficialConstanciaInscripcionModal
+        isOpen={showConstanciaModal}
+        onClose={() => setShowConstanciaModal(false)}
+        businessProfile={{
+          cuit: businessProfile.cuit || '20-38491029-4',
+          razon_social: businessProfile.razon_social || 'Estudio & Servicios Integrales',
+          fantasy_name: businessProfile.fantasy_name || 'AutoARCA Soluciones',
+          category: businessProfile.monotributo_category || 'D',
+          fiscal_address: businessProfile.fiscal_address || 'Av. Corrientes 1240, CABA',
+          activity_name: businessProfile.activity_name || 'Servicios profesionales y comerciales',
+          activity_code: businessProfile.activity_code || '620900',
+          cur: '1029384'
+        }}
+      />
     </div>
   );
 }
+

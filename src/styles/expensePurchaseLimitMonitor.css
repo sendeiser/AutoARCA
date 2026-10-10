@@ -1,0 +1,218 @@
+.expense-limit-card {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.expense-limit-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.expense-limit-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.expense-law-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-surface-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+}
+
+.expense-activity-toggle {
+  display: flex;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+
+.expense-toggle-btn {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.expense-toggle-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  box-shadow: var(--shadow-xs);
+}
+
+.expense-limit-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.expense-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.expense-kpi-item {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.expense-kpi-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.expense-kpi-val {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.expense-kpi-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.expense-progress-box {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.expense-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.expense-progress-track {
+  height: 12px;
+  background: var(--bg-surface);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  margin-bottom: 0.5rem;
+}
+
+.expense-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.expense-progress-fill.green {
+  background: linear-gradient(90deg, #12b76a, #32d583);
+}
+
+.expense-progress-fill.yellow {
+  background: linear-gradient(90deg, #f79009, #fdb022);
+}
+
+.expense-progress-fill.red {
+  background: linear-gradient(90deg, #f04438, #d92d20);
+}
+
+.expense-progress-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono, monospace);
+}
+
+.expense-alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+
+.alert-green {
+  background: rgba(18, 183, 106, 0.08);
+  border-color: rgba(18, 183, 106, 0.25);
+  color: #027a48;
+}
+
+.alert-yellow {
+  background: rgba(247, 144, 9, 0.08);
+  border-color: rgba(247, 144, 9, 0.25);
+  color: #b54708;
+}
+
+.alert-red {
+  background: rgba(240, 68, 56, 0.08);
+  border-color: rgba(240, 68, 56, 0.25);
+  color: #b42318;
+}
+
+[data-theme="dark"] .alert-green { color: #6ce9a6; }
+[data-theme="dark"] .alert-yellow { color: #fec84b; }
+[data-theme="dark"] .alert-red { color: #fda29b; }
+
+.expense-alert-icon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.expense-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.expense-quick-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.expense-chip {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-mono, monospace);
+  transition: all 0.15s ease;
+}
+
+.expense-chip:hover {
+  background: var(--bg-hover);
+  border-color: var(--color-brand-500, #444ce7);
+  color: var(--color-brand-600, #2e90fa);
+}
