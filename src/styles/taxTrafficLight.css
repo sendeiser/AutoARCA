@@ -880,3 +880,52 @@
   border-color: rgba(2, 132, 199, 0.25);
   color: #0f172a;
 }
+
+/* Responsive media queries para móvil y tablets */
+@media (max-width: 640px) {
+  .traffic-light-card {
+    padding: 1.25rem 1rem;
+    border-radius: 18px;
+  }
+
+  .traffic-light-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .traffic-header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .traffic-status-badge {
+    align-self: flex-start;
+  }
+
+  .progress-pct-value {
+    font-size: 1.65rem;
+  }
+
+  .milestone-sub {
+    display: none;
+  }
+
+  .milestone-mark {
+    font-size: 0.68rem;
+  }
+
+  .smart-budget-banner {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .simulator-controls {
+    padding: 0.85rem;
+  }
+
+  .sim-results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

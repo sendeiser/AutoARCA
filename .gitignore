@@ -34,5 +34,7 @@ skills/
 
 # Playwright Visual Audit Artifacts
 playwright-screenshots/
+audit_screenshots/
+responsive_audit_results/
 *.pdf
 

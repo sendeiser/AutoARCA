@@ -328,7 +328,7 @@ export default function AccountantPortal({
         <>
           {/* Banner de Código de Vinculación Profesional estilo Untitled UI */}
           <Card style={{ marginBottom: '1.5rem', background: 'rgba(30, 27, 75, 0.45)', borderColor: 'rgba(124, 58, 237, 0.3)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="accountant-link-banner-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                 <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.2)', color: '#c4b5fd', border: '1px solid rgba(124, 58, 237, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <LinkIcon size={20} />
@@ -345,7 +345,7 @@ export default function AccountantPortal({
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div className="accountant-link-banner-actions" style={{ display: 'flex', gap: '0.5rem' }}>
                 <Button
                   variant="secondary"
                   size="sm"

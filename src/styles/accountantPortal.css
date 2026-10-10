@@ -41,12 +41,19 @@
   display: flex;
   gap: 0.5rem;
   background: var(--bg-surface-subtle);
-  padding: 0.35rem;
+  padding: 0.4rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   margin-bottom: 1.5rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   white-space: nowrap;
+}
+
+.accountant-subnav-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .accountant-subnav-btn {
@@ -517,6 +524,52 @@
   }
 }
 
+@media (max-width: 640px) {
+  .accountant-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .accountant-actions-header {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .accountant-actions-header button,
+  .btn-add-client-top,
+  .bulk-zip-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .accountant-link-banner-inner {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.85rem !important;
+  }
+
+  .accountant-link-banner-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+
+  .accountant-link-banner-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .clients-table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .clients-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 540px) {
   .accountant-kpi-grid {
     grid-template-columns: 1fr;
@@ -526,4 +579,5 @@
     justify-content: space-between;
   }
 }
+
 
