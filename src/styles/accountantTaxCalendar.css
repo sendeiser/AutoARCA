@@ -182,3 +182,25 @@
   color: var(--color-success-600, #12b76a);
   font-weight: 600;
 }
+
+@media (max-width: 640px) {
+  .tax-calendar-body {
+    padding: 1rem 0.75rem;
+  }
+  .calendar-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .calendar-progress-pill {
+    align-items: flex-start;
+  }
+  .calendar-groups-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .cal-tasks-checks {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}

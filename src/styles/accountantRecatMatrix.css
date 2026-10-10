@@ -170,3 +170,44 @@
 [data-theme="dark"] .recat-cat-badge.target {
   color: #84caff;
 }
+
+@media (max-width: 640px) {
+  .recat-matrix-body {
+    padding: 1rem 0.75rem;
+  }
+  .recat-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .recat-header-flex > button {
+    width: 100%;
+    justify-content: center;
+  }
+  .recat-kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .recat-kpi-item {
+    padding: 0.65rem 0.75rem;
+  }
+  .recat-kpi-val {
+    font-size: 1.15rem;
+  }
+  .recat-filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .recat-tabs-group {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: 100%;
+  }
+  .recat-tab-filter {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.4rem 0.6rem;
+  }
+}

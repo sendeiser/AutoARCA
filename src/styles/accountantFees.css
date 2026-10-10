@@ -132,3 +132,24 @@
 [data-theme="dark"] .fees-status-chip.paid { color: #6ce9a6; }
 [data-theme="dark"] .fees-status-chip.pending { color: #fec84b; }
 [data-theme="dark"] .fees-status-chip.overdue { color: #fda29b; }
+
+@media (max-width: 640px) {
+  .accountant-fees-body {
+    padding: 1rem 0.75rem;
+  }
+  .fees-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .fees-kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .fees-kpi-item {
+    padding: 0.65rem 0.75rem;
+  }
+  .fees-kpi-val {
+    font-size: 1.15rem;
+  }
+}

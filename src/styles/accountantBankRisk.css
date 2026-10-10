@@ -159,3 +159,40 @@
   max-width: 320px;
   line-height: 1.35;
 }
+
+@media (max-width: 640px) {
+  .bank-risk-body {
+    padding: 1rem 0.75rem;
+  }
+  .bank-risk-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .bank-risk-kpis {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .bank-risk-kpi {
+    padding: 0.65rem 0.75rem;
+  }
+  .bank-risk-kpi .risk-kpi-val {
+    font-size: 1.15rem;
+  }
+  .bank-risk-filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .bank-risk-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .bank-tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.4rem 0.6rem;
+  }
+}

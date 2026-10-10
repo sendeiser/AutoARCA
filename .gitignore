@@ -38,5 +38,6 @@ audit_screenshots/
 responsive_audit_results/
 mobile_validation_screens/
 mobile_modules_audit/
+mobile_audit_deep/
 *.pdf
 

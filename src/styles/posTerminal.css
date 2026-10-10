@@ -24,9 +24,14 @@
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
   color: var(--pos-text-main);
   box-sizing: border-box;
-  height: calc(100dvh - 104px);
-  max-height: calc(100dvh - 104px);
-  overflow: hidden;
+  min-height: calc(100dvh - 104px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.pos-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* Cabecera del POS al estilo Apple iOS Navigation Bar */
