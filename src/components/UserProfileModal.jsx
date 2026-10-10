@@ -62,7 +62,7 @@ export default function UserProfileModal({
             {currentUser.full_name?.charAt(0) || 'U'}
           </div>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#fff' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-main, #fff)' }}>
               {currentUser.full_name}
             </h3>
             <div style={{ fontSize: '0.82rem', color: '#38bdf8', fontWeight: 600 }}>

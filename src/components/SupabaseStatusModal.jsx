@@ -142,7 +142,7 @@ export default function SupabaseStatusModal({ isOpen, onClose }) {
                   }}
                 >
                   <div>
-                    <div className="font-mono" style={{ fontSize: '0.82rem', fontWeight: 600, color: '#f8fafc' }}>
+                    <div className="font-mono" style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main, #f8fafc)' }}>
                       {tbl.label}
                     </div>
                     <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{tbl.desc}</div>

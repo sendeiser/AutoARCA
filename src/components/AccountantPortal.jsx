@@ -182,7 +182,7 @@ export default function AccountantPortal({
                 </span>
                 <Badge variant="brand" hasDot={true}>Activo</Badge>
               </div>
-              <div className="font-mono" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '0.05em' }}>
+              <div className="accountant-link-code font-mono" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main, #f8fafc)', letterSpacing: '0.05em' }}>
                 {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
               </div>
             </div>

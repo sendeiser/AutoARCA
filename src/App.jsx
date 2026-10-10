@@ -25,8 +25,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     if (initialUser !== null) return initialUser;
     try {
       const session = authService.getCurrentSession();
-      if (session && session.user) {
-        return session.user;
+      if (session) {
+        return session.user || session;
       }
     } catch {
       // ignore
@@ -102,12 +102,15 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   // Cargar sesión persistida al iniciar
   useEffect(() => {
     try {
-      const session = authService.getCurrentSession();
-      if (session && session.user) {
-        setCurrentUser(session.user);
-        setRole(session.user.role || 'client');
-        if (session.business) {
-          setBusinessProfile(session.business);
+      if (!forceAuthGate && initialUser === null) {
+        const session = authService.getCurrentSession();
+        if (session) {
+          const u = session.user || session;
+          setCurrentUser(u);
+          setRole(u.role || 'client');
+          if (session.business) {
+            setBusinessProfile(session.business);
+          }
         }
       }
       const loadedUsers = authService.getUsers();
@@ -333,7 +336,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
       />
 
       {/* Contenido Dinámico según Rol y Estado */}
-      <main>
+      <main className="app-main-content">
         {role === 'client' && (
           <>
             {isClientSuspended ? (

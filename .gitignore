@@ -31,3 +31,7 @@ skills/
 .env
 .env.*
 !.env.example
+
+# Playwright Visual Audit Artifacts
+playwright-screenshots/
+

@@ -85,6 +85,11 @@
 }
 
 @media (max-width: 768px) {
+  /* En móviles, añadimos padding inferior al contenedor para evitar solapamiento con la barra */
+  .app-main-content {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+
   /* En móviles, ocultamos el segment superior para ahorrar espacio vertical */
   .navbar-desktop-segment {
     display: none;

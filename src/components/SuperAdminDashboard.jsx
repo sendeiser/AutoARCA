@@ -109,7 +109,7 @@ export default function SuperAdminDashboard({
           <div style={{ display: 'inline-block', marginBottom: '0.4rem' }}>
             <Badge variant="brand" hasDot={true}>Centro de Comando Maestro</Badge>
           </div>
-          <h1 style={{ fontSize: '1.75rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
+          <h1 style={{ fontSize: '1.75rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main, #fff)' }}>
             Panel Global de SuperAdmin
           </h1>
           <p style={{ margin: '0.35rem 0 0 0', color: '#94a3b8', fontSize: '0.88rem' }}>
@@ -184,7 +184,7 @@ export default function SuperAdminDashboard({
         <TableContainer>
           <TableToolbar>
             <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: '#fff' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: 'var(--text-main, #fff)' }}>
                 Escalas Oficiales de Monotributo (A a K)
               </h2>
               <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>
@@ -256,7 +256,7 @@ export default function SuperAdminDashboard({
         <TableContainer>
           <TableToolbar>
             <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: '#fff' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: 'var(--text-main, #fff)' }}>
                 Gestión de Usuarios y Estado de Suscripción
               </h2>
               <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>

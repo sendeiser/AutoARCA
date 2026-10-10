@@ -331,7 +331,26 @@
     padding: 0.2rem;
   }
 
+  .role-seg-text {
+    display: none;
+  }
+
+  .role-seg-btn {
+    padding: 0.25rem 0.45rem;
+  }
+
+  .role-switcher-segmented {
+    padding: 1px;
+    gap: 1px;
+  }
+
+  .theme-toggle-btn,
+  .sound-toggle-btn {
+    padding: 0.28rem 0.45rem;
+  }
+
   .app-user-controls {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 }
+

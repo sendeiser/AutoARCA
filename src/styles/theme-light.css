@@ -978,8 +978,60 @@ body[data-theme="light"] {
 [data-theme="light"] .uui-showcase-card {
   background: #ffffff !important;
   border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: var(--uui-shadow-md) !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
   color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-showcase-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-showcase-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .uui-showcase-item {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .uui-showcase-item svg {
+  color: #10b981 !important;
+}
+
+[data-theme="light"] .uui-auth-logo-badge {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .admin-scale-input {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .admin-scale-input:focus {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12) !important;
+}
+
+[data-theme="light"] .accountant-link-code {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dashboard-business-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .client-dashboard-wrap {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dashboard-section-subtitle {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .progress-milestones {
+  color: #64748b !important;
 }
 
 [data-theme="light"] .uui-quote-box {

@@ -67,19 +67,19 @@ export default function ClientDashboard({
   };
 
   return (
-    <div style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem', color: '#f8fafc' }}>
+    <div className="client-dashboard-wrap" style={{ maxWidth: '960px', margin: '0 auto', padding: '1.25rem' }}>
       {/* Barra de Encabezado Principal */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
-            <h1 style={{ fontSize: '1.6rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
+            <h1 className="dashboard-business-title" style={{ fontSize: '1.6rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
               {businessProfile.fantasy_name || 'Panel del Comercio'}
             </h1>
             <Badge variant="brand" hasDot={true}>
               Cat. {businessProfile.monotributo_category || 'D'}
             </Badge>
           </div>
-          <span style={{ fontSize: '0.84rem', color: '#94a3b8' }}>
+          <span style={{ fontSize: '0.84rem', color: 'var(--text-muted, #94a3b8)' }}>
             CUIT: <strong>{businessProfile.cuit || 'Sin registrar'}</strong> · {businessProfile.razon_social || 'Titular'}
           </span>
         </div>
@@ -178,7 +178,7 @@ export default function ClientDashboard({
       <TableContainer>
         <TableToolbar>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
+            <h3 className="dashboard-section-subtitle" style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main, #ffffff)' }}>
               Historial de Lotes Diarios para ARCA
             </h3>
             <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>

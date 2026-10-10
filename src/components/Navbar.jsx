@@ -74,6 +74,7 @@ export default function Navbar({
                 onClick={() => handleSelect(tab.key)}
                 aria-selected={isActive}
                 role="tab"
+                data-testid={`nav-tab-${tab.key}`}
               >
                 <Icon size={15} />
                 <span className="navbar-segment-label">{tab.label}</span>
@@ -102,6 +103,7 @@ export default function Navbar({
                 onClick={() => handleSelect(tab.key)}
                 aria-selected={isActive}
                 role="tab"
+                data-testid={`nav-tab-mobile-${tab.key}`}
               >
                 <div className="navbar-bottom-icon-wrap">
                   <Icon size={19} />
