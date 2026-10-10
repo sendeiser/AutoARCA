@@ -218,3 +218,56 @@ export function generateLibroVentasExcelCsv(sales = [], businessProfile = {}) {
     totalGeneral
   };
 }
+
+/**
+ * Exportación de Comprobantes de Ventas para Tango Gestión (.txt)
+ */
+export function generateTangoVentasTxt(sales = [], businessProfile = {}) {
+  const cuitClean = (businessProfile.cuit || '0').replace(/[^0-9]/g, '');
+  const filename = `TANGO_VENTAS_${cuitClean}_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.txt`;
+
+  const lines = sales.map((sale, idx) => {
+    const fecha = formatArcaDate(sale.date || new Date().toISOString().slice(0, 10));
+    const nroCbte = String(sale.id || idx + 1).replace(/\D/g, '').padStart(8, '0');
+    const docTipo = getArcaDocTypeCode(sale.customer_doc_type);
+    const docNro = padZero(String(sale.customer_doc_number || '0').replace(/\D/g, ''), 11);
+    const razonSocial = sanitizeText(sale.customer_name || 'CONSUMIDOR FINAL').padEnd(30, ' ').slice(0, 30);
+    const importe = padZero(Math.round(Number(sale.amount || 0) * 100), 15);
+    const cae = (sale.cae || '74291823910293').padEnd(14, ' ').slice(0, 14);
+
+    // Formato estándar Tango: TipoCbte(3) + PtoVta(5) + NroCbte(8) + Fecha(8) + DocTipo(2) + DocNro(11) + RazonSocial(30) + Importe(15) + CAE(14)
+    return `FAC00001${nroCbte}${fecha}${docTipo}${docNro}${razonSocial}${importe}${cae}`;
+  });
+
+  return {
+    filename,
+    content: lines.join('\r\n'),
+    salesCount: sales.length
+  };
+}
+
+/**
+ * Exportación Posicional para Holistor / Sistemas Bejerman (.txt)
+ */
+export function generateHolistorBejermanTxt(sales = [], businessProfile = {}) {
+  const cuitClean = (businessProfile.cuit || '0').replace(/[^0-9]/g, '');
+  const filename = `HOLISTOR_VENTAS_${cuitClean}_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.txt`;
+
+  const lines = sales.map((sale, idx) => {
+    const fecha = (sale.date || new Date().toISOString().slice(0, 10)).replace(/-/g, '');
+    const nroCbte = String(sale.id || idx + 1).replace(/\D/g, '').padStart(8, '0');
+    const docNro = (sale.customer_doc_number || '0').replace(/\D/g, '').padStart(11, '0');
+    const nombre = sanitizeText(sale.customer_name || 'CONSUMIDOR FINAL').padEnd(40, ' ').slice(0, 40);
+    const total = padZero(Math.round(Number(sale.amount || 0) * 100), 12);
+    const cae = (sale.cae || '74291823910293').padEnd(14, '0').slice(0, 14);
+
+    return `011${fecha}00001${nroCbte}${docNro}${nombre}${total}000000000000${total}${cae}`;
+  });
+
+  return {
+    filename,
+    content: lines.join('\r\n'),
+    salesCount: sales.length
+  };
+}
+

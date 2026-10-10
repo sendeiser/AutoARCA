@@ -1,0 +1,135 @@
+.income-cert-sheet {
+  background: #ffffff;
+  color: #101828;
+  border: 1px solid #d0d5dd;
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.cert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.cert-estudio-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  color: #0f172a;
+}
+
+.cert-accountant-sub {
+  font-size: 0.85rem;
+  color: #334155;
+  margin-top: 0.15rem;
+}
+
+.cert-accountant-mat {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.cert-date-box {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.cert-title-block {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.cert-title-block h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.02em;
+  color: #0f172a;
+}
+
+.cert-norm-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.cert-text-body {
+  font-size: 0.84rem;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cert-details-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin: 0.5rem 0;
+}
+
+.cert-months-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-top: 0.5rem;
+}
+
+.cert-months-table th {
+  background: #f1f5f9;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #cbd5e1;
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #475467;
+}
+
+.cert-months-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cert-total-row {
+  background: #edf2f7;
+  font-weight: 700;
+}
+
+.cert-signature-layout {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.cert-signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 240px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.cert-signature-line {
+  width: 100%;
+  height: 1px;
+  background: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.cert-footer-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

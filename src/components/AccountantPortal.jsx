@@ -26,6 +26,13 @@ import { SearchInput } from './untitled-ui/SearchInput.jsx';
 import { reportPdfService } from '../services/reportPdfService.js';
 import { generateLibroVentasExcelCsv } from '../services/arcaExportService.js';
 import OfficialConstanciaInscripcionModal from './OfficialConstanciaInscripcionModal.jsx';
+import AccountantRecategorizationMatrix from './AccountantRecategorizationMatrix.jsx';
+import AccountantDfeInbox from './AccountantDfeInbox.jsx';
+import AccountantBankRiskDashboard from './AccountantBankRiskDashboard.jsx';
+import AccountantTaxCalendar from './AccountantTaxCalendar.jsx';
+import AccountantIncomeCertificateModal from './AccountantIncomeCertificateModal.jsx';
+import AccountantFeesManager from './AccountantFeesManager.jsx';
+import AccountantMultiSoftwareExportModal from './AccountantMultiSoftwareExportModal.jsx';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -47,6 +54,9 @@ export default function AccountantPortal({
   const [newRazonSocial, setNewRazonSocial] = useState('');
   const [newCategory, setNewCategory] = useState('D');
   const [selectedClientForConstancia, setSelectedClientForConstancia] = useState(null);
+  const [selectedClientForCert, setSelectedClientForCert] = useState(null);
+  const [selectedClientForExport, setSelectedClientForExport] = useState(null);
+  const [activeTab, setActiveTab] = useState('clientes'); // 'clientes' | 'recategorizacion' | 'dfe' | 'riesgo_bancario' | 'calendario' | 'honorarios'
 
   // Sync state if props change
   React.useEffect(() => {
@@ -267,349 +277,470 @@ export default function AccountantPortal({
         </div>
       </div>
 
-      {/* Banner de Código de Vinculación Profesional estilo Untitled UI */}
-      <Card style={{ marginBottom: '1.5rem', background: 'rgba(30, 27, 75, 0.45)', borderColor: 'rgba(124, 58, 237, 0.3)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.2)', color: '#c4b5fd', border: '1px solid rgba(124, 58, 237, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LinkIcon size={20} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-                <span style={{ fontSize: '0.75rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Código de Vinculación Profesional para Clientes
-                </span>
-                <Badge variant="brand" hasDot={true}>Activo</Badge>
-              </div>
-              <div className="accountant-link-code font-mono" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main, #f8fafc)', letterSpacing: '0.05em' }}>
-                {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                if (navigator.clipboard) {
-                  navigator.clipboard.writeText(accountantProfile.link_code || 'CONT-MENDEZ-9876');
-                  alert('¡Código copiado al portapapeles!');
-                }
-              }}
-              iconLeading={<CopyIcon size={14} />}
-            >
-              Copiar Código
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => { soundService.playKeyTap(); setShowLinkModal(true); }}
-              iconLeading={<LinkIcon size={14} />}
-            >
-              Gestionar Vinculaciones
-            </Button>
-          </div>
-        </div>
-      </Card>
-
-      {/* KPI Cards Banner estilo Untitled UI Metrics */}
-      <StatGrid>
-        <StatCard
-          label="Clientes Monitoreados"
-          value={totalClients}
-          icon={<UsersIcon size={20} />}
-          caption="Bajo gestión fiscal"
-          trend="neutral"
-        />
-        <StatCard
-          label="En Zona Segura"
-          value={totalClients - inRiskClients - inWarningClients}
-          icon={<ShieldCheckIcon size={20} />}
-          caption="Categoría en orden"
-          trend="up"
-          change="Al día"
-        />
-        <StatCard
-          label="Alerta o Peligro"
-          value={inRiskClients + inWarningClients}
-          icon={<AlertTriangleIcon size={20} />}
-          caption={`${inRiskClients} al borde del límite`}
-          trend={inRiskClients > 0 ? 'down' : 'neutral'}
-          change={inRiskClients > 0 ? 'Riesgo' : 'Atención'}
-        />
-        <StatCard
-          label="Lotes Listos para Descarga"
-          value={readyBatchesCount}
-          icon={<ReceiptTaxIcon size={20} />}
-          caption="CSV ARCA generados"
-          trend={readyBatchesCount > 0 ? 'up' : 'neutral'}
-          change={`${readyBatchesCount} listos`}
-        />
-      </StatGrid>
-
-      {/* Toolbar con Buscador, Filtros y Selector de Fecha */}
-      <div className="accountant-toolbar">
-        <SearchInput
-          placeholder="Buscar por CUIT o Razón Social..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        {/* Status Filter Chips */}
-        <div className="status-filter-chips">
-          <button
-            type="button"
-            className={`filter-chip ${statusFilter === 'all' ? 'active' : ''}`}
-            onClick={() => { soundService.playKeyTap(); setStatusFilter('all'); }}
-          >
-            Todos ({totalClients})
-          </button>
-          <button
-            type="button"
-            className={`filter-chip green ${statusFilter === 'green' ? 'active' : ''}`}
-            onClick={() => { soundService.playKeyTap(); setStatusFilter('green'); }}
-          >
-            🟢 En orden
-          </button>
-          <button
-            type="button"
-            className={`filter-chip yellow ${statusFilter === 'yellow' ? 'active' : ''}`}
-            onClick={() => { soundService.playKeyTap(); setStatusFilter('yellow'); }}
-          >
-            🟡 Alerta ({inWarningClients})
-          </button>
-          <button
-            type="button"
-            className={`filter-chip red ${statusFilter === 'red' ? 'active' : ''}`}
-            onClick={() => { soundService.playKeyTap(); setStatusFilter('red'); }}
-          >
-            <AlertTriangleIcon size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Riesgo ({inRiskClients})
-          </button>
-        </div>
-
-        {/* View Toggle & Date Picker */}
-        <div className="toolbar-controls-right">
-          <div className="view-mode-toggle">
-            <button
-              type="button"
-              className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => { soundService.playKeyTap(); setViewMode('table'); }}
-              title="Vista de Tabla"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-            >
-              <TableIcon size={14} /> Tabla
-            </button>
-            <button
-              type="button"
-              className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
-              onClick={() => { soundService.playKeyTap(); setViewMode('cards'); }}
-              title="Vista de Tarjetas"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-            >
-              <GridIcon size={14} /> Tarjetas
-            </button>
-          </div>
-
-          <input
-            type="date"
-            className="date-selector-input"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </div>
+      {/* Barra de Sub-Navegación del Estudio Contable */}
+      <div className="accountant-subnav-bar">
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'clientes' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('clientes'); }}
+        >
+          <UsersIcon size={16} /> Cartera & Lotes
+        </button>
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'recategorizacion' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('recategorizacion'); }}
+        >
+          <ReceiptTaxIcon size={16} /> Recategorización Semestral
+        </button>
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'dfe' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('dfe'); }}
+        >
+          <FileTextIcon size={16} /> Central DFE E-Ventanilla
+        </button>
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'riesgo_bancario' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('riesgo_bancario'); }}
+        >
+          <AlertTriangleIcon size={16} /> Riesgo & Brecha Bancaria
+        </button>
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'calendario' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('calendario'); }}
+        >
+          <TableIcon size={16} /> Calendario CUIT
+        </button>
+        <button
+          type="button"
+          className={`accountant-subnav-btn ${activeTab === 'honorarios' ? 'active' : ''}`}
+          onClick={() => { soundService.playKeyTap(); setActiveTab('honorarios'); }}
+        >
+          <ShieldCheckIcon size={16} /> Honorarios del Estudio
+        </button>
       </div>
 
-      {/* Vista de Tabla */}
-      {viewMode === 'table' ? (
-        <div className="clients-table-card">
-          <table className="clients-table">
-            <thead>
-              <tr>
-                <th>Comercio / Profesional</th>
-                <th>CUIT</th>
-                <th>Categoría</th>
-                <th>Semáforo Fiscal</th>
-                <th>Cierre del Día</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
+      {/* Pestaña Principal: Cartera & Lotes Diarios */}
+      {activeTab === 'clientes' && (
+        <>
+          {/* Banner de Código de Vinculación Profesional estilo Untitled UI */}
+          <Card style={{ marginBottom: '1.5rem', background: 'rgba(30, 27, 75, 0.45)', borderColor: 'rgba(124, 58, 237, 0.3)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.2)', color: '#c4b5fd', border: '1px solid rgba(124, 58, 237, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <LinkIcon size={20} />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Código de Vinculación Profesional para Clientes
+                    </span>
+                    <Badge variant="brand" hasDot={true}>Activo</Badge>
+                  </div>
+                  <div className="accountant-link-code font-mono" style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main, #f8fafc)', letterSpacing: '0.05em' }}>
+                    {accountantProfile.link_code || 'CONT-MENDEZ-9876'}
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    if (navigator.clipboard) {
+                      navigator.clipboard.writeText(accountantProfile.link_code || 'CONT-MENDEZ-9876');
+                      alert('¡Código copiado al portapapeles!');
+                    }
+                  }}
+                  iconLeading={<CopyIcon size={14} />}
+                >
+                  Copiar Código
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => { soundService.playKeyTap(); setShowLinkModal(true); }}
+                  iconLeading={<LinkIcon size={14} />}
+                >
+                  Gestionar Vinculaciones
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* KPI Cards Banner estilo Untitled UI Metrics */}
+          <StatGrid>
+            <StatCard
+              label="Clientes Monitoreados"
+              value={totalClients}
+              icon={<UsersIcon size={20} />}
+              caption="Bajo gestión fiscal"
+              trend="neutral"
+            />
+            <StatCard
+              label="En Zona Segura"
+              value={totalClients - inRiskClients - inWarningClients}
+              icon={<ShieldCheckIcon size={20} />}
+              caption="Categoría en orden"
+              trend="up"
+              change="Al día"
+            />
+            <StatCard
+              label="Alerta o Peligro"
+              value={inRiskClients + inWarningClients}
+              icon={<AlertTriangleIcon size={20} />}
+              caption={`${inRiskClients} al borde del límite`}
+              trend={inRiskClients > 0 ? 'down' : 'neutral'}
+              change={inRiskClients > 0 ? 'Riesgo' : 'Atención'}
+            />
+            <StatCard
+              label="Lotes Listos para Descarga"
+              value={readyBatchesCount}
+              icon={<ReceiptTaxIcon size={20} />}
+              caption="CSV ARCA generados"
+              trend={readyBatchesCount > 0 ? 'up' : 'neutral'}
+              change={`${readyBatchesCount} listos`}
+            />
+          </StatGrid>
+
+          {/* Toolbar con Buscador, Filtros y Selector de Fecha */}
+          <div className="accountant-toolbar">
+            <SearchInput
+              placeholder="Buscar por CUIT o Razón Social..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
+            {/* Status Filter Chips */}
+            <div className="status-filter-chips">
+              <button
+                type="button"
+                className={`filter-chip ${statusFilter === 'all' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('all'); }}
+              >
+                Todos ({totalClients})
+              </button>
+              <button
+                type="button"
+                className={`filter-chip green ${statusFilter === 'green' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('green'); }}
+              >
+                🟢 En orden
+              </button>
+              <button
+                type="button"
+                className={`filter-chip yellow ${statusFilter === 'yellow' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('yellow'); }}
+              >
+                🟡 Alerta ({inWarningClients})
+              </button>
+              <button
+                type="button"
+                className={`filter-chip red ${statusFilter === 'red' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('red'); }}
+              >
+                <AlertTriangleIcon size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Riesgo ({inRiskClients})
+              </button>
+            </div>
+
+            {/* View Toggle & Date Picker */}
+            <div className="toolbar-controls-right">
+              <div className="view-mode-toggle">
+                <button
+                  type="button"
+                  className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+                  onClick={() => { soundService.playKeyTap(); setViewMode('table'); }}
+                  title="Vista de Tabla"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <TableIcon size={14} /> Tabla
+                </button>
+                <button
+                  type="button"
+                  className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
+                  onClick={() => { soundService.playKeyTap(); setViewMode('cards'); }}
+                  title="Vista de Tarjetas"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <GridIcon size={14} /> Tarjetas
+                </button>
+              </div>
+
+              <input
+                type="date"
+                className="date-selector-input"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Vista de Tabla */}
+          {viewMode === 'table' ? (
+            <div className="clients-table-card">
+              <table className="clients-table">
+                <thead>
+                  <tr>
+                    <th>Comercio / Profesional</th>
+                    <th>CUIT</th>
+                    <th>Categoría</th>
+                    <th>Semáforo Fiscal</th>
+                    <th>Cierre del Día</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredClients.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>
+                        No se encontraron clientes asociados con los filtros aplicados.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredClients.map((client) => {
+                      const color = client.trafficColor || 'green';
+                      const hasBatch = !!client.todayBatch;
+
+                      return (
+                        <tr key={client.id}>
+                          <td>
+                            <strong>{client.fantasy_name || client.razon_social}</strong>
+                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.razon_social}</div>
+                          </td>
+                          <td><code>{client.cuit}</code></td>
+                          <td>
+                            <span className="client-cat-badge">Cat. {client.monotributo_category || 'A'}</span>
+                          </td>
+                          <td>
+                            <span className={`dot-badge ${color}`}>
+                              <span className={`status-dot-indicator dot-${color}`} />
+                              <span style={{ textTransform: 'capitalize' }}>
+                                {color === 'green' ? 'En orden' : color === 'yellow' ? 'Alerta' : 'Peligro'}
+                              </span>
+                            </span>
+                          </td>
+                          <td>
+                            {hasBatch ? (
+                              <div>
+                                <span style={{ color: '#10b981', fontWeight: 700 }}>
+                                  {formatCurrencyARS(client.todayBatch.total_amount)}
+                                </span>
+                                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                                  {client.todayBatch.total_sales_count} ventas
+                                </div>
+                              </div>
+                            ) : (
+                              <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.85rem' }}>
+                                Sin cerrar
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                              <button
+                                type="button"
+                                className="btn-download-single"
+                                onClick={() => handleDownloadClientPdf(client)}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
+                                title="Descargar informe fiscal en PDF"
+                              >
+                                <FileTextIcon size={13} /> PDF Fiscal
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-download-single"
+                                onClick={() => handleDownloadClientExcel(client)}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
+                                title="Descargar Libro de Ventas en formato Excel/CSV"
+                              >
+                                <FileSpreadsheetIcon size={13} /> Excel
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-download-single"
+                                onClick={() => {
+                                  soundService.playKeyTap();
+                                  setSelectedClientForConstancia(client);
+                                }}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(124, 58, 237, 0.12)', borderColor: 'rgba(124, 58, 237, 0.3)', color: '#c4b5fd' }}
+                                title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
+                              >
+                                <ShieldCheckIcon size={13} /> Constancia
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-download-single"
+                                onClick={() => {
+                                  soundService.playKeyTap();
+                                  setSelectedClientForCert(client);
+                                }}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' }}
+                                title="Emitir Certificación de Ingresos FACPCE Res. 37"
+                              >
+                                <FileTextIcon size={13} /> Certificación
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-download-single"
+                                onClick={() => {
+                                  soundService.playKeyTap();
+                                  setSelectedClientForExport(client);
+                                }}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }}
+                                title="Exportar a Tango, Holistor, Bejerman o Excel"
+                              >
+                                <DownloadIcon size={13} /> Exportar
+                              </button>
+                              {hasBatch ? (
+                                <button
+                                  type="button"
+                                  className="btn-download-single"
+                                  onClick={() => handleDownloadSingle(client)}
+                                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                                  title="Descargar lote CSV ARCA"
+                                >
+                                  <DownloadIcon size={13} /> CSV ARCA
+                                </button>
+                              ) : (
+                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Sin lote</span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            /* Vista de Tarjetas / Grid */
+            <div className="clients-cards-grid">
               {filteredClients.length === 0 ? (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>
-                    No se encontraron clientes asociados con los filtros aplicados.
-                  </td>
-                </tr>
+                <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
+                  No se encontraron clientes asociados.
+                </div>
               ) : (
                 filteredClients.map((client) => {
                   const color = client.trafficColor || 'green';
                   const hasBatch = !!client.todayBatch;
 
                   return (
-                    <tr key={client.id}>
-                      <td>
-                        <strong>{client.fantasy_name || client.razon_social}</strong>
-                        <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.razon_social}</div>
-                      </td>
-                      <td><code>{client.cuit}</code></td>
-                      <td>
+                    <div key={client.id} className="client-grid-card">
+                      <div className="client-card-top">
+                        <div>
+                          <h3 className="client-card-title">{client.fantasy_name || client.razon_social}</h3>
+                          <div className="client-card-subtitle">{client.razon_social}</div>
+                        </div>
                         <span className="client-cat-badge">Cat. {client.monotributo_category || 'A'}</span>
-                      </td>
-                      <td>
+                      </div>
+
+                      <div className="client-card-cuit">
+                        <span>CUIT:</span> <code>{client.cuit}</code>
+                      </div>
+
+                      <div className="client-card-status-row">
+                        <span className="status-label">Estado Fiscal:</span>
                         <span className={`dot-badge ${color}`}>
                           <span className={`status-dot-indicator dot-${color}`} />
                           <span style={{ textTransform: 'capitalize' }}>
                             {color === 'green' ? 'En orden' : color === 'yellow' ? 'Alerta' : 'Peligro'}
                           </span>
                         </span>
-                      </td>
-                      <td>
+                      </div>
+
+                      <div className="client-card-batch-info">
                         {hasBatch ? (
                           <div>
-                            <span style={{ color: '#10b981', fontWeight: 700 }}>
+                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Cierre diario listo:</div>
+                            <div style={{ color: '#10b981', fontWeight: 800, fontSize: '1.1rem' }}>
                               {formatCurrencyARS(client.todayBatch.total_amount)}
-                            </span>
-                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                              {client.todayBatch.total_sales_count} ventas
                             </div>
+                            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.todayBatch.total_sales_count} comprobantes</div>
                           </div>
                         ) : (
-                          <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.85rem' }}>
-                            Sin cerrar
-                          </span>
+                          <div style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.85rem' }}>
+                            Jornada pendiente de cierre
+                          </div>
                         )}
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                      </div>
+
+                      <div className="client-card-actions" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          className="btn-download-single"
+                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
+                          onClick={() => handleDownloadClientPdf(client)}
+                        >
+                          <FileTextIcon size={13} /> PDF
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-download-single"
+                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' }}
+                          onClick={() => {
+                            soundService.playKeyTap();
+                            setSelectedClientForCert(client);
+                          }}
+                        >
+                          <FileTextIcon size={13} /> Cert.
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-download-single"
+                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }}
+                          onClick={() => {
+                            soundService.playKeyTap();
+                            setSelectedClientForExport(client);
+                          }}
+                        >
+                          <DownloadIcon size={13} /> Exp.
+                        </button>
+                        {hasBatch && (
                           <button
                             type="button"
                             className="btn-download-single"
-                            onClick={() => handleDownloadClientPdf(client)}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
-                            title="Descargar informe fiscal en PDF"
+                            style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}
+                            onClick={() => handleDownloadSingle(client)}
                           >
-                            <FileTextIcon size={13} /> PDF Fiscal
+                            <DownloadIcon size={13} /> CSV
                           </button>
-                          <button
-                            type="button"
-                            className="btn-download-single"
-                            onClick={() => handleDownloadClientExcel(client)}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
-                            title="Descargar Libro de Ventas en formato Excel/CSV"
-                          >
-                            <FileSpreadsheetIcon size={13} /> Excel
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-download-single"
-                            onClick={() => {
-                              soundService.playKeyTap();
-                              setSelectedClientForConstancia(client);
-                            }}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(124, 58, 237, 0.12)', borderColor: 'rgba(124, 58, 237, 0.3)', color: '#c4b5fd' }}
-                            title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
-                          >
-                            <ShieldCheckIcon size={13} /> Constancia
-                          </button>
-                          {hasBatch ? (
-                            <button
-                              type="button"
-                              className="btn-download-single"
-                              onClick={() => handleDownloadSingle(client)}
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-                              title="Descargar lote CSV ARCA"
-                            >
-                              <DownloadIcon size={14} /> CSV ARCA
-                            </button>
-                          ) : (
-                            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Sin lote</span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                        )}
+                      </div>
+                    </div>
                   );
                 })
               )}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        /* Vista de Tarjetas / Grid */
-        <div className="clients-cards-grid">
-          {filteredClients.length === 0 ? (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
-              No se encontraron clientes asociados.
             </div>
-          ) : (
-            filteredClients.map((client) => {
-              const color = client.trafficColor || 'green';
-              const hasBatch = !!client.todayBatch;
-
-              return (
-                <div key={client.id} className="client-grid-card">
-                  <div className="client-card-top">
-                    <div>
-                      <h3 className="client-card-title">{client.fantasy_name || client.razon_social}</h3>
-                      <div className="client-card-subtitle">{client.razon_social}</div>
-                    </div>
-                    <span className="client-cat-badge">Cat. {client.monotributo_category || 'A'}</span>
-                  </div>
-
-                  <div className="client-card-cuit">
-                    <span>CUIT:</span> <code>{client.cuit}</code>
-                  </div>
-
-                  <div className="client-card-status-row">
-                    <span className="status-label">Estado Fiscal:</span>
-                    <span className={`dot-badge ${color}`}>
-                      <span className={`status-dot-indicator dot-${color}`} />
-                      <span style={{ textTransform: 'capitalize' }}>
-                        {color === 'green' ? 'En orden' : color === 'yellow' ? 'Alerta' : 'Peligro'}
-                      </span>
-                    </span>
-                  </div>
-
-                  <div className="client-card-batch-info">
-                    {hasBatch ? (
-                      <div>
-                        <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Cierre diario listo:</div>
-                        <div style={{ color: '#10b981', fontWeight: 800, fontSize: '1.1rem' }}>
-                          {formatCurrencyARS(client.todayBatch.total_amount)}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.todayBatch.total_sales_count} comprobantes</div>
-                      </div>
-                    ) : (
-                      <div style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.85rem' }}>
-                        Jornada pendiente de cierre
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="client-card-actions" style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      type="button"
-                      className="btn-download-single"
-                      style={{ flex: 1, padding: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
-                      onClick={() => handleDownloadClientPdf(client)}
-                    >
-                      <FileTextIcon size={14} /> Informe PDF
-                    </button>
-                    {hasBatch && (
-                      <button
-                        type="button"
-                        className="btn-download-single"
-                        style={{ flex: 1, padding: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
-                        onClick={() => handleDownloadSingle(client)}
-                      >
-                        <DownloadIcon size={14} /> CSV ARCA
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })
           )}
-        </div>
+        </>
+      )}
+
+      {/* Pestaña: Matriz de Recategorización Semestral */}
+      {activeTab === 'recategorizacion' && (
+        <AccountantRecategorizationMatrix clients={clientList} />
+      )}
+
+      {/* Pestaña: Central Unificada de DFE E-Ventanilla */}
+      {activeTab === 'dfe' && (
+        <AccountantDfeInbox clients={clientList} />
+      )}
+
+      {/* Pestaña: Tablero de Exclusión y Riesgo Bancario */}
+      {activeTab === 'riesgo_bancario' && (
+        <AccountantBankRiskDashboard clients={clientList} />
+      )}
+
+      {/* Pestaña: Calendario Impositivo por CUIT */}
+      {activeTab === 'calendario' && (
+        <AccountantTaxCalendar clients={clientList} />
+      )}
+
+      {activeTab === 'honorarios' && (
+        <AccountantFeesManager clients={clientList} accountantProfile={accountantProfile} />
       )}
 
       {/* Modal de Vinculación de Nuevo Cliente */}
@@ -722,6 +853,25 @@ export default function AccountantPortal({
             activity_code: selectedClientForConstancia.activity_code || '620900',
             cur: '1029384'
           }}
+        />
+      )}
+
+      {/* Modal de Certificación de Ingresos FACPCE */}
+      {selectedClientForCert && (
+        <AccountantIncomeCertificateModal
+          isOpen={Boolean(selectedClientForCert)}
+          onClose={() => setSelectedClientForCert(null)}
+          client={selectedClientForCert}
+          accountantProfile={accountantProfile}
+        />
+      )}
+
+      {/* Modal de Exportación Multi-Software (Tango, Holistor, Bejerman, Excel BOM) */}
+      {selectedClientForExport && (
+        <AccountantMultiSoftwareExportModal
+          isOpen={Boolean(selectedClientForExport)}
+          onClose={() => setSelectedClientForExport(null)}
+          client={selectedClientForExport}
         />
       )}
     </div>
