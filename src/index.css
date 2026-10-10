@@ -89,9 +89,11 @@
   }
 }
 
-body {
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  min-height: 100dvh;
   background-color: var(--apple-bg-base);
   background-image: 
     radial-gradient(at 15% 15%, rgba(10, 132, 255, 0.09) 0px, transparent 45%),
@@ -101,7 +103,35 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
-  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Contenedor Raíz de Aplicación Zero-Scroll Viewport */
+.app-shell-root {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Área de Contenido Principal Dinámica con Adaptabilidad */
+.app-main-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main-content.pos-view-active {
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
 }
 
 code, .font-mono {

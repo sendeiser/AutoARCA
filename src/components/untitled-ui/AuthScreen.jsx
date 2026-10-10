@@ -42,11 +42,24 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
   const handleLogin = (e) => {
     e.preventDefault();
     setErrorMsg('');
+
+    const cleanEmail = loginEmail.trim();
+    const cleanPass = loginPassword.trim();
+
+    if (!cleanEmail) {
+      setErrorMsg('Por favor ingresa tu correo electrónico.');
+      return;
+    }
+    if (!cleanPass) {
+      setErrorMsg('Por favor ingresa tu contraseña.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       soundService.playKeyTap();
-      const user = authService.login(loginEmail, loginPassword);
+      const user = authService.login(cleanEmail, cleanPass);
       soundService.playSuccessChime();
       if (onAuthSuccess) onAuthSuccess(user);
     } catch (err) {
@@ -61,13 +74,28 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
   const handleRegister = (e) => {
     e.preventDefault();
     setErrorMsg('');
+
+    const cleanName = regFullName.trim();
+    const cleanEmail = regEmail.trim();
+    const cleanPass = regPassword.trim();
+
+    if (!cleanName) {
+      setErrorMsg('Por favor ingresa tu nombre completo o razón social.');
+      return;
+    }
+    if (!cleanEmail) {
+      setErrorMsg('Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+    if (!cleanPass || cleanPass.length < 4) {
+      setErrorMsg('La contraseña debe tener al menos 4 caracteres.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       soundService.playKeyTap();
-      if (!regFullName || !regEmail || !regPassword) {
-        throw new Error('Por favor completa todos los campos obligatorios.');
-      }
 
       let assignedAccountantId = null;
       if (regRole === 'client' && regAccountantCode.trim()) {
@@ -78,16 +106,16 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
       }
 
       const user = authService.register({
-        fullName: regFullName,
-        email: regEmail,
-        password: regPassword,
+        fullName: cleanName,
+        email: cleanEmail,
+        password: cleanPass,
         role: regRole,
-        phone: regPhone,
-        cuit: regCuit,
-        fantasyName: regFantasyName,
+        phone: regPhone.trim(),
+        cuit: regCuit.trim(),
+        fantasyName: regFantasyName.trim(),
         monotributoCategory: regCategory,
         activityType: regActivityType,
-        matricula: regMatricula,
+        matricula: regMatricula.trim(),
         jurisdiccion: regJurisdiccion,
         accountantId: assignedAccountantId
       });
@@ -104,6 +132,7 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
 
   // Quick 1-Click Demo Login
   const handleDemoLogin = (email, pass) => {
+    setErrorMsg('');
     soundService.playKeyTap();
     setIsLoading(true);
     try {
@@ -111,7 +140,8 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
       soundService.playSuccessChime();
       if (onAuthSuccess) onAuthSuccess(user);
     } catch (err) {
-      setErrorMsg(err.message);
+      soundService.playWarning();
+      setErrorMsg(err.message || 'Error al iniciar sesión demo.');
     } finally {
       setIsLoading(false);
     }

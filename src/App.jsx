@@ -23,6 +23,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   const [currentUser, setCurrentUser] = useState(() => {
     if (forceAuthGate) return null;
     if (initialUser !== null) return initialUser;
+    if (isTestEnv) return INITIAL_USERS[0];
     try {
       const session = authService.getCurrentSession();
       if (session) {
@@ -31,7 +32,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
     } catch {
       // ignore
     }
-    return isTestEnv ? INITIAL_USERS[0] : null;
+    return null;
   });
 
   const [role, setRole] = useState(() => currentUser?.role || 'client');
@@ -102,7 +103,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   // Cargar sesión persistida al iniciar
   useEffect(() => {
     try {
-      if (!forceAuthGate && initialUser === null) {
+      if (!forceAuthGate && initialUser === null && !isTestEnv) {
         const session = authService.getCurrentSession();
         if (session) {
           const u = session.user || session;
@@ -111,6 +112,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
           if (session.business) {
             setBusinessProfile(session.business);
           }
+        } else {
+          setCurrentUser(null);
         }
       }
       const loadedUsers = authService.getUsers();
@@ -133,6 +136,9 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   const handleRoleChange = (newRole) => {
     soundService.playKeyTap();
     setRole(newRole);
+    if (currentUser && currentUser.role === newRole) {
+      return;
+    }
     const targetUser = users.find((u) => u.role === newRole) || users[0];
     if (targetUser) {
       setCurrentUser(targetUser);
@@ -303,7 +309,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
   }
 
   return (
-    <div>
+    <div className="app-shell-root">
       {/* Barra de Navegación Principal estilo Apple macOS / iPadOS */}
       {/* Barra Superior Header */}
       <Header
@@ -335,8 +341,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
         }}
       />
 
-      {/* Contenido Dinámico según Rol y Estado */}
-      <main className="app-main-content">
+      {/* Contenido Dinámico según Rol y Estado (Zero-Scroll Adaptive) */}
+      <main className={`app-main-content ${role === 'client' && clientView === 'pos' ? 'pos-view-active' : ''}`.trim()}>
         {role === 'client' && (
           <>
             {isClientSuspended ? (
@@ -366,7 +372,7 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
         {role === 'accountant' && (
           <AccountantPortal
             clients={accountantClientsList}
-            accountantProfile={users.find((u) => u.role === 'accountant')}
+            accountantProfile={currentUser?.role === 'accountant' ? currentUser : (users.find((u) => u.role === 'accountant') || currentUser)}
           />
         )}
 

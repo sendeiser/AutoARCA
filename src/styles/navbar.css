@@ -85,9 +85,13 @@
 }
 
 @media (max-width: 768px) {
-  /* En móviles, añadimos padding inferior al contenedor para evitar solapamiento con la barra */
-  .app-main-content {
+  /* En móviles, añadimos padding inferior para evitar solapamiento con la barra */
+  .app-main-content:not(.pos-view-active) {
     padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-main-content.pos-view-active {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   }
 
   /* En móviles, ocultamos el segment superior para ahorrar espacio vertical */

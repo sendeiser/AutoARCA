@@ -95,7 +95,21 @@ function setStorage(key, value) {
 export const authService = {
   // Obtener lista completa de usuarios
   getUsers() {
-    return getStorage(STORAGE_KEY_USERS, INITIAL_USERS);
+    const stored = getStorage(STORAGE_KEY_USERS, null);
+    if (!stored || !Array.isArray(stored) || stored.length === 0) {
+      this.saveUsers(INITIAL_USERS);
+      return INITIAL_USERS;
+    }
+    // Asegurar que las cuentas demo base siempre estén disponibles
+    const missingBase = INITIAL_USERS.filter(
+      (base) => !stored.some((u) => u.id === base.id || u.email.toLowerCase() === base.email.toLowerCase())
+    );
+    if (missingBase.length > 0) {
+      const merged = [...stored, ...missingBase];
+      this.saveUsers(merged);
+      return merged;
+    }
+    return stored;
   },
 
   // Guardar usuarios
@@ -106,13 +120,7 @@ export const authService = {
 
   // Obtener sesión activa
   getCurrentSession() {
-    const session = getStorage(STORAGE_KEY_SESSION, null);
-    if (session) return session;
-    // Si no hay sesión, loguear por defecto a Martin Gonzalez para que siempre esté lista la app
-    const users = this.getUsers();
-    const defaultUser = users.find((u) => u.id === 'client-1') || users[0];
-    this.setCurrentSession(defaultUser);
-    return defaultUser;
+    return getStorage(STORAGE_KEY_SESSION, null);
   },
 
   setCurrentSession(user) {
@@ -122,17 +130,26 @@ export const authService = {
 
   // Inicio de sesión con validación de credenciales
   login(email, password) {
+    if (!email || !email.trim()) {
+      throw new Error('Por favor ingresa tu correo electrónico.');
+    }
+    if (!password) {
+      throw new Error('Por favor ingresa tu contraseña.');
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = String(password).trim();
     const users = this.getUsers();
     const found = users.find(
-      (u) => u.email.toLowerCase() === email.trim().toLowerCase()
+      (u) => u.email.toLowerCase() === cleanEmail
     );
 
     if (!found) {
-      throw new Error('No existe ningún usuario registrado con ese correo electrónico.');
+      throw new Error('No existe ninguna cuenta registrada con este correo electrónico.');
     }
 
-    if (found.password && found.password !== password) {
-      throw new Error('Contraseña incorrecta. (Tip demo: la clave es 1234)');
+    if (found.password && String(found.password).trim() !== cleanPass) {
+      throw new Error('Contraseña incorrecta. (Tip: para las cuentas demo la clave es 1234)');
     }
 
     this.setCurrentSession(found);
@@ -156,16 +173,27 @@ export const authService = {
     matricula = '',
     jurisdiccion = 'CPCECABA'
   }) {
+    if (!fullName || !fullName.trim()) {
+      throw new Error('El nombre o razón social es obligatorio.');
+    }
+    if (!email || !email.trim()) {
+      throw new Error('El correo electrónico es obligatorio.');
+    }
+    const finalPass = password ? String(password).trim() : '1234';
+    if (finalPass.length < 4) {
+      throw new Error('La contraseña debe tener al menos 4 caracteres.');
+    }
+
     const users = this.getUsers();
     const cleanEmail = email.trim().toLowerCase();
 
     if (users.some((u) => u.email.toLowerCase() === cleanEmail)) {
-      throw new Error('El correo electrónico ya se encuentra registrado.');
+      throw new Error('El correo electrónico ya se encuentra registrado. Por favor inicia sesión.');
     }
 
     const newUserId = `usr-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const newBizId = `biz-${Date.now()}`;
-    const cleanCuit = cuit.replace(/[^0-9]/g, '');
+    const cleanCuit = cuit ? cuit.replace(/[^0-9]/g, '') : '';
 
     // Código de vinculación para contadores (ej. CONT-GOMEZ-4581)
     const slugName = fullName.trim().split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '') || 'ESTUDIO';
@@ -177,15 +205,15 @@ export const authService = {
       id: newUserId,
       full_name: fullName.trim(),
       email: cleanEmail,
-      password: password || '1234',
-      phone,
+      password: finalPass,
+      phone: phone.trim(),
       role,
       subscription_status: 'trial',
-      cuit: cleanCuit,
+      cuit: cleanCuit || (role === 'client' ? '20301234567' : '30712345678'),
       business_id: role === 'client' ? newBizId : null,
       accountant_id: role === 'client' ? (accountantId || 'accountant-1') : null,
-      matricula: role === 'accountant' ? matricula : undefined,
-      jurisdiccion: role === 'accountant' ? jurisdiccion : undefined,
+      matricula: role === 'accountant' ? (matricula.trim() || 'T° 142 F° 89') : undefined,
+      jurisdiccion: role === 'accountant' ? (jurisdiccion || 'CPCECABA') : undefined,
       link_code: linkCode,
       created_at: new Date().toISOString()
     };
@@ -199,13 +227,13 @@ export const authService = {
       const newBusiness = {
         id: newBizId,
         user_id: newUserId,
-        cuit: cleanCuit || '20000000001',
+        cuit: cleanCuit || '20301234567',
         razon_social: razonSocial.trim() || fullName.trim(),
         fantasy_name: fantasyName.trim() || fullName.trim(),
-        monotributo_category: monotributoCategory,
-        activity_type: activityType,
+        monotributo_category: monotributoCategory || 'A',
+        activity_type: activityType || 'products',
         pos_number: Number(posNumber) || 1,
-        address: 'Dirección Comercial',
+        address: 'Dirección Comercial Principal',
         city: 'Ciudad',
         province: 'Buenos Aires'
       };

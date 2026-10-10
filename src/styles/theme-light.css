@@ -1064,3 +1064,119 @@ body[data-theme="light"] {
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover {
   background: rgba(15, 23, 42, 0.28) !important;
 }
+
+/* ==============================================================================
+   12. Untitled UI AuthScreen en Modo Claro
+   ============================================================================== */
+[data-theme="light"] .uui-auth-container {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-auth-left {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .uui-auth-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-auth-subtitle {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .uui-auth-segmented {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .uui-auth-tab {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-auth-tab.active {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .uui-role-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .uui-role-card:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .uui-role-card.selected {
+  background: #f5f3ff !important;
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 1px #7c3aed !important;
+}
+
+[data-theme="light"] .uui-role-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-role-desc {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-input-box {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-input-box::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .uui-input-label {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .uui-demo-section {
+  border-top-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .uui-demo-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .uui-demo-btn {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .uui-demo-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-auth-right {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
+  border-left-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .uui-showcase-card {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(124, 58, 237, 0.2) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .uui-showcase-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-showcase-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .uui-showcase-item {
+  color: #334155 !important;
+}
+
