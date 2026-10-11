@@ -8,16 +8,26 @@ import {
   CheckCircleIcon,
   AlertTriangleIcon,
   ReceiptTaxIcon,
-  CopyIcon
+  CalendarIcon,
+  UsersIcon
 } from './Icons.jsx';
 import '../styles/accountantTaxCalendar.css';
+
+const CUIT_GROUPS_META = {
+  '0-1': { label: '0-1', vtoDate: 'Día 15', desc: 'Convenio Multilateral CM03 & Rentas Locales' },
+  '2-3': { label: '2-3', vtoDate: 'Día 16', desc: 'Convenio Multilateral CM03 & Rentas Locales' },
+  '4-5': { label: '4-5', vtoDate: 'Día 17', desc: 'Convenio Multilateral CM03 & Rentas Locales' },
+  '6-7': { label: '6-7', vtoDate: 'Día 18', desc: 'Convenio Multilateral CM03 & Rentas Locales' },
+  '8-9': { label: '8-9', vtoDate: 'Día 19', desc: 'Convenio Multilateral CM03 & Rentas Locales' }
+};
 
 export default function AccountantTaxCalendar({
   clients = []
 }) {
   const [checklist, setChecklist] = useState({});
+  const [selectedGroup, setSelectedGroup] = useState('all');
 
-  // Asigna cada cliente a un grupo según la terminación de su CUIT (último dígito antes del guión o último carácter)
+  // Clasifica clientes por terminación de CUIT (último dígito numérico antes del guión verificador)
   const groupedClients = {
     '0-1': [],
     '2-3': [],
@@ -47,10 +57,15 @@ export default function AccountantTaxCalendar({
     }));
   };
 
-  // Cálculo de progreso general
+  // Cálculo de progreso general del mes
   const totalTasks = clients.length * 3;
   const completedTasks = Object.values(checklist).filter(Boolean).length;
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  // Filtrado de grupos visibles
+  const displayGroups = selectedGroup === 'all'
+    ? Object.entries(groupedClients)
+    : Object.entries(groupedClients).filter(([groupKey]) => groupKey === selectedGroup);
 
   return (
     <Card className="tax-calendar-card">
@@ -67,91 +82,146 @@ export default function AccountantTaxCalendar({
             </CardSubtitle>
           </div>
 
-          <div className="calendar-progress-pill">
-            <span className="cal-progress-lbl">Cumplimiento del Mes:</span>
-            <span className="cal-progress-val font-mono">{progressPercent}% ({completedTasks}/{totalTasks})</span>
+          <div className="calendar-progress-widget">
+            <div className="cal-progress-meta">
+              <span className="cal-progress-lbl">Cumplimiento Mensual</span>
+              <span className="cal-progress-val font-mono">{progressPercent}%</span>
+            </div>
+            <div className="cal-progress-bar-track">
+              <div
+                className="cal-progress-bar-fill"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="cal-progress-sub font-mono">
+              {completedTasks} de {totalTasks} tareas listas
+            </span>
           </div>
         </div>
       </CardHeader>
 
       <div className="tax-calendar-body">
-        {/* Banner Vencimiento Fijo Monotributo */}
+        {/* Banner Vencimiento Fijo Monotributo General */}
         <div className="calendar-fixed-banner">
           <div className="fixed-banner-icon">
-            <ReceiptTaxIcon size={20} className="text-primary" />
+            <ReceiptTaxIcon size={22} className="text-primary" />
           </div>
           <div className="fixed-banner-info">
             <strong>Vencimiento General Cuota Monotributo ARCA: Día 20 de cada mes</strong>
-            <p>Aplica a todas las terminaciones de CUIT de Pequeños Contribuyentes (Régimen Simplificado Nacional).</p>
+            <p>Rige para todas las terminaciones de CUIT de Pequeños Contribuyentes en todo el país.</p>
           </div>
         </div>
 
-        {/* Grupos de Vencimientos por CUIT */}
-        <div className="calendar-groups-grid">
-          {Object.entries(groupedClients).map(([cuitGroup, groupClients]) => (
-            <div key={cuitGroup} className="calendar-group-col">
-              <div className="calendar-group-header">
-                <div>
-                  <span className="cuit-group-title">CUIT Terminados en {cuitGroup}</span>
-                  <span className="cuit-group-vto">Vto. IIBB / CM03: Días 15 - 19</span>
+        {/* Barra de Filtros por Terminación de CUIT / Selector de Vencimiento */}
+        <div className="cal-filter-toolbar">
+          <span className="cal-filter-title">Filtrar por Grupo CUIT:</span>
+          <div className="cal-filter-tabs">
+            <button
+              type="button"
+              className={`cal-filter-tab ${selectedGroup === 'all' ? 'active' : ''}`}
+              onClick={() => { soundService.playKeyTap(); setSelectedGroup('all'); }}
+            >
+              Todos ({clients.length})
+            </button>
+            {Object.keys(groupedClients).map((grp) => {
+              const count = groupedClients[grp].length;
+              const meta = CUIT_GROUPS_META[grp];
+              return (
+                <button
+                  key={grp}
+                  type="button"
+                  className={`cal-filter-tab ${selectedGroup === grp ? 'active' : ''}`}
+                  onClick={() => { soundService.playKeyTap(); setSelectedGroup(grp); }}
+                >
+                  CUIT {grp} · {meta.vtoDate} ({count})
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Cronograma Estructurado en Secciones / Tarjetas */}
+        <div className="calendar-timeline-container">
+          {displayGroups.map(([cuitGroup, groupClients]) => {
+            const meta = CUIT_GROUPS_META[cuitGroup];
+            return (
+              <div key={cuitGroup} className="calendar-group-section">
+                <div className="calendar-group-header">
+                  <div className="cal-group-title-row">
+                    <span className="cuit-group-title">CUIT Terminados en {cuitGroup}</span>
+                    <span className="cuit-group-vto-badge">Vto: {meta.vtoDate} (CM03 / IIBB)</span>
+                  </div>
+                  <Badge variant={groupClients.length > 0 ? 'primary' : 'gray'}>
+                    {groupClients.length} {groupClients.length === 1 ? 'Cliente' : 'Clientes'}
+                  </Badge>
                 </div>
-                <Badge variant={groupClients.length > 0 ? 'primary' : 'gray'}>
-                  {groupClients.length} Clientes
-                </Badge>
-              </div>
 
-              <div className="calendar-clients-list">
-                {groupClients.length === 0 ? (
-                  <div className="calendar-empty-sub">Sin clientes con esta terminación.</div>
-                ) : (
-                  groupClients.map((client) => {
-                    const id = client.id;
-                    const isDdjj = checklist[`${id}-ddjj`];
-                    const isVep = checklist[`${id}-vep`];
-                    const isCobro = checklist[`${id}-cobro`];
+                <div className="calendar-clients-grid">
+                  {groupClients.length === 0 ? (
+                    <div className="calendar-empty-sub">
+                      Sin clientes registrados con terminación {cuitGroup}.
+                    </div>
+                  ) : (
+                    groupClients.map((client) => {
+                      const id = client.id;
+                      const isDdjj = checklist[`${id}-ddjj`];
+                      const isVep = checklist[`${id}-vep`];
+                      const isCobro = checklist[`${id}-cobro`];
+                      const isAllDone = isDdjj && isVep && isCobro;
 
-                    return (
-                      <div key={id} className="calendar-client-item">
-                        <div className="cal-client-head">
-                          <strong className="cal-client-name">{client.fantasy_name || client.razon_social}</strong>
-                          <span className="cal-client-cuit font-mono">{client.cuit}</span>
+                      return (
+                        <div key={id} className={`calendar-client-card ${isAllDone ? 'client-completed' : ''}`}>
+                          <div className="cal-client-head">
+                            <div className="cal-client-meta">
+                              <strong className="cal-client-name">
+                                {client.fantasy_name || client.razon_social}
+                              </strong>
+                              <span className="cal-client-cuit font-mono">{client.cuit}</span>
+                            </div>
+                            <div className="cal-client-status">
+                              <span className="cal-cat-badge">Cat. {client.monotributo_category || 'D'}</span>
+                              <Badge variant={isAllDone ? 'success' : 'warning'}>
+                                {isAllDone ? 'Al Día' : 'Pendiente'}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          <div className="cal-tasks-checks">
+                            <label className={`cal-check-item ${isDdjj ? 'checked' : ''}`}>
+                              <input
+                                type="checkbox"
+                                checked={!!isDdjj}
+                                onChange={() => toggleCheck(id, 'ddjj')}
+                              />
+                              <span className={isDdjj ? 'check-done' : ''}>Lote / DDJJ</span>
+                            </label>
+
+                            <label className={`cal-check-item ${isVep ? 'checked' : ''}`}>
+                              <input
+                                type="checkbox"
+                                checked={!!isVep}
+                                onChange={() => toggleCheck(id, 'vep')}
+                              />
+                              <span className={isVep ? 'check-done' : ''}>VEP Enviado</span>
+                            </label>
+
+                            <label className={`cal-check-item ${isCobro ? 'checked' : ''}`}>
+                              <input
+                                type="checkbox"
+                                checked={!!isCobro}
+                                onChange={() => toggleCheck(id, 'cobro')}
+                              />
+                              <span className={isCobro ? 'check-done' : ''}>Liquidado</span>
+                            </label>
+                          </div>
                         </div>
-
-                        <div className="cal-tasks-checks">
-                          <label className="cal-check-item">
-                            <input
-                              type="checkbox"
-                              checked={!!isDdjj}
-                              onChange={() => toggleCheck(id, 'ddjj')}
-                            />
-                            <span className={isDdjj ? 'check-done' : ''}>Lote / DDJJ</span>
-                          </label>
-
-                          <label className="cal-check-item">
-                            <input
-                              type="checkbox"
-                              checked={!!isVep}
-                              onChange={() => toggleCheck(id, 'vep')}
-                            />
-                            <span className={isVep ? 'check-done' : ''}>VEP Enviado</span>
-                          </label>
-
-                          <label className="cal-check-item">
-                            <input
-                              type="checkbox"
-                              checked={!!isCobro}
-                              onChange={() => toggleCheck(id, 'cobro')}
-                            />
-                            <span className={isCobro ? 'check-done' : ''}>Liquidado</span>
-                          </label>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
+                      );
+                    })
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </Card>

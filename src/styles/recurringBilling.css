@@ -141,10 +141,79 @@
     touch-action: manipulation;
   }
 
-  .recurring-table th,
+  /* Transformación de Tabla a Cards Móviles Ergonómicas */
+  .recurring-table-container {
+    border: none !important;
+    background: transparent !important;
+    overflow-x: visible !important;
+    width: 100% !important;
+  }
+
+  .recurring-table {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .recurring-table thead {
+    display: none !important;
+  }
+
+  .recurring-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .recurring-table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.9rem !important;
+    box-shadow: var(--shadow-xs) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
   .recurring-table td {
-    padding: 0.75rem 0.65rem;
-    font-size: 0.8rem;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.35rem 0 !important;
+    border: none !important;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.82rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .recurring-table td::before {
+    content: attr(data-label);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .recurring-table td.recurring-td-client {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 0.55rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .recurring-table td.recurring-td-client::before {
+    display: none !important;
+  }
+
+  .recurring-table td.recurring-td-client strong {
+    font-size: 0.96rem;
+    color: var(--text-main);
   }
 
   .recurring-status-toggle {
@@ -162,14 +231,25 @@
     transform: scale(0.96);
   }
 
-  .recurring-table td button,
-  .recurring-table td .btn {
-    min-height: 42px !important;
-    min-width: 42px !important;
+  .recurring-table td.recurring-td-action {
+    border-bottom: none !important;
+    padding-top: 0.65rem !important;
+    justify-content: stretch !important;
+  }
+
+  .recurring-table td.recurring-td-action::before {
+    display: none !important;
+  }
+
+  .recurring-table td.recurring-td-action button,
+  .recurring-table td.recurring-td-action .btn {
+    width: 100% !important;
+    min-height: 44px !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
+    border-radius: var(--radius-md);
   }
 
   .recurring-modal-form input,

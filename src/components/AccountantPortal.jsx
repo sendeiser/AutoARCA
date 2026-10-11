@@ -244,45 +244,47 @@ export default function AccountantPortal({
 
   return (
     <div className="accountant-portal-container">
-      {/* Cabecera del Portal */}
-      <div className="accountant-header">
-        <div className="accountant-title">
-          <div className="accountant-badge-header">Portal Profesional Contable</div>
-          <h1>Panel de Control del Contador</h1>
-          <p>
-            {accountantProfile.full_name || 'Estudio Contable Méndez & Asociados'} · Monitoreo y Exportación Multi-Cliente ARCA
-          </p>
+      {/* Cabecera del Portal — Solo visible en la primera página (Cartera & Lotes) */}
+      {activeTab === 'clientes' && (
+        <div className="accountant-header">
+          <div className="accountant-title">
+            <div className="accountant-badge-header">Portal Profesional Contable</div>
+            <h1>Panel de Control del Contador</h1>
+            <p>
+              {accountantProfile.full_name || 'Estudio Contable Méndez & Asociados'} · Monitoreo y Exportación Multi-Cliente ARCA
+            </p>
+          </div>
+          <div className="accountant-actions-header">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => { soundService.playKeyTap(); setShowAddClientModal(true); }}
+              iconLeading={<PlusIcon size={15} />}
+            >
+              Vincular Cliente por CUIT
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleDownloadPortfolioPdf}
+              iconLeading={<FileTextIcon size={15} />}
+              title="Descargar informe de toda la cartera en PDF para auditoría"
+            >
+              Informe Cartera PDF
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleBulkZip}
+              disabled={isGeneratingZip}
+              isLoading={isGeneratingZip}
+              iconLeading={<DownloadIcon size={16} />}
+            >
+              Descargar Lotes del Día (ZIP Masivo)
+            </Button>
+          </div>
         </div>
-        <div className="accountant-actions-header">
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => { soundService.playKeyTap(); setShowAddClientModal(true); }}
-            iconLeading={<PlusIcon size={15} />}
-          >
-            Vincular Cliente por CUIT
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={handleDownloadPortfolioPdf}
-            iconLeading={<FileTextIcon size={15} />}
-            title="Descargar informe de toda la cartera en PDF para auditoría"
-          >
-            Informe Cartera PDF
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={handleBulkZip}
-            disabled={isGeneratingZip}
-            isLoading={isGeneratingZip}
-            iconLeading={<DownloadIcon size={16} />}
-          >
-            Descargar Lotes del Día (ZIP Masivo)
-          </Button>
-        </div>
-      </div>
+      )}
 
       {/* Pestaña Principal: Cartera & Lotes Diarios */}
       {activeTab === 'clientes' && (
@@ -467,15 +469,15 @@ export default function AccountantPortal({
 
                       return (
                         <tr key={client.id}>
-                          <td>
+                          <td className="client-td-name" data-label="Comercio">
                             <strong>{client.fantasy_name || client.razon_social}</strong>
                             <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.razon_social}</div>
                           </td>
-                          <td><code>{client.cuit}</code></td>
-                          <td>
+                          <td data-label="CUIT"><code>{client.cuit}</code></td>
+                          <td data-label="Categoría">
                             <span className="client-cat-badge">Cat. {client.monotributo_category || 'A'}</span>
                           </td>
-                          <td>
+                          <td data-label="Semáforo Fiscal">
                             <span className={`dot-badge ${color}`}>
                               <span className={`status-dot-indicator dot-${color}`} />
                               <span style={{ textTransform: 'capitalize' }}>
@@ -483,7 +485,7 @@ export default function AccountantPortal({
                               </span>
                             </span>
                           </td>
-                          <td>
+                          <td data-label="Cierre del Día">
                             {hasBatch ? (
                               <div>
                                 <span style={{ color: '#10b981', fontWeight: 700 }}>
@@ -499,7 +501,7 @@ export default function AccountantPortal({
                               </span>
                             )}
                           </td>
-                          <td>
+                          <td className="client-td-actions" data-label="Acciones">
                             <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center', flexWrap: 'wrap' }}>
                               <button
                                 type="button"

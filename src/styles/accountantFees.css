@@ -155,10 +155,70 @@
   .fees-kpi-val {
     font-size: 1.25rem;
   }
-  .fees-table th,
+  /* Transformación de Tabla a Cards Móviles Ergonómicas */
+  .fees-table-wrap {
+    border: none !important;
+    background: transparent !important;
+    overflow-x: visible !important;
+    width: 100% !important;
+  }
+  .fees-table {
+    display: block !important;
+    width: 100% !important;
+  }
+  .fees-table thead {
+    display: none !important;
+  }
+  .fees-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+  .fees-table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.9rem !important;
+    box-shadow: var(--shadow-xs) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
   .fees-table td {
-    padding: 0.75rem 0.65rem;
-    font-size: 0.8rem;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.35rem 0 !important;
+    border: none !important;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.82rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  .fees-table td::before {
+    content: attr(data-label);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .fees-table td.fees-td-client {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 0.55rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .fees-table td.fees-td-client::before {
+    display: none !important;
+  }
+  .fees-table td.fees-td-client strong {
+    font-size: 0.96rem;
+    color: var(--text-main);
   }
   .fees-status-chip {
     min-height: 38px;
@@ -173,21 +233,29 @@
   .fees-status-chip:active {
     transform: scale(0.96);
   }
-  .fees-table td button,
-  .fees-table td .btn {
-    min-height: 42px !important;
-    min-width: 80px;
+  .fees-table td.fees-td-action {
+    border-bottom: none !important;
+    padding-top: 0.65rem !important;
+    justify-content: stretch !important;
+  }
+  .fees-table td.fees-td-action::before {
+    display: none !important;
+  }
+  .fees-table td.fees-td-action button,
+  .fees-table td.fees-td-action .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
     padding: 0.5rem 0.9rem !important;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.4rem;
     touch-action: manipulation;
     border-radius: var(--radius-md);
   }
-  .fees-table td button:active,
-  .fees-table td .btn:active {
+  .fees-table td.fees-td-action button:active,
+  .fees-table td.fees-td-action .btn:active {
     transform: scale(0.97);
   }
 }

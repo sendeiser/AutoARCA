@@ -188,19 +188,19 @@ export default function RecurringBillingManager({
             <tbody>
               {subscriptions.map((sub) => (
                 <tr key={sub.id} className={!sub.active ? 'recurring-row-inactive' : ''}>
-                  <td>
+                  <td className="recurring-td-client" data-label="Cliente">
                     <strong>{sub.clientName}</strong>
                   </td>
-                  <td className="font-mono text-muted">
+                  <td data-label="Identificación" className="font-mono text-muted">
                     {sub.docType}: {sub.docNumber}
                   </td>
-                  <td className="text-muted" style={{ maxWidth: '240px' }}>
+                  <td data-label="Concepto" className="text-muted" style={{ maxWidth: '240px' }}>
                     {sub.concept}
                   </td>
-                  <td className="font-mono font-bold text-primary">
+                  <td data-label="Monto Mensual" className="font-mono font-bold text-primary">
                     {formatCurrencyARS(sub.amount)}
                   </td>
-                  <td>
+                  <td data-label="Estado">
                     <button
                       type="button"
                       className={`recurring-status-toggle ${sub.active ? 'active' : 'paused'}`}
@@ -209,7 +209,7 @@ export default function RecurringBillingManager({
                       {sub.active ? 'Activo' : 'Pausado'}
                     </button>
                   </td>
-                  <td style={{ textAlign: 'right' }}>
+                  <td className="recurring-td-action" data-label="Acción" style={{ textAlign: 'right' }}>
                     <Button variant="danger" size="sm" onClick={() => handleDelete(sub.id)}>
                       <TrashIcon size={12} />
                     </Button>

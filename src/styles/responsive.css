@@ -34,10 +34,52 @@ body {
 .accountant-portal-container,
 .admin-container {
   width: 100%;
-  max-width: min(94vw, 1200px) !important;
-  margin: 0 auto !important;
-  padding: var(--fluid-page-padding) !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--fluid-page-padding);
   box-sizing: border-box;
+}
+
+/* ==============================================================================
+   Aprovechamiento Integral del 100% del Espacio Horizontal en Mobile (<640px)
+   ============================================================================== */
+@media (max-width: 640px) {
+  .app-main-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .client-dashboard-wrap,
+  .accountant-portal-container,
+  .admin-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0.35rem !important;
+    padding-right: 0.35rem !important;
+    padding-top: 0.4rem !important;
+    padding-bottom: 5.5rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .uui-card,
+  .bank-crossing-card,
+  .dfe-center-card,
+  .recurring-billing-card,
+  .recat-matrix-card,
+  .accountant-dfe-card,
+  .tax-calendar-card,
+  .accountant-fees-card,
+  .accountant-bank-risk-card,
+  .clients-table-card,
+  .expense-monitor-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+  }
 }
 
 /* ==============================================================================

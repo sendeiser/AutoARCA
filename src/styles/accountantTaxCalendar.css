@@ -5,13 +5,15 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-header-flex {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
@@ -32,27 +34,62 @@
   border: 1px solid var(--border-color);
 }
 
-.calendar-progress-pill {
+/* Widget de Cumplimiento Mensual */
+.calendar-progress-widget {
   background: var(--bg-surface-subtle);
   border: 1px solid var(--border-color);
-  padding: 0.4rem 0.8rem;
+  padding: 0.65rem 1rem;
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  gap: 0.35rem;
+  min-width: 200px;
+}
+
+.cal-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
 }
 
 .cal-progress-lbl {
-  font-size: 0.68rem;
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
 }
 
 .cal-progress-val {
-  font-size: 0.95rem;
   font-weight: 800;
   color: var(--color-brand-600, #2e90fa);
+  font-size: 0.95rem;
+}
+
+.cal-progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+[data-theme="light"] .cal-progress-bar-track {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.cal-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2e90fa, #12b76a);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.cal-progress-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: right;
 }
 
 .tax-calendar-body {
@@ -60,122 +97,235 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Banner de Vencimiento General Monotributo */
 .calendar-fixed-banner {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  gap: 0.85rem;
+  padding: 0.85rem 1.15rem;
   background: rgba(46, 144, 250, 0.08);
   border: 1px solid rgba(46, 144, 250, 0.25);
   border-radius: var(--radius-md);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fixed-banner-info strong {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   display: block;
+  color: var(--text-main);
 }
 
 .fixed-banner-info p {
-  margin: 0.15rem 0 0 0;
-  font-size: 0.75rem;
+  margin: 0.2rem 0 0 0;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
-.calendar-groups-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+/* Barra de Filtro de Terminaciones de CUIT */
+.cal-filter-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.calendar-group-col {
+.cal-filter-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.cal-filter-tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--bg-surface-subtle);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cal-filter-tab {
+  background: none;
+  border: none;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.cal-filter-tab:hover {
+  color: var(--text-main);
+  background: var(--bg-hover);
+}
+
+.cal-filter-tab.active {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Secciones del Cronograma */
+.calendar-timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.calendar-group-section {
   background: var(--bg-surface-subtle);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 0.85rem;
+  padding: 1rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-group-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.65rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cal-group-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 .cuit-group-title {
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  display: block;
   color: var(--text-main);
 }
 
-.cuit-group-vto {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  display: block;
+.cuit-group-vto-badge {
+  font-size: 0.72rem;
+  color: #027a48;
+  background: rgba(18, 183, 106, 0.1);
+  border: 1px solid rgba(18, 183, 106, 0.25);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
 }
 
-.calendar-clients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+[data-theme="dark"] .cuit-group-vto-badge {
+  color: #6ce9a6;
+}
+
+.calendar-clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.85rem;
+  width: 100%;
 }
 
 .calendar-empty-sub {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   font-style: italic;
-  padding: 0.5rem 0;
+  padding: 0.75rem 0;
+  grid-column: 1 / -1;
 }
 
-.calendar-client-item {
+/* Tarjeta individual de Cliente en el Calendario */
+.calendar-client-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.15s ease;
+}
+
+.calendar-client-card.client-completed {
+  border-color: rgba(18, 183, 106, 0.4);
+  background: rgba(18, 183, 106, 0.02);
 }
 
 .cal-client-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.cal-client-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .cal-client-name {
   color: var(--text-main);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 140px;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .cal-client-cuit {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
-.cal-tasks-checks {
+.cal-client-status {
   display: flex;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cal-cat-badge {
   font-size: 0.7rem;
-  color: var(--text-muted);
+  font-weight: 700;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+/* Tareas Checklist */
+.cal-tasks-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+  width: 100%;
 }
 
 .cal-check-item {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  padding: 0.35rem 0.65rem;
-  min-height: 38px;
+  padding: 0.45rem 0.55rem;
+  min-height: 40px;
   background: var(--bg-surface-subtle);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -183,7 +333,9 @@
   touch-action: manipulation;
   user-select: none;
   font-size: 0.76rem;
+  font-weight: 600;
   transition: all 0.15s ease;
+  text-align: center;
 }
 
 .cal-check-item:hover {
@@ -195,9 +347,14 @@
   transform: scale(0.97);
 }
 
+.cal-check-item.checked {
+  background: rgba(18, 183, 106, 0.08);
+  border-color: rgba(18, 183, 106, 0.3);
+}
+
 .cal-check-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   accent-color: var(--color-brand-600, #2e90fa);
   cursor: pointer;
   flex-shrink: 0;
@@ -207,37 +364,64 @@
 .check-done {
   text-decoration: line-through;
   color: var(--color-success-600, #12b76a);
-  font-weight: 600;
+  font-weight: 700;
 }
 
+/* ==============================================================================
+   Modo Mobile — 100% Espacio Horizontal & Ergonomía Táctil (<640px)
+   ============================================================================== */
 @media (max-width: 640px) {
-  .tax-calendar-body {
-    padding: 1rem 0.75rem;
+  .tax-calendar-card {
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    width: 100% !important;
   }
+
+  .tax-calendar-body {
+    padding: 0.75rem 0.5rem;
+    gap: 0.85rem;
+    width: 100% !important;
+  }
+
   .calendar-header-flex {
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
   }
-  .calendar-progress-pill {
-    align-items: flex-start;
-  }
-  .calendar-groups-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  .cal-tasks-checks {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
+
+  .calendar-progress-widget {
+    min-width: 100%;
     width: 100%;
+    padding: 0.5rem 0.75rem;
   }
+
+  .calendar-group-section {
+    padding: 0.75rem 0.65rem;
+    border-radius: 10px;
+    width: 100% !important;
+  }
+
+  .calendar-clients-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    width: 100% !important;
+  }
+
+  .calendar-client-card {
+    padding: 0.75rem;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .cal-tasks-checks {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+  }
+
   .cal-check-item {
     min-height: 42px;
-    padding: 0.35rem 0.4rem;
-    justify-content: center;
-    text-align: center;
+    padding: 0.35rem 0.35rem;
     font-size: 0.7rem;
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 }

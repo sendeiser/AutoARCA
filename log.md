@@ -4,6 +4,329 @@ Registro cronológico y auditable de todas las operaciones ejecutadas en la wiki
 
 ---
 
+## [2026-10-10] lint | Rediseño Calendario CUIT, Cards Mobile en Tablas, Aislamiento de Cabecera y Ancho 100%
+- **1. Aislamiento de la Cabecera del Contador (`AccountantPortal.jsx`)**:
+  - Se condicionó el bloque `.accountant-header` exclusivamente a `{activeTab === 'clientes' && (...)}`.
+  - En la primera pestaña (*Cartera & Lotes*), la cabecera con el título profesional y las 3 acciones principales se mantiene intacta.
+  - En las restantes pestañas (*Recategorización*, *Central DFE*, *Riesgo Bancario*, *Calendario CUIT*, *Honorarios del Estudio*), la cabecera desaparece por completo, ahorrando espacio vertical crítico y centrando el foco en cada módulo.
+- **2. Supresión de Navbar Duplicada Inferior (`Navbar.jsx`, `navbar.css`)**:
+  - Se eliminó la barra inferior redundante `.navbar-mobile-bottom` conforme a la solicitud del usuario.
+  - La navegación móvil queda unificada en el control superior horizontal con scroll táctil suave y pills estilizadas, liberando los 68px inferiores de la pantalla.
+- **3. Transformación de Tablas a Cards en Modo Móvil (`<= 640px`)**:
+  - **Matriz de Recategorización Semestral (`accountantRecatMatrix.css`)**: Las filas de la tabla se transforman en tarjetas individuales con cabecera de cliente, pares clave-valor (CUIT, Categoría actual, proyectada, facturación) y botón de aviso de WhatsApp en ancho completo.
+  - **Central DFE y Buzón DFE (`accountantDfeInbox.css`, `dfeNotificationCenter.css`)**: Transformación a cards con badge de prioridad/organismo, extracto del requerimiento y botón de "Descargo" táctil.
+  - **Honorarios del Estudio (`accountantFees.css`)**: Transformación a cards con badge de categoría, importe mensual, estado de pago y botón directo "Cobrar".
+  - **Abonos Mensuales (`recurringBilling.css`)**: Tarjetas de abonos con control de alternancia Activo/Pausado y opciones de edición.
+  - **Cartera Principal (`accountantPortal.css`)**: Reemplazo de tabla en móvil por tarjetas con grilla 2x2 de acciones rápidas (*PDF Fiscal*, *Excel*, *Constancia*, *Certificación*).
+- **4. Rediseño Integral de Calendario CUIT / CUIL (`AccountantTaxCalendar.jsx`, `accountantTaxCalendar.css`)**:
+  - Eliminación de la estructura engorrosa de 5 columnas fijas.
+  - Implementación de un cronograma en línea de tiempo estructurada con selector de grupo de terminación (*Todos*, *0-1 · Vto 15*, *2-3 · Vto 16*, *4-5 · Vto 17*, *6-7 · Vto 18*, *8-9 · Vto 19*).
+  - Incorporación de barra de progreso interactiva de cumplimiento mensual de la cartera y tarjetas individuales con checklists táctiles de tareas (*Lote/DDJJ*, *VEP Enviado*, *Liquidado*).
+- **5. Aprovechamiento del 100% de Espacio Horizontal Móvil (`responsive.css`)**:
+  - Se ajustaron los contenedores principales (`.client-dashboard-wrap`, `.accountant-portal-container`, `.admin-container`) a `width: 100% !important; max-width: 100% !important; margin: 0 !important;` con padding lateral ajustado de `0.35rem`, aprovechando todo el ancho de los teléfonos sin márgenes desperdiciados.
+- **6. Verificación Automatizada con Playwright y Suite Vitest**:
+  - Capturas multi-viewport en iPhone 14 (390x844) y escritorio (1280x800).
+  - **107 de 107 tests aprobados en Vitest (100% verde, 21 archivos de prueba)**.
+
+## [2026-10-10] lint | Eliminación de Barra de Navegación Duplicada en Portal del Contador
+- **1. Supresión del Subnav Inferior en `AccountantPortal.jsx`**:
+  - Se eliminó el bloque redundante `<div className="accountant-subnav-bar">` que duplicaba las 6 pestañas debajo de la botonera principal (`Cartera & Lotes`, `Recategorización`, `Central DFE`, `Riesgo Bancario`, `Calendario CUIT`, `Honorarios del Estudio`).
+  - La navegación queda 100% centralizada en la barra segmentada superior de `<Navbar>`, mejorando drásticamente el espacio vertical, la jerarquía visual y la ergonomía tanto en escritorio como en dispositivos móviles.
+- **2. Verificación Visual y Tests**:
+  - Captura y validación con Playwright en resolución de escritorio (1280x800) confirmando diseño limpio y sin duplicaciones.
+  - **107 de 107 tests aprobados en Vitest (100% verde)**.
+
+- **1. Cruce Bancario (`bankCrossingMonitor.css`)**:
+  - Chips de simulación rápida (`+$250k`, `+$500k`, etc.) transformados de botones diminutos de 26px en una cuadrícula táctil 2x2 con `min-height: 44px`, bordes redondeados y micro-interacción de pulsación (`transform: scale(0.97)`).
+  - Inputs con `min-height: 44px` y `font-size: 16px !important` para erradicar el salto de zoom automático en iOS Safari.
+  - Botón de reajuste en ancho completo (`100%`) con `min-height: 42px`.
+  - Reestructuración de KPIs a grilla de 2 columnas con la tercera métrica ocupando el ancho completo.
+- **2. Buzón DFE (`dfeNotificationCenter.css`)**:
+  - Botón de acción por fila ("Descargo") elevado de 35px a `min-height: 42px`, `padding: 0.5rem 0.85rem` y radio adaptativo.
+  - Textarea y selectores del asistente de descargo configurados a `font-size: 16px !important` para prevenir zoom en iPhone.
+- **3. Abonos Mensuales (`recurringBilling.css`, `RecurringBillingManager.jsx`)**:
+  - Botones de cabecera ("Nuevo Abono" y "Emitir Lote") encapsulados en `.recurring-header-actions`, apilados en ancho completo con `min-height: 44px`.
+  - Chip conmutador de estado ("Activo" / "Pausado") ampliado de 23px a `min-height: 38px; min-width: 72px; padding: 0.4rem 0.85rem;` con respuesta táctil elástica.
+  - Botón de eliminación en tabla ajustado a `min-height: 42px; min-width: 42px;`.
+- **4. Matriz de Recategorización Semestral (`accountantRecatMatrix.css`)**:
+  - Pestañas de filtro de categoría (*Todos*, *Cambian*, *Suben*, *Bajan*) aumentadas de 29px a `min-height: 40px`, con padding `0.5rem 0.85rem` y scroll táctil suave.
+  - Botón de cabecera "Exportar Matriz a Excel (CSV)" optimizado a `min-height: 44px; width: 100%`.
+  - Botones de fila "Avisar" elevados a `min-height: 42px`.
+- **5. Central DFE Multi-Cliente (`accountantDfeInbox.css`)**:
+  - Pestañas de filtro (*Todas*, *Pendientes*, *Urgentes*) elevadas de 30px a `min-height: 40px` con soporte táctil ergonómico.
+  - Botones de acción "Descargo" en tabla ampliados a `min-height: 42px`.
+  - Textarea de respuesta a ARCA configurada a `font-size: 16px !important`.
+- **6. Calendario CUIT (`accountantTaxCalendar.css`)**:
+  - Checkboxes nativos de 13x13px transformados en componentes táctiles interactivos `.cal-check-item`: `min-height: 42px; padding: 0.35rem 0.4rem;` con input estilizado de 18x18px y feedback visual `:active`.
+  - Distribución en cuadrícula simétrica de 3 columnas para tareas (*Lote/DDJJ*, *VEP Enviado*, *Liquidado*).
+- **7. Honorarios del Estudio (`accountantFees.css`)**:
+  - Chip de estado de pago (*✓ Cobrado*, *Pendiente*, *Atrasado*) ampliado de 24px a `min-height: 38px; min-width: 84px;` con feedback al tap.
+  - Botón de WhatsApp "Cobrar" elevado a `min-height: 42px; min-width: 80px`.
+  - KPIs financieros reorganizados en grilla 2x2 donde el 3er indicador ("Pendiente de Cobro") toma el ancho completo de forma balanceada.
+- **8. Auditoría Automatizada con Playwright (`scripts/auditTarget7Modules.js`)**:
+  - Evaluado en **iPhone 14 (390x844)** y **Compact Android (360x780)**.
+  - **0 objetivos táctiles pequeños (<36px)** detectados en los 7 módulos (100% ergonómicos según Apple HIG / Material 3).
+  - **Desborde horizontal: NO (0px overflow en todos los viewports)**.
+- **9. Suite de Regresión Vitest**:
+  - **21 de 21 archivos y 107 de 107 tests aprobados (100% verde)**.
+
+- **1. Componentes de Tablas de Datos (`untitled-ui.css`, `Table.jsx`)**:
+  - Implementación completa de estilos para `.uui-table-container`, `.uui-table-toolbar`, `.uui-table-scroll`, `.uui-table`, `.uui-tr`, `.uui-th` y `.uui-td`.
+  - Contenedor con desplazamiento horizontal táctil nativo (`overflow-x: auto; -webkit-overflow-scrolling: touch;`), padding adaptativo y soporte bidireccional de tema oscuro y claro.
+- **2. Terminal POS Móvil (`posTerminal.css`)**:
+  - Sustituido `overflow: hidden;` rígido por `overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;` y `min-height: calc(100dvh - 104px);`.
+  - Garantiza que en pantallas con poca altura o con teclado virtual táctil abierto no se corten los botones de emisión ni el teclado numérico.
+- **3. Módulos Profesionales del Contador**:
+  - **Matriz de Recategorización Semestral (`accountantRecatMatrix.css`)**:
+    - En `< 640px`: KPIs en cuadrícula simétrica 2x2, barra de filtros con scroll horizontal (`Todos`, `Cambian`, `Suben`, `Bajan`), botón de exportación en ancho completo.
+  - **Central DFE Multi-Cliente (`accountantDfeInbox.css`)**:
+    - Cabecera en columna con pestañas de filtro en ancho completo (`100%`) y scroll horizontal táctil.
+  - **Riesgo & Brecha Bancaria (`accountantBankRisk.css`)**:
+    - Métricas de brecha reorganizadas en grilla 2x2, selector de filtros sin desborde y tabla con desplazamiento horizontal fluido.
+  - **Calendario CUIT (`accountantTaxCalendar.css`)**:
+    - Tarjetas de grupos CUIT (0-1, 2-3...) en columna única móvil, pills de progreso alineados a la izquierda y tareas checklist compactas.
+  - **Honorarios del Estudio (`accountantFees.css`)**:
+    - KPIs financieros en grilla 2x2, cabecera responsiva y lista de honorarios con botones táctiles ergonómicos.
+  - **Cartera & Lotes (`accountantPortal.css`)**:
+    - Grilla de KPIs en 2 columnas compactas en `< 540px` (evitando apilar 4 bloques gigantes), chips de filtro con scroll horizontal táctil suave y barra de herramientas apilada.
+- **4. Modales y Documentos Oficiales en Móvil**:
+  - **Constancia de Inscripción ARCA (`officialConstancia.css`)**:
+    - Cabecera en columna, código de barras redimensionado para viewports reducidos y márgenes optimizados para impresión/PDF.
+  - **Certificación de Ingresos FACPCE Res. 37 (`accountantIncomeCert.css`)**:
+    - Relleno optimizado (`padding: 0.85rem` en móvil vs `2rem` en desktop), firma centrada y tabla de 12 meses fluida.
+  - **Modal de Vinculación (`accountantLinkModal.css`)**:
+    - Pestañas con desplazamiento horizontal en `< 480px` y ancho contenido a `calc(100vw - 1rem)`.
+- **5. Verificación Rigurosa con Playwright y Vitest**:
+  - Validación móvil profunda en todos los 12 módulos y modales (`scripts/deepAuditAllModulesMobile.js`).
+  - Suite de pruebas de regresión: **21 de 21 archivos y 107 de 107 tests aprobados (100% verde)**.
+
+## [2026-10-10] lint | Adaptación y Corrección de Navbar Móvil y Módulos de Cliente y Contador con Playwright
+- **1. Corrección y Expansión Integral de la Barra de Navegación Móvil (`Navbar.jsx`, `navbar.css`)**:
+  - **Pestañas Móviles del Contador**: Agregadas las 6 pestañas operativas (`Cartera`, `Recat`, `DFE`, `Riesgo`, `Calendario`, `Honorarios`) que previamente devolvían un array vacío y dejaban al contador sin barra de navegación en teléfonos móviles.
+  - **Pestañas Móviles del Cliente**: Ampliada la navegación inferior para abarcar no solo POS y Fiscal, sino todos los módulos esenciales: `POS`, `Fiscal`, `Bancos`, `Compras`, `DFE` y `Abonos`.
+  - **Desplazamiento Táctil Horizontal Fluido**: Añadido `overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;` con ancho flexible `min-width: 52px; max-width: 76px;` en `.navbar-bottom-tab`, permitiendo navegar fácilmente deslizando con el dedo.
+  - **Compatibilidad con Modo Claro**: Reglas específicas para variables y fondo de la barra flotante móvil en tema `light` (`rgba(255, 255, 255, 0.95)`).
+- **2. Conexión de Estado Bidireccional en `App.jsx`, `ClientDashboard.jsx` y `AccountantPortal.jsx`**:
+  - Incorporado estado `accountantTab` en `App.jsx` sincronizado con `Navbar` y `AccountantPortal`.
+  - Implementado patrón controlado/no-controlado (`activeSubtab`/`onSubtabChange` en `ClientDashboard` y `activeTab`/`onTabChange` en `AccountantPortal`) de modo que tocar un icono en la barra inferior móvil o hacer clic en la barra interna conmuta sincronizadamente ambas barras y muestra el módulo de inmediato.
+- **3. Resolución del Desborde Horizontal y Botones en Móvil (`clientDashboard.css`, `responsive.css`)**:
+  - **Causa Raíz Diagnosticada**: `ClientDashboard.jsx` contenía `style={{ maxWidth: '960px' }}` en un contenedor flex (`.app-main-content`), lo que hacía que el contenedor se expandiera a 960px de ancho en pantallas de 360px y 390px. Esto provocaba que los botones de acción se estiraran a 920px y su texto quedara centrado en `x = 436px` fuera de la pantalla.
+  - **Solución Aplicada**: Se eliminó el estilo inline de `ClientDashboard.jsx` y se implementó `.client-dashboard-wrap` en `clientDashboard.css` y `responsive.css` con `width: 100%; max-width: 960px; box-sizing: border-box;`.
+  - **Cuadrícula Ergonómica 2 Columnas**: En pantallas `<= 640px`, `.dashboard-header-actions` se rediseñó en una grilla de 2 columnas donde los 4 botones secundarios (`Pagar Cuota VEP`, `Constancia ARCA`, `Libro de Ventas Excel`, `Reporte PDF`) se distribuyen perfectamente en pares simétricos, y el botón principal (`Terminal POS`) toma todo el ancho inferior (`grid-column: 1 / -1`).
+- **4. Ajustes Responsivos en Submódulos**:
+  - `bankCrossingMonitor.css`: Agregada consulta `@media (max-width: 640px)` para KPIs y controles en una sola columna con padding compacto.
+  - `expensePurchaseLimitMonitor.css`: Agregada consulta `@media (max-width: 640px)` para toggle de actividad en ancho completo y grilla de KPIs fluida.
+  - `dfeNotificationCenter.css` y `recurringBilling.css`: Cabeceras adaptativas en columna para evitar solapamiento de badges y acciones en pantallas pequeñas.
+- **5. Verificación Rigurosa con Playwright (`scripts/verifyMobileAudit.js`)**:
+  - Ejecutada auditoría en dos resoluciones móviles reales: **iPhone 14 (390x844)** y **Android Compact (360x780)**.
+  - Comprobadas las 6 pestañas del cliente y las 6 pestañas del contador:
+    - **scrollWidth = clientWidth** en cada pantalla (`scrollX = 0`, sin desborde horizontal).
+    - Botones de acción fiscal situados dentro del marco visible (x=21 a 346px).
+    - Transición instantánea entre módulos sin saltos visuales ni recargas.
+- **6. Suite de Pruebas Unitarias**:
+  - **107 de 107 tests aprobados en 21 archivos de prueba (100% verde)**.
+
+## [2026-10-10] lint | Auditoría y Corrección de Diseño Responsive Mobile y Multi-Pantalla con Playwright
+- **1. Suite de Auditoría Automatizada con Playwright (`scripts/responsiveDeepAudit.js`)**:
+  - Evaluación y diagnóstico en 4 tipos de pantalla estandarizados:
+    - **Mobile Compact (360x780)**: Pantallas pequeñas de teléfonos Android comunes.
+    - **Mobile iPhone (390x844)**: Pantallas modernas iOS.
+    - **Tablet iPad (768x1024)**: Pantallas medianas en orientación vertical y horizontal.
+    - **Desktop Laptop (1280x800)**: Pantallas de computadoras portátiles y monitores de escritorio.
+  - Verificación rigurosa de cero desbordes horizontales (`scrollWidth <= innerWidth`) y ajuste ergonómico táctil.
+- **2. Sub-Navegación Táctil en Portal del Contador y Panel de Cliente (`accountantPortal.css`, `clientDashboard.css`)**:
+  - Implementado desplazamiento horizontal táctil fluido (`overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; white-space: nowrap;`) en `.accountant-subnav-bar` y `.client-subnav-bar`.
+  - Añadido `flex-shrink: 0;` a botones de subpestañas para evitar truncamiento o salto de línea forzado en pantallas móviles.
+- **3. Tarjeta de Código de Vinculación Profesional (`AccountantPortal.jsx`, `accountantPortal.css`)**:
+  - Clases responsivas `.accountant-link-banner-inner` y `.accountant-link-banner-actions`.
+  - En pantallas `< 640px`, los botones *"Copiar Código"* y *"Gestionar Vinculaciones"* se apilan verticalmente con ancho 100% y centrado ergonómico.
+  - Tabla de clientes `.clients-table-card` con desplazamiento horizontal seguro sin cortar columnas.
+- **4. Modales y Guía General del Sistema (`SystemOverviewModal.css`, `untitled-ui.css`, `responsive.css`)**:
+  - Corrección de colisión de títulos con botón de cierre en todos los modales agregando `padding-right: 2.5rem;` a `.uui-modal-title`.
+  - En dispositivos móviles, la barra de roles de la guía (`.overview-roles-bar`) se adaptó a scroll táctil horizontal para evitar apilar botones y consumir espacio vertical de la explicación.
+  - Ajuste de relleno y contraste en `.overview-hero-card` para legibilidad óptima en pantallas pequeñas.
+- **5. Cabecera y Controles de Barra Superior (`header.css`)**:
+  - En pantallas `< 480px`, optimizado el espacio de `.app-shell-navbar` (44px) y botones de control para evitar saturación de la barra.
+- **6. Semáforo Fiscal y Consumo de Escala (`taxTrafficLight.css`)**:
+  - En pantallas `< 640px`, la cabecera del semáforo fiscal se reorganiza en columna limpia, el porcentaje de consumo se calibra a 1.65rem y se ocultan los subtextos secundarios de las marcas de la escala graduada para evitar sobreposiciones visuales.
+- **7. Resultados de Verificación Playwright y Tests Unitarios**:
+  - Auditoría de Playwright finalizada con **0 desbordes detectados en todos los 4 modos de pantalla**.
+  - Suite de pruebas vitest: **21 de 21 archivos y 107 de 107 tests aprobados (100% verde sin regresiones)**.
+
+## [2026-10-10] ingest | Módulo y Botón "¿Cómo Funciona el Sistema?" Personalizado por Rol de Usuario (`SystemOverviewModal.jsx`)
+- **1. Botón "¿Cómo funciona?" en Barra Superior (`Header.jsx`, `header.css`, `Icons.jsx`)**:
+  - Incorporado en la cabecera fija de la aplicación con ícono vectorial `HelpCircleIcon`, estilo Untitled UI y respuesta háptica.
+  - Visible y accesible de forma permanente tanto en escritorio como en dispositivos móviles.
+- **2. Centro Interactivo de Funcionamiento y Catálogo de Módulos (`SystemOverviewModal.jsx` & `systemOverviewModal.css`)**:
+  - Detecta automáticamente el rol del usuario conectado (`client`, `accountant`, `superadmin`) y despliega su guía personalizada por defecto con etiqueta *"Tu Rol"*.
+  - Incluye selector segmentado para explorar los otros roles y comprender la interacción de todo el ecosistema AutoARCA.
+  - **A. Guía para Comercios y Monotributistas (`client`)**:
+    - *El Ciclo del Comercio*: 1. Facturación en POS en < 5s -> 2. Semáforo en vivo y presupuesto diario -> 3. Cierre diario en 1 clic -> 4. Sincronización automática con el contador.
+    - *Catálogo de Módulos*: POS Terminal (RG 4892 con QR y RG 5700 hasta $10M sin identificar), Semáforo & Barra de Consumo, Simulador de Recategorización, Cruce Bancario & Brecha (Art. 20 inc. f y g), Buzón DFE (RG 4280), Monitor VEP con QR interoperable, Control de Compras (80%/40%), Abonos recurrentes y Constancia F. 152.
+  - **B. Guía para Estudios Contables y Contadores (`accountant`)**:
+    - *Flujo Operativo del Estudio*: 1. Vinculación por código o CUIT -> 2. Monitoreo global de semáforos -> 3. Descarga masiva ZIP de lotes ARCA -> 4. Recategorización semestral, certificaciones y exportación.
+    - *Catálogo de Módulos*: Cartera & Lotes Diarios, Matriz Masiva de Recategorización (Ley 27.743), Central DFE Multi-Cliente con descargos legales, Tablero de Brecha Bancaria, Calendario CUIT con checklist (CM03 / IIBB), Certificaciones de Ingresos FACPCE Res. 37, Exportador a Tango/Holistor/Bejerman/Excel BOM y Gestión de Honorarios con cobranza por WhatsApp.
+  - **C. Guía para el Super Administrador (`superadmin`)**:
+    - *Flujo de Gobierno y Negocio*: 1. Métricas SaaS y MRR -> 2. Regulación de escalas ARCA en caliente -> 3. Gestión de suscripciones y bloqueo por morosidad -> 4. Auditoría de Supabase y Cron Jobs nocturnos.
+    - *Catálogo de Módulos*: Métricas de negocio, Editor maestro de escalas de Monotributo, Usuarios y control de suscripción, Diagnóstico de Base de Datos y Monitor de automatizaciones.
+- **3. Pruebas Automatizadas y Calidad**:
+  - Creada suite `tests/SystemOverviewModal.test.jsx` con 5 tests unitarios e integrales.
+  - **100% de la suite de pruebas aprobada: 21 de 21 archivos y 107 de 107 tests pasando sin fallas**.
+
+## [2026-10-10] ingest | Suite Integral del Contador para Estudios Contables en Argentina (Ley 27.743, RG 5700, RG 4280, FACPCE Res. 37, Tango, Holistor)
+- **1. Matriz Masiva de Recategorización Semestral (`AccountantRecategorizationMatrix.jsx` & `accountantRecatMatrix.css`)**:
+  - Auditoría masiva de toda la cartera de clientes según los parámetros semestrales (Enero / Julio) fijados por la Ley 27.743 y RG ARCA.
+  - Proyección en tiempo real de facturación acumulada de los últimos 12 meses vs topes vigentes.
+  - Cálculo automático de variaciones de cuota mensual en pesos (`quotaDiff`) para cada contribuyente.
+  - Filtros instantáneos por diagnóstico (Todos, Cambian de Categoría, Suben, Bajan).
+  - Alerta en 1 clic para enviar por WhatsApp o Email al cliente el diagnóstico y recordatorio formal.
+  - Exportación de la matriz completa de recategorización en CSV con compatibilidad Excel (BOM UTF-8).
+- **2. Central Unificada de DFE Multi-Cliente / E-Ventanilla (`AccountantDfeInbox.jsx` & `accountantDfeInbox.css`)**:
+  - Bandeja consolidada de notificaciones, requerimientos e intimaciones de ARCA para todos los CUITs de la cartera (RG ARCA 4280).
+  - Contador regresivo de plazo perentorio de 15 días hábiles con alerta de urgencia (< 5 días hábiles o vencidos).
+  - **Redactor de Descargo Formal Integrado**: Genera escritos formales con membrete del estudio contable, mención del Art. 100 de la Ley 11.683 y modelo listo para copiar y pegar en *Presentaciones Digitales* de ARCA.
+- **3. Tablero de Exclusión y Brecha Bancaria de la Cartera (`AccountantBankRiskDashboard.jsx` & `accountantBankRisk.css`)**:
+  - Monitor preventivo de riesgos de exclusión de oficio según Art. 20 inc. f y g de la Ley 24.977.
+  - Cotejo entre acreditaciones bancarias brutas / billeteras virtuales y facturación electrónica emitida.
+  - Cálculo de la brecha no facturada de cada cliente y semaforización de riesgo crítico.
+  - Exportación de la auditoría de conciliación bancaria a CSV.
+- **4. Calendario Impositivo Dinámico por Terminación de CUIT (`AccountantTaxCalendar.jsx` & `accountantTaxCalendar.css`)**:
+  - Agrupación operativa de clientes por terminación de CUIT (0-1, 2-3, 4-5, 6-7, 8-9) para vencimientos de Ingresos Brutos (Convenio Multilateral CM03 y regímenes locales).
+  - Alerta unificada de vencimiento mensual de Monotributo nacional (día 20 de cada mes).
+  - Checklist interactivo de tareas del estudio por cliente: *Lote / DDJJ*, *VEP Enviado*, *Liquidado*.
+  - Indicador de porcentaje de cumplimiento mensual del estudio contable.
+- **5. Generador de Certificaciones de Ingresos FACPCE Res. 37 (`AccountantIncomeCertificateModal.jsx` & `accountantIncomeCert.css`)**:
+  - Confección de la manifestación de ingresos y certificación profesional según la Resolución Técnica N° 37 de la FACPCE.
+  - Desglose mensual de los últimos 12 meses de facturación con validación de comprobantes y CAE oficial ARCA.
+  - Membrete formal con matrícula profesional del contador ante el Consejo Profesional (CPCECABA / CPCE Provincial).
+  - Vista optimizada de impresión y guardado en PDF de alta fidelidad.
+- **6. Exportador Multi-Software Contable (`AccountantMultiSoftwareExportModal.jsx`, `arcaExportService.js`)**:
+  - Módulo de exportación masiva con soporte específico para:
+    - **Tango Gestión (.txt)**: Formato posicional nativo para el módulo de Ventas y Facturación de Tango Software.
+    - **Holistor / Sistemas Bejerman (.txt)**: Archivo estructurado con código de comprobante 011 y formato posicional estándar.
+    - **Excel Universal (.csv con UTF-8 BOM)**: Planilla de cálculo lista para abrir sin distorsión de caracteres.
+    - **ARCA Importador Oficial (.csv)**: Estructura nativa para importación de lotes en el portal de ARCA.
+- **7. Control y Cobranza de Honorarios Profesionales (`AccountantFeesManager.jsx` & `accountantFees.css`)**:
+  - Tablero financiero para estudios contables: Honorarios Facturables, Total Cobrado, Pendiente de Cobro y Efectividad de cobranza.
+  - Lista de clientes con monto mensual acordado, estado de pago (Pagado / Pendiente) y fecha de liquidación.
+  - Generador de mensajes de cobro personalizados para WhatsApp con CBU/Alias bancario del estudio contable.
+- **8. Sub-Navegación Unificada en el Portal del Contador (`AccountantPortal.jsx` & `accountantPortal.css`)**:
+  - Barra de sub-navegación horizontal con diseño Untitled UI para conmutación fluida entre Cartera & Lotes, Recategorización, Central DFE, Riesgo Bancario, Calendario CUIT y Honorarios.
+  - Acciones rápidas incorporadas a cada fila de cliente: *PDF Fiscal*, *Excel*, *Constancia*, *Certificación*, *Exportar*, *CSV ARCA*.
+- **9. Batería de Pruebas Automatizadas y Visuales**:
+  - Creada suite `tests/AccountantAdvancedFeatures.test.jsx` con 8 pruebas integrales.
+  - **100% de la suite de pruebas aprobada: 20 de 20 archivos de prueba y 102 de 102 tests pasando**.
+  - Sesión de validación visual interactiva ejecutada mediante Browser Subagent con 6 capturas de pantalla de alta fidelidad.
+
+## [2026-10-10] ingest | Implementación Integral de Funcionalidades Avanzadas de ARCA (Cruce Bancario, Compras, DFE, VEP QR, Constancia F.152, Abonos y RG 5700)
+- **1. Monitor de Cruce Bancario & Billeteras Virtuales vs Facturación (`BankCrossingMonitor.jsx` & `bankCrossingMonitor.css`)**:
+  - Implementado según Art. 20 inc. f y g de la Ley de Monotributo (Ley 24.977 y modif. Ley 27.743) y RG 4298 de ARCA.
+  - Compara en tiempo real las acreditaciones bancarias brutas y billeteras virtuales (Mercado Pago, CVU) descontando transferencias no comerciales justificadas (cuentas propias, préstamos).
+  - Calcula la **Brecha No Facturada** y el porcentaje de exposición ante ARCA.
+  - Alerta temprana de riesgo de exclusión de oficio o recategorización forzosa por superar topes de categoría o de la Categoría K.
+- **2. Central de Domicilio Fiscal Electrónico (DFE / E-Ventanilla) (`DfeNotificationCenter.jsx` & `dfeNotificationCenter.css`)**:
+  - Implementado conforme a la RG ARCA 4280.
+  - Monitorea requerimientos, intimaciones y notificaciones fiscales con un **reloj regresivo de 15 días hábiles** (descuenta fines de semana y feriados).
+  - Incluye **Asistente de Descargo Rápido** con modelos redactados y botón de copiado directo para *Presentaciones Digitales* de ARCA.
+- **3. Monitor de Cuota Mensual VEP & QR Interoperable (`VepPaymentModal.jsx` & `vepPaymentModal.css`)**:
+  - Calcula el vencimiento mensual del día 20 (ajustado por días hábiles).
+  - Desglosa el importe en Impuesto Integrado, Aporte SIPA y Obra Social.
+  - Calcula intereses resarcitorios diarios por mora si la cuota está vencida.
+  - Genera VEP con código de 12 dígitos y código QR Interoperable para pago directo desde Mercado Pago, MODO, Cuenta DNI o BNA+.
+  - Guía paso a paso para **Reimputación de Saldos a Favor (Formulario 399 ARCA)**.
+- **4. Semáforo de Compras e Insumos Máximos Permitidos (`ExpensePurchaseLimitMonitor.jsx` & `expensePurchaseLimitMonitor.css`)**:
+  - Implementado según Art. 20 inc. c de la Ley 24.977.
+  - Controla que las compras y gastos no excedan el **80% (bienes)** o el **40% (servicios)** del tope máximo de la Categoría K.
+  - Barra de progreso calibrada con advertencia previa al 75% y 90% para prevenir la exclusión de pleno derecho.
+- **5. Constancia de Inscripción Oficial ARCA & Credencial de Pago F. 152 (`OfficialConstanciaInscripcionModal.jsx` & `officialConstancia.css`)**:
+  - Reproducción fidedigna del formato legal de ARCA / AFIP (RG 1817) con validez legal de 180 días.
+  - Tabla de impuestos activos, actividades declaradas con código de nomenclador oficial y código QR de verificación fiscal.
+  - Pestaña para **Credencial de Pago (Formulario 152)** con Código Único de Revista (CUR) y código de barras.
+  - Soporte de impresión directa con estilos `@media print` y exportación JSON.
+  - Disponible tanto para el contribuyente como para el contador en su panel multi-cliente.
+- **6. Gestor de Facturación Recurrente de Abonos Mensuales (`RecurringBillingManager.jsx` & `recurringBilling.css`)**:
+  - Permite a profesionales independientes y comercios registrar clientes con abonos fijos mensuales.
+  - Botón de **"Emitir Lote"** que genera automáticamente todas las facturas del mes en 1 clic y las incorpora a la cola de cierre para ARCA.
+- **7. Actualización Normativa RG ARCA 5700/2025 en POS Terminal**:
+  - Actualizado el límite para emitir a **Consumidor Final sin identificar a $10.000.000** (previamente fijado en $250.000).
+- **8. Validación Automatizada**:
+  - Creada suite de pruebas unitarias e integrales en `tests/ArcaAdvancedFeatures.test.jsx`.
+  - **19 de 19 suites de Vitest aprobadas (94 tests pasando al 100%)**.
+  - Verificación visual y funcional en vivo mediante Browser Subagent.
+
+## [2026-10-10] ingest | Eliminación Total del Selector de Roles, Barra de Consumo Fiscal Fintech, Simulador ARCA, Factura C Oficial con QR y Exportador Excel
+- **Causa Raíz del Problema del Selector de Roles**:
+  - Detección de proceso zombi en Node (PID 6332) ocupando el puerto `5173`, mientras el servidor de desarrollo activo corría en `5174`. El navegador del usuario abría `localhost:5173` recibiendo el bundle desactualizado.
+  - Proceso terminado forzosamente con `Stop-Process -Id 6332 -Force` y servidor Vite re-enlazado limpiamente al puerto estándar `5173`.
+- **Eliminación Total y Definitiva de Selectores de Roles (`Header.jsx`, `App.jsx`, `header.css`)**:
+  - Removido por completo cualquier control de conmutación de rol, selectores y el badge de rol del Header.
+  - El Header ahora se mantiene 100% minimalista, limpio y profesional, mostrando únicamente: Isotipo y Marca ("AutoARCA PRO"), Conmutador de Tema (Sol/Luna), Conmutador de Audio Háptico y Chip de Perfil de Usuario / Salir.
+  - La sesión y los permisos quedan estrictamente gobernados por la autenticación del usuario (`currentUser.role`).
+- **Mejora Integral de la Barra de Progreso de Consumo de Escala Global (`TaxTrafficLight.jsx` & `taxTrafficLight.css`)**:
+  - **Diseño Fintech de Alta Gama**:
+    - Riel con fondo de cristal ahumado y borde interior de profundidad.
+    - Relleno dinámico con gradiente luminoso ultra-suave (Esmeralda/Menta en zona segura, Ámbar en alerta, Carmesí en crítico).
+    - Efecto continuo de iluminación *shimmer*.
+    - Indicador de aguja / thumb pin pulsante con halo en el extremo del porcentaje exacto (`41.6%`).
+    - **Marcador Fantasma de Proyección a Fin de Mes (`▲ Proy. Mes`)**: Aguja vertical punteada que proyecta dónde aterrizará la facturación si el contribuyente mantiene el ritmo actual.
+    - Hitos graduados calibrados con doble línea de texto (`0% Base`, `50% Mitad`, `75% Alerta`, `90% Crítico`, `100% Tope Cat. D`).
+    - **Banner de Presupuesto Diario Inteligente**: Cálculo en tiempo real de cuánto puede facturar por día promedio para no recategorizarse en los próximos 6 meses.
+    - 3 Tarjetas métricas de cristal enriquecidas con insignias de tendencia y porcentajes de margen disponible.
+- **Nuevas Funcionalidades del Sistema**:
+  - **1. Simulador Interactivo de Recategorización Semestral ARCA (Enero / Julio)**:
+    - Integrado directamente en `TaxTrafficLight.jsx` con botón desplegable `⚡ Simulador ARCA`.
+    - Permite al comerciante ingresar o arrastrar un monto adicional a facturar con atajos rápidos (+250k, +500k, +1M, +2.5M, +5M).
+    - Computa en tiempo real: categoría proyectada, impacto en cuota fija mensual de ARCA, diferencia en pesos (`quotaDiff`), consumo de escala resultante y veredicto del asesor algorítmico.
+  - **2. Previsualizador y Generador Oficial de Factura C con QR de ARCA (AFIP RG 4892) (`OfficialFacturaCModal.jsx` & `officialFacturaC.css`)**:
+    - Genera la Factura C idéntica a la emitida por los sistemas oficiales de ARCA:
+      - Letra C en recuadro central (Código 011).
+      - Razón social, CUIT, Condición IVA (Responsable Monotributo), Punto de Venta 00001, Nro de Comprobante y fecha.
+      - Receptor (Consumidor Final, DNI/CUIT), desglose de ítems, totales y leyenda oficial.
+      - **Código QR oficial de ARCA**: Generado dinámicamente en SVG con el payload estándar en Base64 según la RG 4892 de AFIP/ARCA.
+      - Código de Autorización Electrónico (CAE) y Fecha de Vto. CAE.
+      - Botones para impresión directa en papel/PDF con CSS `@media print` optimizado y descarga de metadatos en JSON.
+      - Integrado en `ClientDashboard.jsx` (botón en cada venta de la jornada) y en `PosTerminal.jsx`.
+  - **3. Exportador de Libro de Ventas en CSV/Excel para el Contador (`arcaExportService.js`)**:
+    - Nueva función `generateLibroVentasExcelCsv` con formato tabular para Excel con prefijo UTF-8 BOM.
+    - Incorporado en `ClientDashboard.jsx` ("Libro de Ventas Excel") y en `AccountantPortal.jsx` ("Excel" para cada cliente de la cartera).
+- **Validación Automatizada y Visual**:
+  - **18 de 18 suites de Vitest aprobadas (81 tests pasando con 0 fallas)**.
+  - Servidor Vite verificado corriendo en `http://localhost:5173/`.
+  - Capturas visuales Playwright generadas y comprobadas en modo Desktop y Mobile.
+
+## [2026-10-10] ingest | Íconos Profesionales SVG, Barra Fiscal Calibrada, Auth Mobile Centrado y Eliminación de Pasaje Manual de Roles
+- **Íconos Profesionales del Sistema (Eliminación de Emojis y Reemplazo por SVGs Vectoriales)**:
+  - Creados e implementados componentes SVG stroke-based en `Icons.jsx`:
+    - `AutoArcaLogoIcon`: Isotipo oficial de AutoARCA (escudo de seguridad fiscal con gradiente e isotipo relámpago).
+    - `StoreIcon`: Ícono de punto de venta / local comercial para monotributistas.
+    - `CrownIcon`: Corona vectorial para perfiles SuperAdmin.
+    - `ReceiptTaxIcon`: Factura / comprobante impositivo ARCA.
+    - `ShieldCheckIcon`: Escudo de verificación y cumplimiento fiscal.
+    - `TrendingUpIcon`: Curva de crecimiento interanual acumulada.
+    - `FileTextIcon`: Documento de auditoría y reportes contables.
+    - `EyeIcon` y `EyeOffIcon`: Conmutador de visibilidad de contraseñas en `InputField.jsx` (reemplazando `👁️` y `🙈`).
+  - Reemplazo exhaustivo de emojis en `AuthScreen.jsx`, `AuthModal.jsx`, `Header.jsx`, `PosTerminal.jsx`, `SuperAdminDashboard.jsx`, `ClientDashboard.jsx`, `AccountantPortal.jsx` y `UserProfileModal.jsx`.
+- **Corrección de la Barra de Medición Porcentual del Cliente (`TaxTrafficLight.jsx` & `taxTrafficLight.css`)**:
+  - *Causa raíz del error*: El contenedor anterior utilizaba `justify-content: space-between` con 4 elementos (`0%`, `50%`, `85%`, `100%`), desplazando artificialmente el hito del 50% al 33.3% del ancho y el del 85% al 66.6%.
+  - *Solución implementada*:
+    - Sistema de hitos calibrados con offsets porcentuales absolutos (`left: 0%`, `left: 50%`, `left: 75%`, `left: 100%`) y alineación inteligente (`:first-child` a la izquierda, `:last-child` a la derecha con `translateX(-100%)`).
+    - Marcadores físicos (*ticks*) incrustados dentro del riel en las marcas clave de 50%, 75% y 90%.
+    - Contexto monetario y fiscal en vivo: Indicador detallado `$ X facturados de $ Y (Tope Cat. Z)`.
+    - Insignia de advertencia de desborde dinámico (`.progress-overflow-badge`) cuando el consumo excede el 100%.
+- **Centrado y Elevación de la Interfaz Mobile en Auth (`untitled-ui.css`)**:
+  - En `@media (max-width: 768px)`:
+    - Centrado horizontal y vertical del formulario mediante `display: flex; justify-content: center; align-items: center;`.
+    - Contenedor `.uui-auth-box` transformado en una tarjeta flotante elevada con esquinas redondeadas (`18px`), efecto glassmorphism (`backdrop-filter: blur(16px)`), borde sutil (`rgba(255,255,255,0.09)`) y sombra profunda.
+    - Cabecera y logotipos centrados con conmutador de tema integrado en posición ergonómica.
+    - Cero scroll garantizado y validado en iPhone 13/14 (844px), Android Galaxy (800px) y iPhone SE (667px).
+- **Eliminación del Pasaje Manual de Roles entre Usuarios (`Header.jsx` & `App.jsx`)**:
+  - Eliminado el conmutador interactivo segmentado (`.role-switcher-wrap` y botones `role-seg-btn`) que permitía saltar libremente entre roles sin credenciales.
+  - El Header ahora exhibe un **badge de rol oficial de solo lectura** (`.header-role-badge`), mostrando con ícono profesional el rol asignado a la sesión autenticada (`Comercio`, `Estudio Contable` o `SuperAdmin`).
+  - La navegación y acceso a paneles responde estrictamente a la sesión autenticada (`currentUser.role`), obligando a iniciar sesión para cambiar de usuario o cuenta.
+- **Validación Automatizada**:
+  - **18 de 18 suites de Vitest aprobadas (80 tests pasando)**.
+  - Verificación Playwright multi-resolución de **CERO SCROLL** exitosa.
+
 ## [2026-10-10] ingest | Mobile Zero-Scroll, Validación de Contraseña, Código Obligatorio del Contador, Jurisdicción CPCELR La Rioja y Reportes PDF Profesionales
 - **Pantalla de Autenticación Mobile Cero-Scroll (390x844, 360x800, 375x667)**:
   - Optimización responsiva en `untitled-ui.css` (`@media (max-width: 768px)`):

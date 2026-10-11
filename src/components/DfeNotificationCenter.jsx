@@ -149,15 +149,15 @@ export default function DfeNotificationCenter({
 
                 return (
                   <tr key={notif.id} className={notif.status === 'pending' ? 'dfe-row-pending' : ''}>
-                    <td>
+                    <td className="dfe-td-item" data-label="Asunto">
                       <div className="dfe-item-title">{notif.title}</div>
                       <div className="dfe-item-code">{notif.code} — {notif.origin}</div>
                     </td>
-                    <td>
+                    <td data-label="Tipo">
                       <span className={`dfe-pill-type type-${notif.type.toLowerCase()}`}>{notif.type}</span>
                     </td>
-                    <td className="font-mono text-muted">{notif.date}</td>
-                    <td>
+                    <td data-label="Fecha Notif." className="font-mono text-muted">{notif.date}</td>
+                    <td data-label="Plazo Legal">
                       {notif.status === 'pending' ? (
                         <div className="dfe-countdown-box">
                           <ClockIcon size={14} className={daysInfo.remainingBusinessDays <= 3 ? 'text-danger' : 'text-warning'} />
@@ -170,12 +170,12 @@ export default function DfeNotificationCenter({
                         <span className="text-muted font-mono">Resuelto</span>
                       )}
                     </td>
-                    <td>
+                    <td data-label="Estado">
                       <Badge variant={notif.status === 'pending' ? 'warning' : 'success'}>
                         {notif.status === 'pending' ? 'Pendiente' : 'Descargo Presentado'}
                       </Badge>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td className="dfe-td-action" data-label="Acción" style={{ textAlign: 'right' }}>
                       <Button
                         size="sm"
                         variant="secondary"

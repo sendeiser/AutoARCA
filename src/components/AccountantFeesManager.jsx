@@ -151,15 +151,15 @@ export default function AccountantFeesManager({
 
                 return (
                   <tr key={client.id}>
-                    <td>
+                    <td className="fees-td-client" data-label="Cliente">
                       <strong>{client.fantasy_name || client.razon_social}</strong>
                     </td>
-                    <td><code className="font-mono">{client.cuit}</code></td>
-                    <td>
+                    <td data-label="CUIT"><code className="font-mono">{client.cuit}</code></td>
+                    <td data-label="Cat. ARCA">
                       <span className="client-cat-badge">Cat. {client.monotributo_category || 'D'}</span>
                     </td>
-                    <td className="font-mono font-bold">{formatCurrencyARS(f.fee)}</td>
-                    <td>
+                    <td data-label="Honorario Mensual" className="font-mono font-bold">{formatCurrencyARS(f.fee)}</td>
+                    <td data-label="Estado de Pago">
                       <button
                         type="button"
                         className={`fees-status-chip ${isPaid ? 'paid' : f.status === 'overdue' ? 'overdue' : 'pending'}`}
@@ -169,10 +169,10 @@ export default function AccountantFeesManager({
                         {isPaid ? '✓ Cobrado' : f.status === 'overdue' ? 'Atrasado' : 'Pendiente'}
                       </button>
                     </td>
-                    <td className="font-mono text-muted" style={{ fontSize: '0.78rem' }}>
+                    <td data-label="Fecha Cobro" className="font-mono text-muted" style={{ fontSize: '0.78rem' }}>
                       {f.paymentDate || '—'}
                     </td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td className="fees-td-action" data-label="Acción" style={{ textAlign: 'right' }}>
                       <Button
                         size="sm"
                         variant="secondary"

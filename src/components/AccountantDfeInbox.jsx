@@ -185,19 +185,19 @@ export default function AccountantDfeInbox({ clients = [] }) {
 
                   return (
                     <tr key={notif.id} className={notif.status === 'pending' && daysInfo.remainingBusinessDays <= 4 ? 'row-critical' : ''}>
-                      <td>
+                      <td className="dfe-td-client" data-label="Cliente">
                         <strong>{notif.clientName}</strong>
                         <div className="dfe-client-cuit font-mono">{notif.cuit}</div>
                       </td>
-                      <td>
+                      <td className="dfe-td-title" data-label="Asunto">
                         <div className="dfe-notif-title">{notif.title}</div>
                         <div className="dfe-notif-origin font-mono">{notif.code} · {notif.origin}</div>
                       </td>
-                      <td>
+                      <td data-label="Tipo">
                         <span className={`dfe-type-tag type-${notif.type.toLowerCase()}`}>{notif.type}</span>
                       </td>
-                      <td className="font-mono text-muted">{notif.date}</td>
-                      <td>
+                      <td data-label="Fecha Notif." className="font-mono text-muted">{notif.date}</td>
+                      <td data-label="Plazo Legal">
                         {notif.status === 'pending' ? (
                           <div className="dfe-clock-box">
                             <ClockIcon size={14} className={daysInfo.remainingBusinessDays <= 4 ? 'text-danger' : 'text-warning'} />
@@ -210,12 +210,12 @@ export default function AccountantDfeInbox({ clients = [] }) {
                           <span className="text-muted font-mono">Presentado</span>
                         )}
                       </td>
-                      <td>
+                      <td data-label="Estado">
                         <Badge variant={notif.status === 'pending' ? 'warning' : 'success'}>
                           {notif.status === 'pending' ? 'Pendiente Descargo' : 'Descargo Presentado'}
                         </Badge>
                       </td>
-                      <td style={{ textAlign: 'right' }}>
+                      <td className="dfe-td-action" data-label="Acción" style={{ textAlign: 'right' }}>
                         <Button
                           size="sm"
                           variant="secondary"

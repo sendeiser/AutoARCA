@@ -269,24 +269,24 @@ export default function AccountantRecategorizationMatrix({
               ) : (
                 filtered.map((c) => (
                   <tr key={c.id}>
-                    <td>
+                    <td className="recat-td-client" data-label="Cliente">
                       <strong>{c.fantasy_name || c.razon_social}</strong>
                       <div className="recat-subname">{c.razon_social}</div>
                     </td>
-                    <td><code className="font-mono">{c.cuit}</code></td>
-                    <td>
+                    <td data-label="CUIT"><code className="font-mono">{c.cuit}</code></td>
+                    <td data-label="Cat. Actual">
                       <span className="recat-cat-badge">Cat. {c.currentCat}</span>
                     </td>
-                    <td className="font-mono font-bold">
+                    <td data-label="Facturación 12M" className="font-mono font-bold">
                       {formatCurrencyARS(c.rollingSales)}
                     </td>
-                    <td>
+                    <td data-label="Cat. Proyectada">
                       <span className="recat-cat-badge target">Cat. {c.targetCat}</span>
                     </td>
-                    <td>
+                    <td data-label="Diagnóstico ARCA">
                       <Badge variant={c.actionVariant}>{c.actionLabel}</Badge>
                     </td>
-                    <td className="font-mono">
+                    <td data-label="Variación Cuota" className="font-mono">
                       {c.quotaDiff > 0 ? (
                         <span className="text-danger">+{formatCurrencyARS(c.quotaDiff)}/m</span>
                       ) : c.quotaDiff < 0 ? (
@@ -295,7 +295,7 @@ export default function AccountantRecategorizationMatrix({
                         <span className="text-muted">$0</span>
                       )}
                     </td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td className="recat-td-action" data-label="Acción" style={{ textAlign: 'right' }}>
                       <Button
                         size="sm"
                         variant="secondary"

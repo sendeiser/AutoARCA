@@ -227,25 +227,94 @@
   .recat-tab-filter:active {
     transform: scale(0.97);
   }
-  .recat-table th,
-  .recat-table td {
-    padding: 0.75rem 0.65rem;
-    font-size: 0.8rem;
+  /* Transformación de Tabla a Cards Móviles Ergonómicas */
+  .recat-table-container {
+    border: none !important;
+    background: transparent !important;
+    overflow-x: visible !important;
+    width: 100% !important;
   }
-  .recat-table button,
-  .recat-table .btn {
-    min-height: 42px !important;
+  .recat-table {
+    display: block !important;
+    width: 100% !important;
+  }
+  .recat-table thead {
+    display: none !important;
+  }
+  .recat-table tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+  .recat-table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.9rem !important;
+    box-shadow: var(--shadow-xs) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  .recat-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.35rem 0 !important;
+    border: none !important;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.82rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  .recat-table td::before {
+    content: attr(data-label);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .recat-table td.recat-td-client {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 0.55rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .recat-table td.recat-td-client::before {
+    display: none !important;
+  }
+  .recat-table td.recat-td-client strong {
+    font-size: 0.96rem;
+    color: var(--text-main);
+  }
+  .recat-table td.recat-td-action {
+    border-bottom: none !important;
+    padding-top: 0.65rem !important;
+    justify-content: stretch !important;
+  }
+  .recat-table td.recat-td-action::before {
+    display: none !important;
+  }
+  .recat-table td.recat-td-action button,
+  .recat-table td.recat-td-action .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
     padding: 0.5rem 0.85rem !important;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.35rem;
     touch-action: manipulation;
     border-radius: var(--radius-md);
   }
-  .recat-table button:active,
-  .recat-table .btn:active {
+  .recat-table td.recat-td-action button:active,
+  .recat-table td.recat-td-action .btn:active {
     transform: scale(0.97);
   }
 }
