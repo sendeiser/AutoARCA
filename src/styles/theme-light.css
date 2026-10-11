@@ -899,17 +899,22 @@ body[data-theme="light"] {
    10. Pantalla AuthScreen Split-Screen en Modo Claro
    ============================================================================== */
 [data-theme="light"] .uui-auth-container {
-  background: #ffffff !important;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    url('/auth-bg.jpg') center/cover no-repeat,
+    #ffffff !important;
 }
 
 [data-theme="light"] .uui-auth-left {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 [data-theme="light"] .uui-auth-right {
   background: 
-    radial-gradient(circle at 60% 40%, rgba(124, 58, 237, 0.08), rgba(241, 245, 249, 0.98)),
-    linear-gradient(180deg, #f8fafc 0%, #ede9fe 100%) !important;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(241, 245, 249, 0.9) 100%),
+    url('/auth-bg.jpg') center/cover no-repeat !important;
   border-left-color: rgba(15, 23, 42, 0.08) !important;
 }
 
@@ -1069,12 +1074,16 @@ body[data-theme="light"] {
    12. Untitled UI AuthScreen en Modo Claro
    ============================================================================== */
 [data-theme="light"] .uui-auth-container {
-  background: #f8fafc !important;
+  background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08), transparent 45%),
+              linear-gradient(180deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.92) 100%),
+              url('/auth-bg.jpg') center/cover no-repeat !important;
   color: #0f172a !important;
 }
 
 [data-theme="light"] .uui-auth-left {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 [data-theme="light"] .uui-auth-title {
@@ -1158,7 +1167,8 @@ body[data-theme="light"] {
 }
 
 [data-theme="light"] .uui-auth-right {
-  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
+  background: linear-gradient(135deg, rgba(245, 243, 255, 0.7) 0%, rgba(237, 233, 254, 0.78) 100%),
+              url('/auth-bg.jpg') center/cover no-repeat !important;
   border-left-color: #e2e8f0 !important;
 }
 

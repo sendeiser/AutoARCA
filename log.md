@@ -4,6 +4,20 @@ Registro cronológico y auditable de todas las operaciones ejecutadas en la wiki
 
 ---
 
+## [2026-10-11] lint | Incorporación de Imagen de Fondo Fiscal y Nuevo Ícono Oficial AutoARCA en Auth y Web
+- **1. Generación de Imagen de Fondo para Auth (`public/auth-bg.jpg`)**:
+  - Se generó una imagen de alta definición con estética fintech fiscal argentina (facturación electrónica ARCA/AFIP, escudo de cumplimiento normativo, gráficos de recategorización, nodos y analíticas financieras en cian y violeta neón).
+  - Integrada en `.uui-auth-container`, `.uui-auth-right` y la versión móvil en `untitled-ui.css` y `theme-light.css` con superposición glassmorphism (desenfoque de 14-16px y transparencias equilibradas para garantizar contraste y legibilidad óptima tanto en Modo Oscuro como en Modo Claro).
+- **2. Generación e Integración del Ícono de Marca (`public/autoarca-icon.png`, `public/favicon.png`)**:
+  - Se diseñó un isotipo moderno y premium consistente en un escudo 3D con un rayo eléctrico cian formando la letra "A", simbolizando velocidad en emisión y blindaje fiscal.
+  - Actualizado el Favicon y Web Manifest (`index.html`, `public/manifest.json`).
+  - Incorporado en la cabecera de la aplicación (`Header.jsx`) junto a la marca `AutoARCA PRO`.
+  - Incorporado en el badge de marca de `AuthScreen.jsx` y en el encabezado de `AuthModal.jsx`.
+- **3. Verificación Visual con Playwright**:
+  - Verificados y capturados los estados en desktop (1280x800) modo oscuro y claro, mobile (390x844) y cabecera autenticada.
+- **4. Suite de Tests Vitest**:
+  - **107 de 107 tests aprobados (100% verde)** sin regresiones.
+
 ## [2026-10-11] lint | Eliminación de Subnav Duplicada y Aislamiento de Cabecera en Panel del Cliente
 - **1. Supresión del Subnav Repetido en el Panel del Cliente (`ClientDashboard.jsx`, `clientDashboard.css`)**:
   - Se eliminó el contenedor `.client-subnav-bar` que duplicaba las opciones de navegación por debajo del navbar principal (`Panel Fiscal & Ventas`, `Cruce Bancario`, `Control de Compras`, `E-Ventanilla DFE`, `Abonos Recurrentes`).

@@ -112,7 +112,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
         {/* Cabecera */}
         <div className="auth-header">
           <div className="auth-brand-logo" style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
-            <AutoArcaLogoIcon size={28} />
+            <img
+              src="/autoarca-icon.png"
+              alt="AutoARCA Logo"
+              style={{ width: '36px', height: '36px', borderRadius: '9px', objectFit: 'cover', boxShadow: '0 2px 10px rgba(37, 99, 235, 0.45)' }}
+            />
           </div>
           <h2 className="auth-title">AutoARCA</h2>
           <p className="auth-subtitle">

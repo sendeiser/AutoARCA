@@ -47,7 +47,12 @@ export default function Header({
           }}
           aria-label="Ir a la vista principal"
         >
-          <AutoArcaLogoIcon size={19} />
+          <img
+            src="/autoarca-icon.png"
+            alt="AutoARCA Logo"
+            className="brand-logo-img"
+            style={{ width: '22px', height: '22px', borderRadius: '6px', objectFit: 'cover', boxShadow: '0 2px 8px rgba(37, 99, 235, 0.45)' }}
+          />
           <span className="brand-title">AutoARCA</span>
           <span className="brand-apple-badge">PRO</span>
         </button>

@@ -289,7 +289,9 @@
   min-height: 100dvh;
   max-height: 100dvh;
   display: flex;
-  background: #090d16;
+  background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.12), transparent 45%),
+              linear-gradient(180deg, rgba(9, 13, 22, 0.94) 0%, rgba(14, 21, 38, 0.96) 100%),
+              url('/auth-bg.jpg') center/cover no-repeat;
   color: #f8fafc;
   overflow: hidden;
   box-sizing: border-box;
@@ -309,6 +311,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  background: rgba(9, 13, 22, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .uui-auth-right {
@@ -317,8 +322,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at 60% 40%, rgba(124, 58, 237, 0.15), rgba(9, 13, 22, 0.95)),
-              linear-gradient(180deg, #0e1526 0%, #090d16 100%);
+  background: linear-gradient(135deg, rgba(9, 13, 22, 0.62) 0%, rgba(14, 21, 38, 0.78) 100%),
+              url('/auth-bg.jpg') center/cover no-repeat;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   padding: clamp(1.25rem, 3.5vh, 2.75rem);
   position: relative;
@@ -540,6 +545,9 @@
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
+    background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.15), transparent 70%),
+                linear-gradient(180deg, rgba(9, 13, 22, 0.72) 0%, rgba(14, 21, 38, 0.82) 100%),
+                url('/auth-bg.jpg') center/cover no-repeat !important;
   }
 
   .uui-auth-left {
@@ -568,13 +576,15 @@
   }
 
   [data-theme="light"] .uui-auth-left {
-    background: #f8fafc !important;
+    background: transparent !important;
   }
 
   [data-theme="light"] .uui-auth-box {
-    background: #ffffff !important;
+    background: rgba(255, 255, 255, 0.9) !important;
     border-color: #e2e8f0 !important;
     box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
   }
 
   .uui-auth-header {
@@ -1178,7 +1188,8 @@
 }
 
 [data-theme="light"] .uui-auth-right {
-  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
+  background: linear-gradient(135deg, rgba(245, 243, 255, 0.85) 0%, rgba(237, 233, 254, 0.88) 100%),
+              url('/auth-bg.jpg') center/cover no-repeat !important;
   border-left-color: #e2e8f0 !important;
 }
 

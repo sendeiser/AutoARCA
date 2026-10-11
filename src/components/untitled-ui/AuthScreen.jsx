@@ -180,7 +180,11 @@ export default function AuthScreen({ onAuthSuccess, theme = 'dark', onToggleThem
           <div className="uui-auth-header">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div className="uui-auth-logo-badge" style={{ marginBottom: 0 }}>
-                <AutoArcaLogoIcon size={25} />
+                <img
+                  src="/autoarca-icon.png"
+                  alt="AutoARCA Logo"
+                  style={{ width: '28px', height: '28px', borderRadius: '7px', objectFit: 'cover', boxShadow: '0 2px 8px rgba(37, 99, 235, 0.45)' }}
+                />
                 <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'inherit' }}>
                   AutoARCA
                 </span>
