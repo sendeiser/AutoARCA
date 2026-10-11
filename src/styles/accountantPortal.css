@@ -283,6 +283,27 @@
   border-color: #ef4444;
 }
 
+.filter-chip.exceeded.active {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.filter-chip.batches.active {
+  background: #7c3aed;
+  color: #fff;
+  border-color: #7c3aed;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+.filter-chip.vencen-hoy.active {
+  background: #0284c7;
+  color: #fff;
+  border-color: #0284c7;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
 .toolbar-controls-right {
   display: flex;
   gap: 0.75rem;

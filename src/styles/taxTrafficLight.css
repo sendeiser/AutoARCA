@@ -448,6 +448,215 @@
   font-size: 1.1rem;
 }
 
+/* ==============================================================================
+ * Anillos de Salud Fiscal Circulares estilo Apple Health Rings
+ * ============================================================================== */
+.traffic-view-toggle-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  border-radius: 9999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.traffic-view-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.traffic-view-toggle-btn.active {
+  background: rgba(10, 132, 255, 0.18);
+  border-color: rgba(10, 132, 255, 0.45);
+  color: #64d2ff;
+}
+
+[data-theme="light"] .traffic-view-toggle-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+[data-theme="light"] .traffic-view-toggle-btn.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.fiscal-rings-container {
+  margin-top: 1.25rem;
+  animation: posOverlayFade 0.3s ease-out;
+}
+
+.fiscal-rings-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2rem;
+  background: rgba(28, 28, 30, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="light"] .fiscal-rings-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+}
+
+.fiscal-rings-visual {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fiscal-rings-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.4));
+}
+
+.fiscal-ring-track {
+  opacity: 0.25;
+}
+
+.fiscal-ring-circle {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fiscal-ring-center-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.fiscal-ring-center-pct {
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.fiscal-ring-center-lbl {
+  font-size: 0.72rem;
+  color: rgba(235, 235, 245, 0.65);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+[data-theme="light"] .fiscal-ring-center-lbl {
+  color: #64748b;
+}
+
+.fiscal-rings-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.fiscal-ring-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.fiscal-ring-legend-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(3px);
+}
+
+[data-theme="light"] .fiscal-ring-legend-item {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .fiscal-ring-legend-item:hover {
+  background: #f1f5f9;
+}
+
+.ring-legend-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #000000;
+  font-weight: 900;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.ring-legend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ring-legend-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: rgba(235, 235, 245, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+[data-theme="light"] .ring-legend-title {
+  color: #64748b;
+}
+
+.ring-legend-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+[data-theme="light"] .ring-legend-val {
+  color: #0f172a;
+}
+
+.ring-legend-sub {
+  font-size: 0.74rem;
+  color: rgba(235, 235, 245, 0.5);
+}
+
+[data-theme="light"] .ring-legend-sub {
+  color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+  .fiscal-rings-card {
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    gap: 1.25rem;
+  }
+}
+
 /* Rejilla de Métricas en Tarjetas Estilo Glassmorphism */
 .traffic-metrics-grid {
   display: grid;

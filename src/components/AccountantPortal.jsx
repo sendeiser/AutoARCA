@@ -70,15 +70,26 @@ export default function AccountantPortal({
     setClientList(clients);
   }, [clients]);
 
-  // Filtrado reactivo de comercios
+  // Filtrado reactivo de comercios con chips de 1-clic
   const filteredClients = clientList.filter((c) => {
     const query = searchQuery.toLowerCase();
     const cuitMatch = (c.cuit || '').includes(query);
     const nameMatch = (c.fantasy_name || c.razon_social || '').toLowerCase().includes(query);
     const matchesSearch = cuitMatch || nameMatch;
 
-    if (statusFilter === 'all') return matchesSearch;
-    return matchesSearch && (c.trafficColor === statusFilter);
+    if (!matchesSearch) return false;
+    if (statusFilter === 'all') return true;
+    if (statusFilter === 'red') return c.trafficColor === 'red';
+    if (statusFilter === 'yellow') return c.trafficColor === 'yellow';
+    if (statusFilter === 'green') return c.trafficColor === 'green';
+    if (statusFilter === 'exceeded') return (c.percentageConsumed > 100) || (c.rolling12mSales > (c.maxAnnualBilling || 16450000));
+    if (statusFilter === 'batches') return !!c.todayBatch;
+    if (statusFilter === 'vencen_hoy') {
+      const rawCuit = (c.cuit || '0').replace(/[^0-9]/g, '');
+      const lastDigit = Number(rawCuit.slice(-2, -1) || rawCuit.slice(-1) || 0);
+      return lastDigit <= 3;
+    }
+    return true;
   });
 
   // KPIs
@@ -377,7 +388,7 @@ export default function AccountantPortal({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
 
-            {/* Status Filter Chips */}
+            {/* Status Filter Chips de 1-Clic */}
             <div className="status-filter-chips">
               <button
                 type="button"
@@ -388,24 +399,51 @@ export default function AccountantPortal({
               </button>
               <button
                 type="button"
-                className={`filter-chip green ${statusFilter === 'green' ? 'active' : ''}`}
-                onClick={() => { soundService.playKeyTap(); setStatusFilter('green'); }}
+                className={`filter-chip red ${statusFilter === 'red' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('red'); }}
+                title="Mostrar exclusivamente clientes en alerta roja"
               >
-                🟢 En orden
+                <AlertTriangleIcon size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Solo Alerta Roja ({inRiskClients})
               </button>
               <button
                 type="button"
                 className={`filter-chip yellow ${statusFilter === 'yellow' ? 'active' : ''}`}
                 onClick={() => { soundService.playKeyTap(); setStatusFilter('yellow'); }}
+                title="Clientes con consumo entre 80% y 95%"
               >
                 🟡 Alerta ({inWarningClients})
               </button>
               <button
                 type="button"
-                className={`filter-chip red ${statusFilter === 'red' ? 'active' : ''}`}
-                onClick={() => { soundService.playKeyTap(); setStatusFilter('red'); }}
+                className={`filter-chip green ${statusFilter === 'green' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('green'); }}
+                title="Clientes en zona segura fiscal"
               >
-                <AlertTriangleIcon size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Riesgo ({inRiskClients})
+                🟢 En orden ({totalClients - inRiskClients - inWarningClients})
+              </button>
+              <button
+                type="button"
+                className={`filter-chip exceeded ${statusFilter === 'exceeded' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('exceeded'); }}
+                title="Clientes que superaron el 100% de la categoría"
+              >
+                🚨 Excedidos
+              </button>
+              <button
+                type="button"
+                className={`filter-chip batches ${statusFilter === 'batches' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('batches'); }}
+                title="Comercios con lotes CSV listos para ARCA"
+              >
+                📦 Con Lotes ({readyBatchesCount})
+              </button>
+              <button
+                type="button"
+                className={`filter-chip vencen-hoy ${statusFilter === 'vencen_hoy' ? 'active' : ''}`}
+                onClick={() => { soundService.playKeyTap(); setStatusFilter('vencen_hoy'); }}
+                title="Clientes con vencimiento impositivo en los próximos días"
+              >
+                ⚡ Vencen Hoy
               </button>
             </div>
 

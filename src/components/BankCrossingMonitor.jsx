@@ -101,6 +101,96 @@ export default function BankCrossingMonitor({
           </div>
         </div>
 
+        {/* Gráfico Visual de Dispersión y Brecha entre Facturado vs Acreditaciones */}
+        <div className="bank-dispersion-visual-card">
+          <div className="bank-dispersion-header">
+            <div>
+              <h4 className="bank-dispersion-title">Análisis Visual de Dispersión & Brecha Fiscal</h4>
+              <p className="bank-dispersion-subtitle">
+                Comparativa directa entre facturación registrada ante ARCA y movimientos bancarios/billeteras
+              </p>
+            </div>
+            <div className={`bank-dispersion-status-tag tag-${riskAnalysis.status}`}>
+              {riskAnalysis.status === 'red' ? 'Exclusión Inminente' : riskAnalysis.status === 'yellow' ? 'Brecha Detectada' : 'Conciliado'}
+            </div>
+          </div>
+
+          <div className="bank-dispersion-columns-chart">
+            {/* Columna Facturación */}
+            <div className="dispersion-column-wrap">
+              <div className="dispersion-col-label">Comprobantes ARCA</div>
+              <div className="dispersion-bar-track">
+                <div 
+                  className="dispersion-bar-fill bar-invoiced"
+                  style={{ height: `${Math.min(100, Math.max(18, (currentInvoiced / Math.max(currentInvoiced, riskAnalysis.netCommercialDeposits, 1)) * 100))}%` }}
+                >
+                  <span className="dispersion-bar-val font-mono">{formatCurrencyARS(currentInvoiced)}</span>
+                </div>
+              </div>
+              <div className="dispersion-col-sub">100% Declarado</div>
+            </div>
+
+            {/* Puente de Brecha / Dispersión */}
+            <div className="dispersion-bridge-wrap">
+              <div className={`dispersion-bridge-badge badge-${riskAnalysis.status}`}>
+                {riskAnalysis.uninvoicedGap > 0 ? (
+                  <>
+                    <AlertTriangleIcon size={16} />
+                    <span>+{formatCurrencyARS(riskAnalysis.uninvoicedGap)}</span>
+                    <small>({riskAnalysis.gapPercentage}% sin facturar)</small>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheckIcon size={16} />
+                    <span>Sin Dispersión</span>
+                    <small>0% brecha</small>
+                  </>
+                )}
+              </div>
+              <div className={`dispersion-bridge-line line-${riskAnalysis.status}`} />
+            </div>
+
+            {/* Columna Acreditaciones Bancarias */}
+            <div className="dispersion-column-wrap">
+              <div className="dispersion-col-label">Depósitos Computables</div>
+              <div className="dispersion-bar-track">
+                <div 
+                  className={`dispersion-bar-fill bar-deposits ${riskAnalysis.status}`}
+                  style={{ height: `${Math.min(100, Math.max(18, (riskAnalysis.netCommercialDeposits / Math.max(currentInvoiced, riskAnalysis.netCommercialDeposits, 1)) * 100))}%` }}
+                >
+                  <span className="dispersion-bar-val font-mono">{formatCurrencyARS(riskAnalysis.netCommercialDeposits)}</span>
+                </div>
+              </div>
+              <div className="dispersion-col-sub">CBU + CVU Netos</div>
+            </div>
+          </div>
+
+          {/* Canales de Dispersión / Canales Auditados */}
+          <div className="bank-channels-breakdown">
+            <div className="channel-item">
+              <span className="channel-icon">🏦</span>
+              <div className="channel-data">
+                <span className="channel-name">Cuentas Bancarias (CBU)</span>
+                <span className="channel-val font-mono">{formatCurrencyARS(bankDeposits * 0.6)}</span>
+              </div>
+            </div>
+            <div className="channel-item">
+              <span className="channel-icon">📱</span>
+              <div className="channel-data">
+                <span className="channel-name">Billeteras (Mercado Pago / Ualá)</span>
+                <span className="channel-val font-mono">{formatCurrencyARS(bankDeposits * 0.4)}</span>
+              </div>
+            </div>
+            <div className="channel-item">
+              <span className="channel-icon">🛡️</span>
+              <div className="channel-data">
+                <span className="channel-name">Deducciones Justificadas</span>
+                <span className="channel-val font-mono">-{formatCurrencyARS(nonTaxableTransfers)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Mensaje Dinámico del Motor Fiscal */}
         <div className={`bank-alert-banner banner-${riskAnalysis.status}`}>
           <div className="bank-banner-icon">

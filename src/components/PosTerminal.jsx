@@ -54,6 +54,7 @@ export function PosTerminalProvider({
   const [lastSale, setLastSale] = useState(null);
   const [showFacturaModal, setShowFacturaModal] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [emittedSuccessSale, setEmittedSuccessSale] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
@@ -159,6 +160,7 @@ export function PosTerminalProvider({
           await onRecordSale(saleRecord);
         }
         setLastSale(saleRecord);
+        setEmittedSuccessSale(saleRecord);
         soundService.playSuccess();
         actions.showToast('¡Comprobante emitido con éxito!');
         setAmountRaw('0');
@@ -172,7 +174,8 @@ export function PosTerminalProvider({
         setIsSubmitting(false);
       }
     },
-    setShowFacturaModal
+    setShowFacturaModal,
+    setEmittedSuccessSale
   }), [numericAmount, customerDocType, customerDocNumber, customerName, paymentMethod, anonymousMaxLimit, onRecordSale]);
 
   const value = {
@@ -188,6 +191,7 @@ export function PosTerminalProvider({
       lastSale,
       showFacturaModal,
       toastMessage,
+      emittedSuccessSale,
       isSubmitting,
       isMuted,
       isPulsing
@@ -457,6 +461,52 @@ export function PosToast() {
   return <div className="pos-toast">{toastMessage}</div>;
 }
 
+export function PosSuccessFeedback() {
+  const { state: { emittedSuccessSale }, actions: { setEmittedSuccessSale, setShowFacturaModal } } = usePosTerminal();
+
+  if (!emittedSuccessSale) return null;
+
+  return (
+    <div className="pos-success-overlay" onClick={() => setEmittedSuccessSale(null)}>
+      <div className="pos-success-card" onClick={(e) => e.stopPropagation()}>
+        <div className="pos-spring-check-wrapper">
+          <svg className="pos-spring-check-svg" viewBox="0 0 52 52">
+            <circle className="pos-spring-check-circle" cx="26" cy="26" r="23" fill="none" />
+            <path className="pos-spring-check-path" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+          </svg>
+        </div>
+        <h3 className="pos-success-title">¡Comprobante Emitido!</h3>
+        <div className="pos-success-amount">
+          ${Number(emittedSuccessSale.amount || 0).toLocaleString('es-AR')}
+        </div>
+        <div className="pos-success-meta">
+          <span>CAE Oficial: <strong>{emittedSuccessSale.cae}</strong></span>
+          <span>Cliente: <strong>{emittedSuccessSale.customer_name}</strong></span>
+        </div>
+        <div className="pos-success-actions">
+          <button
+            type="button"
+            className="pos-success-btn-view"
+            onClick={() => {
+              setShowFacturaModal(true);
+              setEmittedSuccessSale(null);
+            }}
+          >
+            <EyeIcon size={15} /> Ver Factura C
+          </button>
+          <button
+            type="button"
+            className="pos-success-btn-close"
+            onClick={() => setEmittedSuccessSale(null)}
+          >
+            Nueva Venta
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // 4. Componente Compuesto por defecto (Compatibilidad Total & Simplicidad)
 export default function PosTerminal({
   businessProfile = {},
@@ -477,6 +527,7 @@ export default function PosTerminal({
       <PosKeypad />
       <PosSubmitButton />
       <PosToast />
+      <PosSuccessFeedback />
       <PosCustomerModal />
     </PosTerminalProvider>
   );
@@ -492,4 +543,6 @@ PosTerminal.QuickAmounts = PosQuickAmounts;
 PosTerminal.Keypad = PosKeypad;
 PosTerminal.SubmitButton = PosSubmitButton;
 PosTerminal.CustomerModal = PosCustomerModal;
+PosTerminal.Toast = PosToast;
+PosTerminal.SuccessFeedback = PosSuccessFeedback;
 PosTerminal.Toast = PosToast;

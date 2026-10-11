@@ -44,6 +44,7 @@ export default function TaxTrafficLight({ metrics }) {
 
   const [showSimulator, setShowSimulator] = useState(false);
   const [simExtraBilling, setSimExtraBilling] = useState(0);
+  const [viewMode, setViewMode] = useState('rings');
 
   const isCritical = trafficLight.color === 'red';
   const isWarning = trafficLight.color === 'yellow';
@@ -118,18 +119,32 @@ export default function TaxTrafficLight({ metrics }) {
             <span className="traffic-category-tope">Tope: {formatCurrencyARS(maxAnnualBilling)}</span>
           </div>
 
-          <button
-            type="button"
-            className={`traffic-simulator-toggle-btn ${showSimulator ? 'active' : ''}`}
-            onClick={() => {
-              soundService.playKeyTap();
-              setShowSimulator((prev) => !prev);
-            }}
-            title="Abrir o cerrar el simulador predictivo de recategorización semestral"
-          >
-            <SlidersIcon size={14} />
-            <span>{showSimulator ? 'Ocultar Simulador' : 'Simulador ARCA'}</span>
-          </button>
+          <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
+            <button
+              type="button"
+              className={`traffic-view-toggle-btn ${viewMode === 'rings' ? 'active' : ''}`}
+              onClick={() => {
+                soundService.playKeyTap();
+                setViewMode((prev) => (prev === 'rings' ? 'bar' : 'rings'));
+              }}
+              title="Alternar entre Anillos de Salud Fiscal estilo Apple Watch y Barra Calibrada"
+            >
+              <span>{viewMode === 'rings' ? '⭕ Anillos ARCA' : '📊 Barra Calibrada'}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`traffic-simulator-toggle-btn ${showSimulator ? 'active' : ''}`}
+              onClick={() => {
+                soundService.playKeyTap();
+                setShowSimulator((prev) => !prev);
+              }}
+              title="Abrir o cerrar el simulador predictivo de recategorización semestral"
+            >
+              <SlidersIcon size={14} />
+              <span>{showSimulator ? 'Ocultar Simulador' : 'Simulador ARCA'}</span>
+            </button>
+          </div>
         </div>
 
         <div
@@ -146,94 +161,231 @@ export default function TaxTrafficLight({ metrics }) {
         </div>
       </div>
 
-      {/* Barra de Progreso de Consumo Anual Calibrada y Enriquecida */}
-      <div className="progress-container">
-        <div className="progress-labels">
-          <div className="progress-meta-text">
-            <span className="progress-title">Consumo de Escala Anual (12 Meses)</span>
-            <div className="progress-subtitle">
-              <strong style={{ color: 'var(--text-main, #fff)' }}>{formatCurrencyARS(rolling12mSales)}</strong> facturados de {formatCurrencyARS(maxAnnualBilling)} (Tope Cat. {category})
+      {/* Vista de Anillos de Salud Fiscal Circulares estilo Apple Health Rings */}
+      {viewMode === 'rings' ? (
+        <div className="fiscal-rings-container">
+          <div className="fiscal-rings-card">
+            <div className="fiscal-rings-visual">
+              <svg className="fiscal-rings-svg" viewBox="0 0 200 200">
+                <defs>
+                  <linearGradient id="ringGradBilling" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor={trafficLight.color === 'red' ? '#ff453a' : trafficLight.color === 'yellow' ? '#ffd60a' : '#30d158'} />
+                    <stop offset="100%" stopColor={trafficLight.color === 'red' ? '#dc2626' : trafficLight.color === 'yellow' ? '#d97706' : '#10b981'} />
+                  </linearGradient>
+                  <linearGradient id="ringGradProj" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0a84ff" />
+                    <stop offset="100%" stopColor="#64d2ff" />
+                  </linearGradient>
+                  <linearGradient id="ringGradExpenses" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#bf5af2" />
+                    <stop offset="100%" stopColor="#7c3aed" />
+                  </linearGradient>
+                </defs>
+
+                {/* Background Track Rings */}
+                <circle cx="100" cy="100" r="76" className="fiscal-ring-track" stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" />
+                <circle cx="100" cy="100" r="58" className="fiscal-ring-track" stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" />
+                <circle cx="100" cy="100" r="40" className="fiscal-ring-track" stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" />
+
+                {/* Ring 1 (Exterior - Consumo Anual 12M) */}
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="76"
+                  stroke="url(#ringGradBilling)"
+                  strokeWidth="12"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="477.52"
+                  strokeDashoffset={477.52 - (Math.min(100, boundedPercentage) / 100) * 477.52}
+                  transform="rotate(-90 100 100)"
+                  className="fiscal-ring-circle"
+                />
+
+                {/* Ring 2 (Medio - Proyección Fin de Mes) */}
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="58"
+                  stroke="url(#ringGradProj)"
+                  strokeWidth="12"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="364.42"
+                  strokeDashoffset={364.42 - (Math.min(100, boundedProjectedPct) / 100) * 364.42}
+                  transform="rotate(-90 100 100)"
+                  className="fiscal-ring-circle"
+                />
+
+                {/* Ring 3 (Interior - Tope Compras e Insumos ARCA 80%) */}
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="40"
+                  stroke="url(#ringGradExpenses)"
+                  strokeWidth="12"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="251.33"
+                  strokeDashoffset={251.33 - (Math.min(100, (boundedPercentage * 0.8)) / 100) * 251.33}
+                  transform="rotate(-90 100 100)"
+                  className="fiscal-ring-circle"
+                />
+              </svg>
+
+              {/* Centro de los Anillos */}
+              <div className="fiscal-ring-center-content">
+                <span className={`progress-pct-value text-${trafficLight.color} fiscal-ring-center-pct font-mono`}>
+                  {displayPct}%
+                </span>
+                <span className="fiscal-ring-center-lbl">Consumo Cat. {category}</span>
+              </div>
+            </div>
+
+            {/* Leyenda Interactiva de los Anillos */}
+            <div className="fiscal-rings-legend">
+              <div className="fiscal-ring-legend-item">
+                <div className="ring-legend-badge" style={{ background: trafficLight.color === 'red' ? '#ff453a' : trafficLight.color === 'yellow' ? '#ffd60a' : '#30d158' }}>
+                  1
+                </div>
+                <div className="ring-legend-info">
+                  <div className="ring-legend-title">Facturación Anual (12 Meses)</div>
+                  <div className="ring-legend-val font-mono">
+                    <strong>{formatCurrencyARS(rolling12mSales)}</strong> / {formatCurrencyARS(maxAnnualBilling)}
+                  </div>
+                  <div className="ring-legend-sub">
+                    {remainingAnnualMargin >= 0 ? `${remainingMarginPct}% margen disponible` : 'Escala superada'}
+                  </div>
+                </div>
+              </div>
+
+              <div className="fiscal-ring-legend-item">
+                <div className="ring-legend-badge" style={{ background: '#0a84ff' }}>
+                  2
+                </div>
+                <div className="ring-legend-info">
+                  <div className="ring-legend-title">Proyección Cierre de Mes</div>
+                  <div className="ring-legend-val font-mono">
+                    <strong>{boundedProjectedPct.toFixed(1)}% de escala</strong> ({formatCurrencyARS(projectedAnnualSales)})
+                  </div>
+                  <div className="ring-legend-sub">Calculado al ritmo promedio diario</div>
+                </div>
+              </div>
+
+              <div className="fiscal-ring-legend-item">
+                <div className="ring-legend-badge" style={{ background: '#bf5af2' }}>
+                  3
+                </div>
+                <div className="ring-legend-info">
+                  <div className="ring-legend-title">Tope Compras & Insumos ARCA</div>
+                  <div className="ring-legend-val font-mono">
+                    <strong>{formatCurrencyARS(rolling12mSales * 0.8)}</strong> (Tope 80% bienes)
+                  </div>
+                  <div className="ring-legend-sub">Art. 20 inc. c Ley 24.977 Monotributo</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="progress-pct-display">
-            <div className="progress-pct-row">
-              <span className={`progress-pct-value text-${trafficLight.color}`}>{displayPct}%</span>
-              <span className="progress-margin-tag">
-                {remainingAnnualMargin >= 0 ? `${remainingMarginPct}% margen disponible` : 'Escala superada'}
-              </span>
-            </div>
-            {rawPct > 100 && (
-              <span className="progress-overflow-badge">Excedido +{(rawPct - 100).toFixed(1)}%</span>
-            )}
+          {/* Consejo Inteligente de Presupuesto Diario */}
+          <div className="smart-budget-banner" style={{ marginTop: '0.85rem' }}>
+            <span className="budget-icon">💡</span>
+            <span>
+              <strong>Presupuesto diario recomendado:</strong> Podés facturar un promedio de{' '}
+              <strong style={{ color: '#38bdf8' }}>{formatCurrencyARS(safeDailyBudget)}/día</strong> durante los próximos 6 meses para permanecer en tu categoría actual sin recategorizar.
+            </span>
           </div>
         </div>
+      ) : (
+        /* Barra de Progreso de Consumo Anual Calibrada y Enriquecida */
+        <div className="progress-container">
+          <div className="progress-labels">
+            <div className="progress-meta-text">
+              <span className="progress-title">Consumo de Escala Anual (12 Meses)</span>
+              <div className="progress-subtitle">
+                <strong style={{ color: 'var(--text-main, #fff)' }}>{formatCurrencyARS(rolling12mSales)}</strong> facturados de {formatCurrencyARS(maxAnnualBilling)} (Tope Cat. {category})
+              </div>
+            </div>
 
-        {/* Riel Calibrado con Ticks, Gradiente Vivo y Marcador de Proyección */}
-        <div className="progress-track" title={`Consumo actual: ${displayPct}% de la escala anual`}>
-          {/* Relleno Dinámico Luminoso */}
-          <div
-            className={`progress-fill fill-${trafficLight.color}`}
-            style={{ width: `${boundedPercentage}%` }}
-          >
-            <div className="progress-fill-glow" />
-            <div className="progress-fill-shimmer" />
-            {/* Indicador de punta con halo pulsante */}
-            <div className="progress-needle-thumb" title={`Actual: ${displayPct}%`} />
+            <div className="progress-pct-display">
+              <div className="progress-pct-row">
+                <span className={`progress-pct-value text-${trafficLight.color}`}>{displayPct}%</span>
+                <span className="progress-margin-tag">
+                  {remainingAnnualMargin >= 0 ? `${remainingMarginPct}% margen disponible` : 'Escala superada'}
+                </span>
+              </div>
+              {rawPct > 100 && (
+                <span className="progress-overflow-badge">Excedido +{(rawPct - 100).toFixed(1)}%</span>
+              )}
+            </div>
           </div>
 
-          {/* Marcador Fantasma de Proyección a Fin de Mes */}
-          {boundedProjectedPct > boundedPercentage && boundedProjectedPct <= 100 && (
+          {/* Riel Calibrado con Ticks, Gradiente Vivo y Marcador de Proyección */}
+          <div className="progress-track" title={`Consumo actual: ${displayPct}% de la escala anual`}>
+            {/* Relleno Dinámico Luminoso */}
             <div
-              className="progress-ghost-marker"
-              style={{ left: `${boundedProjectedPct}%` }}
-              title={`Proyección fin de mes: ${boundedProjectedPct.toFixed(1)}%`}
+              className={`progress-fill fill-${trafficLight.color}`}
+              style={{ width: `${boundedPercentage}%` }}
             >
-              <div className="ghost-marker-line" />
-              <div className="ghost-marker-label">▲ Proy. Mes</div>
+              <div className="progress-fill-glow" />
+              <div className="progress-fill-shimmer" />
+              {/* Indicador de punta con halo pulsante */}
+              <div className="progress-needle-thumb" title={`Actual: ${displayPct}%`} />
             </div>
-          )}
 
-          {/* Marcas de porcentaje en el riel */}
-          <div className="progress-track-tick tick-25" style={{ left: '25%' }} />
-          <div className="progress-track-tick tick-50" style={{ left: '50%' }} />
-          <div className="progress-track-tick tick-75" style={{ left: '75%' }} />
-          <div className="progress-track-tick tick-90" style={{ left: '90%' }} />
-        </div>
+            {/* Marcador Fantasma de Proyección a Fin de Mes */}
+            {boundedProjectedPct > boundedPercentage && boundedProjectedPct <= 100 && (
+              <div
+                className="progress-ghost-marker"
+                style={{ left: `${boundedProjectedPct}%` }}
+                title={`Proyección fin de mes: ${boundedProjectedPct.toFixed(1)}%`}
+              >
+                <div className="ghost-marker-line" />
+                <div className="ghost-marker-label">▲ Proy. Mes</div>
+              </div>
+            )}
 
-        {/* Escala graduada con posiciones porcentuales reales */}
-        <div className="progress-milestones-calibrated">
-          <span className="milestone-mark" style={{ left: '0%' }}>
-            <span className="milestone-pct">0%</span>
-            <span className="milestone-sub">Base</span>
-          </span>
-          <span className="milestone-mark" style={{ left: '50%' }}>
-            <span className="milestone-pct">50%</span>
-            <span className="milestone-sub">Mitad</span>
-          </span>
-          <span className="milestone-mark alert-warning" style={{ left: '75%' }}>
-            <span className="milestone-pct">75%</span>
-            <span className="milestone-sub">Alerta</span>
-          </span>
-          <span className="milestone-mark alert-danger" style={{ left: '90%' }}>
-            <span className="milestone-pct">90%</span>
-            <span className="milestone-sub">Crítico</span>
-          </span>
-          <span className="milestone-mark alert-limit" style={{ left: '100%' }}>
-            <span className="milestone-pct">100%</span>
-            <span className="milestone-sub">Tope Cat. {category}</span>
-          </span>
-        </div>
+            {/* Marcas de porcentaje en el riel */}
+            <div className="progress-track-tick tick-25" style={{ left: '25%' }} />
+            <div className="progress-track-tick tick-50" style={{ left: '50%' }} />
+            <div className="progress-track-tick tick-75" style={{ left: '75%' }} />
+            <div className="progress-track-tick tick-90" style={{ left: '90%' }} />
+          </div>
 
-        {/* Consejo Inteligente de Presupuesto Diario */}
-        <div className="smart-budget-banner">
-          <span className="budget-icon">💡</span>
-          <span>
-            <strong>Presupuesto diario recomendado:</strong> Podés facturar un promedio de{' '}
-            <strong style={{ color: '#38bdf8' }}>{formatCurrencyARS(safeDailyBudget)}/día</strong> durante los próximos 6 meses para permanecer en tu categoría actual sin recategorizar.
-          </span>
+          {/* Escala graduada con posiciones porcentuales reales */}
+          <div className="progress-milestones-calibrated">
+            <span className="milestone-mark" style={{ left: '0%' }}>
+              <span className="milestone-pct">0%</span>
+              <span className="milestone-sub">Base</span>
+            </span>
+            <span className="milestone-mark" style={{ left: '50%' }}>
+              <span className="milestone-pct">50%</span>
+              <span className="milestone-sub">Mitad</span>
+            </span>
+            <span className="milestone-mark alert-warning" style={{ left: '75%' }}>
+              <span className="milestone-pct">75%</span>
+              <span className="milestone-sub">Alerta</span>
+            </span>
+            <span className="milestone-mark alert-danger" style={{ left: '90%' }}>
+              <span className="milestone-pct">90%</span>
+              <span className="milestone-sub">Crítico</span>
+            </span>
+            <span className="milestone-mark alert-limit" style={{ left: '100%' }}>
+              <span className="milestone-pct">100%</span>
+              <span className="milestone-sub">Tope Cat. {category}</span>
+            </span>
+          </div>
+
+          {/* Consejo Inteligente de Presupuesto Diario */}
+          <div className="smart-budget-banner">
+            <span className="budget-icon">💡</span>
+            <span>
+              <strong>Presupuesto diario recomendado:</strong> Podés facturar un promedio de{' '}
+              <strong style={{ color: '#38bdf8' }}>{formatCurrencyARS(safeDailyBudget)}/día</strong> durante los próximos 6 meses para permanecer en tu categoría actual sin recategorizar.
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Grilla de Métricas en Tarjetas Estilo Glassmorphism */}
       <div className="traffic-metrics-grid">
