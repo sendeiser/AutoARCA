@@ -284,52 +284,6 @@ export default function AccountantPortal({
         </div>
       </div>
 
-      {/* Barra de Sub-Navegación del Estudio Contable */}
-      <div className="accountant-subnav-bar">
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'clientes' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('clientes'); }}
-        >
-          <UsersIcon size={16} /> Cartera & Lotes
-        </button>
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'recategorizacion' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('recategorizacion'); }}
-        >
-          <ReceiptTaxIcon size={16} /> Recategorización Semestral
-        </button>
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'dfe' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('dfe'); }}
-        >
-          <FileTextIcon size={16} /> Central DFE E-Ventanilla
-        </button>
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'riesgo_bancario' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('riesgo_bancario'); }}
-        >
-          <AlertTriangleIcon size={16} /> Riesgo & Brecha Bancaria
-        </button>
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'calendario' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('calendario'); }}
-        >
-          <TableIcon size={16} /> Calendario CUIT
-        </button>
-        <button
-          type="button"
-          className={`accountant-subnav-btn ${activeTab === 'honorarios' ? 'active' : ''}`}
-          onClick={() => { soundService.playKeyTap(); setActiveTab('honorarios'); }}
-        >
-          <ShieldCheckIcon size={16} /> Honorarios del Estudio
-        </button>
-      </div>
-
       {/* Pestaña Principal: Cartera & Lotes Diarios */}
       {activeTab === 'clientes' && (
         <>

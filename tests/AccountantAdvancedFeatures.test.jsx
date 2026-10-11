@@ -3,6 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import AccountantPortal from '../src/components/AccountantPortal.jsx';
+import Navbar from '../src/components/Navbar.jsx';
 import AccountantRecategorizationMatrix from '../src/components/AccountantRecategorizationMatrix.jsx';
 import AccountantDfeInbox from '../src/components/AccountantDfeInbox.jsx';
 import AccountantBankRiskDashboard from '../src/components/AccountantBankRiskDashboard.jsx';
@@ -182,38 +183,53 @@ describe('Accountant Advanced Features Suite', () => {
   });
 
   it('8. AccountantPortal conmuta limpiamente entre todas las pestañas profesionales', () => {
-    render(<AccountantPortal clients={mockClients} accountantProfile={mockProfile} />);
+    const TestAccountantApp = () => {
+      const [tab, setTab] = React.useState('clientes');
+      return (
+        <div>
+          <Navbar role="accountant" activeTab={tab} onTabChange={setTab} />
+          <AccountantPortal
+            clients={mockClients}
+            accountantProfile={mockProfile}
+            activeTab={tab}
+            onTabChange={setTab}
+          />
+        </div>
+      );
+    };
+
+    render(<TestAccountantApp />);
 
     // Pestaña inicial: Cartera & Lotes
-    expect(screen.getByRole('button', { name: /Cartera & Lotes/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Recategorización Semestral/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Central DFE E-Ventanilla/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Riesgo & Brecha Bancaria/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Calendario CUIT/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Honorarios del Estudio/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Cartera & Lotes/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Recategorización/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Central DFE/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Riesgo Bancario/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Calendario CUIT/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Honorarios del Estudio/i })).toBeInTheDocument();
 
     // Clic en pestaña Recategorización
-    fireEvent.click(screen.getByRole('button', { name: /Recategorización Semestral/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Recategorización/i }));
     expect(screen.getByText(/Matriz Masiva de Recategorización Semestral/i)).toBeInTheDocument();
 
     // Clic en pestaña Central DFE
-    fireEvent.click(screen.getByRole('button', { name: /Central DFE E-Ventanilla/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Central DFE/i }));
     expect(screen.getByText(/Central Unificada de DFE Multi-Cliente/i)).toBeInTheDocument();
 
-    // Clic en pestaña Riesgo & Brecha Bancaria
-    fireEvent.click(screen.getByRole('button', { name: /Riesgo & Brecha Bancaria/i }));
+    // Clic en pestaña Riesgo Bancario
+    fireEvent.click(screen.getByRole('tab', { name: /Riesgo Bancario/i }));
     expect(screen.getByText(/Tablero de Exclusión y Brecha Bancaria de la Cartera/i)).toBeInTheDocument();
 
     // Clic en pestaña Calendario CUIT
-    fireEvent.click(screen.getByRole('button', { name: /Calendario CUIT/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Calendario CUIT/i }));
     expect(screen.getByText(/Calendario Impositivo Dinámico por Terminación de CUIT/i)).toBeInTheDocument();
 
     // Clic en pestaña Honorarios
-    fireEvent.click(screen.getByRole('button', { name: /Honorarios del Estudio/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Honorarios del Estudio/i }));
     expect(screen.getByText(/Control y Cobranza de Honorarios Profesionales/i)).toBeInTheDocument();
 
     // Volver a Cartera & Lotes
-    fireEvent.click(screen.getByRole('button', { name: /Cartera & Lotes/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Cartera & Lotes/i }));
     expect(screen.getByText(/Descargar Lotes del Día \(ZIP Masivo\)/i)).toBeInTheDocument();
   });
 });
