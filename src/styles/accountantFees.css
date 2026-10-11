@@ -146,10 +146,48 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
+  .fees-kpis-grid > .fees-kpi-item:nth-child(3) {
+    grid-column: 1 / -1;
+  }
   .fees-kpi-item {
-    padding: 0.65rem 0.75rem;
+    padding: 0.75rem 0.85rem;
   }
   .fees-kpi-val {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
+  }
+  .fees-table th,
+  .fees-table td {
+    padding: 0.75rem 0.65rem;
+    font-size: 0.8rem;
+  }
+  .fees-status-chip {
+    min-height: 38px;
+    min-width: 84px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  .fees-status-chip:active {
+    transform: scale(0.96);
+  }
+  .fees-table td button,
+  .fees-table td .btn {
+    min-height: 42px !important;
+    min-width: 80px;
+    padding: 0.5rem 0.9rem !important;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    touch-action: manipulation;
+    border-radius: var(--radius-md);
+  }
+  .fees-table td button:active,
+  .fees-table td .btn:active {
+    transform: scale(0.97);
   }
 }

@@ -113,9 +113,68 @@
   gap: 1rem;
 }
 
+.recurring-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 @media (max-width: 640px) {
   .recurring-header-flex {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .recurring-header-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .recurring-header-actions button,
+  .recurring-header-actions .btn {
+    width: 100%;
+    min-height: 44px !important;
+    justify-content: center;
+    font-size: 0.88rem;
+    touch-action: manipulation;
+  }
+
+  .recurring-table th,
+  .recurring-table td {
+    padding: 0.75rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .recurring-status-toggle {
+    min-height: 38px;
+    min-width: 72px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  .recurring-status-toggle:active {
+    transform: scale(0.96);
+  }
+
+  .recurring-table td button,
+  .recurring-table td .btn {
+    min-height: 42px !important;
+    min-width: 42px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  .recurring-modal-form input,
+  .recurring-modal-form select {
+    font-size: 16px !important; /* Prevents auto-zoom in iOS Safari */
+    min-height: 44px;
   }
 }

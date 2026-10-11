@@ -151,5 +151,46 @@
   .dfe-header-flex {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .dfe-table th,
+  .dfe-table td {
+    padding: 0.75rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .dfe-table button,
+  .dfe-table .btn {
+    min-height: 42px !important;
+    min-width: 44px;
+    padding: 0.5rem 0.85rem !important;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    touch-action: manipulation;
+    border-radius: var(--radius-md);
+  }
+
+  .dfe-table button:active,
+  .dfe-table .btn:active {
+    transform: scale(0.97);
+  }
+
+  .dfe-pill-type {
+    font-size: 0.72rem;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .dfe-descargo-textarea {
+    font-size: 16px !important; /* Prevents auto-zoom in iOS Safari */
+    padding: 0.85rem;
+  }
+
+  .dfe-modal-selector-wrap select {
+    min-height: 44px !important;
+    font-size: 16px !important;
   }
 }

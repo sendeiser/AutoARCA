@@ -154,7 +154,7 @@ export default function RecurringBillingManager({
               Gestiona honorarios y cuotas mensuales fijas. Emite todo el lote mensual a ARCA en un solo clic.
             </CardSubtitle>
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="recurring-header-actions">
             <Button variant="secondary" size="sm" onClick={() => setShowAddModal(true)}>
               <PlusIcon size={14} /> Nuevo Abono
             </Button>

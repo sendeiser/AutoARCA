@@ -220,12 +220,85 @@
 
 @media (max-width: 640px) {
   .bank-crossing-body {
-    padding: 1rem 0.75rem;
+    padding: 1rem 0.85rem;
+    gap: 1rem;
   }
+
+  .bank-crossing-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .bank-crossing-header-flex > button {
+    width: 100%;
+    min-height: 42px;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  .bank-crossing-badge-row {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
   .bank-crossing-kpis {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
   }
+
+  .bank-crossing-kpis > .bank-kpi-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .bank-kpi-item {
+    padding: 0.75rem;
+  }
+
+  .bank-kpi-val {
+    font-size: 1.25rem;
+  }
+
+  .bank-meter-labels {
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.72rem;
+  }
+
   .bank-controls-grid {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .bank-controls-grid input {
+    min-height: 44px;
+    font-size: 16px !important;
+  }
+
+  .bank-sim-chips {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .bank-sim-label {
+    grid-column: 1 / -1;
+    margin-bottom: 0.15rem;
+  }
+
+  .bank-chip {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem;
+    touch-action: manipulation;
+  }
+
+  .bank-chip:active {
+    transform: scale(0.97);
   }
 }
