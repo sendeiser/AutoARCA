@@ -4,6 +4,15 @@ Registro cronológico y auditable de todas las operaciones ejecutadas en la wiki
 
 ---
 
+## [2026-10-11] lint | Instalación de Google Stitch Skills y Generación del Sistema de Diseño Canónico (DESIGN.md)
+- **1. Instalación de Habilidades Oficiales de Google Stitch**:
+  - Instaladas en `.agents/skills/`: `stitch-extract-design-md`, `taste-design` y `stitch-loop`.
+- **2. Extracción y Auditoría Integral del Sistema de Diseño (`DESIGN.md`)**:
+  - Se analizó la arquitectura visual de AutoARCA: tokens Apple HIG en Dark OLED, modo Daylight Untitled UI, semáforos fiscales ARCA, tipografía dual (Plus Jakarta Sans y Fira Code tabular), squircles y materiales con desenfoque de 14-20px.
+  - Se establecieron los estándares canónicos de componentes y la lista de antipatrones prohibidos según los criterios de diseño no-genérico de Google Stitch.
+- **3. Plan de Acción y Oportunidades de Mejora**:
+  - Definido el roadmap modular (POS, Dashboard Fiscal, Portal Contador, Cruce Bancario) para futuras optimizaciones de interfaz.
+
 ## [2026-10-11] lint | Incorporación de Imagen de Fondo Fiscal y Nuevo Ícono Oficial AutoARCA en Auth y Web
 - **1. Generación de Imagen de Fondo para Auth (`public/auth-bg.jpg`)**:
   - Se generó una imagen de alta definición con estética fintech fiscal argentina (facturación electrónica ARCA/AFIP, escudo de cumplimiento normativo, gráficos de recategorización, nodos y analíticas financieras en cian y violeta neón).
