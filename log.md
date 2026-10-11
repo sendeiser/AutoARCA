@@ -4,6 +4,20 @@ Registro cronológico y auditable de todas las operaciones ejecutadas en la wiki
 
 ---
 
+## [2026-10-11] lint | Eliminación de Subnav Duplicada y Aislamiento de Cabecera en Panel del Cliente
+- **1. Supresión del Subnav Repetido en el Panel del Cliente (`ClientDashboard.jsx`, `clientDashboard.css`)**:
+  - Se eliminó el contenedor `.client-subnav-bar` que duplicaba las opciones de navegación por debajo del navbar principal (`Panel Fiscal & Ventas`, `Cruce Bancario`, `Control de Compras`, `E-Ventanilla DFE`, `Abonos Recurrentes`).
+  - La navegación queda 100% unificada y sin repeticiones a través del control superior en desktop y la barra inferior fija en móvil.
+- **2. Conservación Intacta del Menú Inferior en Mobile (`Navbar.jsx`, `navbar.css`)**:
+  - Se preservó sin modificaciones la barra inferior fija flotante estilo iOS `.navbar-mobile-bottom` conforme a la instrucción expresa del usuario (*"el menu que esta abajo de todo dejalo no lo quites"*).
+- **3. Aislamiento de la Cabecera del Comercio (`ClientDashboard.jsx`)**:
+  - El encabezado con la razón social/nombre de fantasía (`La Casa de Limpieza [Cat. D]`), CUIT y los botones de acción rápida (*Pagar Cuota VEP*, *Constancia ARCA*, *Libro de Ventas Excel*, *Reporte PDF*, *Terminal POS*) se condicionó a `{activeSubtab === 'fiscal' && (...)}`.
+  - Ahora solo aparece en el módulo de **Dashboard Fiscal**, y desaparece limpiamente al navegar a los demás módulos (*Cruce Bancario*, *Control Compras*, *Buzón DFE*, *Abonos Mensuales*), otorgando foco inmediato a las funcionalidades específicas de cada sección.
+- **4. Verificación Automatizada con Playwright**:
+  - Validado en desktop (1280x800) y mobile (390x844): subnav ausente, cabecera presente solo en Dashboard Fiscal y oculta en los demás módulos, menú inferior móvil 100% funcional.
+- **5. Regresión de Tests Vitest**:
+  - **107 de 107 tests aprobados en Vitest (100% verde)**.
+
 ## [2026-10-11] lint | Restauración de Bottom Tab Bar Inferior y Ocultamiento de Barra Superior en Mobile
 - **1. Reincorporación de la Barra de Navegación Inferior en Mobile (`Navbar.jsx`, `navbar.css`)**:
   - Conforme al requerimiento explícito del usuario, en pantallas móviles (`< 768px`) se restauró la barra de pestañas fija inferior estilo iOS `.navbar-mobile-bottom` con acceso táctil ergonómico para todos los roles (Comercio, Contador y SuperAdmin).

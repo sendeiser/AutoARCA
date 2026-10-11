@@ -137,108 +137,71 @@ export default function ClientDashboard({
 
   return (
     <div className="client-dashboard-wrap">
-      {/* Barra de Encabezado Principal */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
-            <h1 className="dashboard-business-title" style={{ fontSize: '1.6rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
-              {businessProfile.fantasy_name || 'Panel del Comercio'}
-            </h1>
-            <Badge variant="brand" hasDot={true}>
-              Cat. {businessProfile.monotributo_category || 'D'}
-            </Badge>
+      {/* Barra de Encabezado Principal — Solo visible en el módulo del Dashboard Fiscal */}
+      {activeSubtab === 'fiscal' && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
+              <h1 className="dashboard-business-title" style={{ fontSize: '1.6rem', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
+                {businessProfile.fantasy_name || 'Panel del Comercio'}
+              </h1>
+              <Badge variant="brand" hasDot={true}>
+                Cat. {businessProfile.monotributo_category || 'D'}
+              </Badge>
+            </div>
+            <span style={{ fontSize: '0.84rem', color: 'var(--text-muted, #94a3b8)' }}>
+              CUIT: <strong>{businessProfile.cuit || 'Sin registrar'}</strong> · {businessProfile.razon_social || 'Titular'}
+            </span>
           </div>
-          <span style={{ fontSize: '0.84rem', color: 'var(--text-muted, #94a3b8)' }}>
-            CUIT: <strong>{businessProfile.cuit || 'Sin registrar'}</strong> · {businessProfile.razon_social || 'Titular'}
-          </span>
-        </div>
 
-        <div className="dashboard-header-actions">
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => { soundService.playKeyTap(); setShowVepModal(true); }}
-            iconLeading={<CreditCardIcon size={16} />}
-            title="Ver vencimiento de cuota mensual y pagar con VEP o QR Interoperable"
-          >
-            Pagar Cuota VEP
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => { soundService.playKeyTap(); setShowConstanciaModal(true); }}
-            iconLeading={<ShieldCheckIcon size={16} />}
-            title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
-          >
-            Constancia ARCA
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={handleExportLibroVentasExcel}
-            iconLeading={<FileSpreadsheetIcon size={16} />}
-            title="Exportar Libro de Ventas en formato Excel/CSV para tu contador o software contable"
-          >
-            Libro de Ventas Excel
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={handleDownloadReportPdf}
-            iconLeading={<FileTextIcon size={16} />}
-            title="Descargar informe fiscal en PDF para enviar a tu contador"
-          >
-            Reporte PDF
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onNavigateToPos}
-            iconLeading={<BoltIcon size={16} />}
-          >
-            Terminal POS
-          </Button>
+          <div className="dashboard-header-actions">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => { soundService.playKeyTap(); setShowVepModal(true); }}
+              iconLeading={<CreditCardIcon size={16} />}
+              title="Ver vencimiento de cuota mensual y pagar con VEP o QR Interoperable"
+            >
+              Pagar Cuota VEP
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => { soundService.playKeyTap(); setShowConstanciaModal(true); }}
+              iconLeading={<ShieldCheckIcon size={16} />}
+              title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
+            >
+              Constancia ARCA
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleExportLibroVentasExcel}
+              iconLeading={<FileSpreadsheetIcon size={16} />}
+              title="Exportar Libro de Ventas en formato Excel/CSV para tu contador o software contable"
+            >
+              Libro de Ventas Excel
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleDownloadReportPdf}
+              iconLeading={<FileTextIcon size={16} />}
+              title="Descargar informe fiscal en PDF para enviar a tu contador"
+            >
+              Reporte PDF
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={onNavigateToPos}
+              iconLeading={<BoltIcon size={16} />}
+            >
+              Terminal POS
+            </Button>
+          </div>
         </div>
-      </div>
-
-      {/* Barra de Subnavegación del Panel del Contribuyente */}
-      <div className="client-subnav-bar">
-        <button
-          type="button"
-          className={`client-subnav-btn ${activeSubtab === 'fiscal' ? 'active' : ''}`}
-          onClick={() => { soundService.playTap(); setActiveSubtab('fiscal'); }}
-        >
-          <ReceiptTaxIcon size={15} /> Panel Fiscal & Ventas
-        </button>
-        <button
-          type="button"
-          className={`client-subnav-btn ${activeSubtab === 'bancos' ? 'active' : ''}`}
-          onClick={() => { soundService.playTap(); setActiveSubtab('bancos'); }}
-        >
-          <ShieldCheckIcon size={15} /> Cruce Bancario (Anti-Exclusión)
-        </button>
-        <button
-          type="button"
-          className={`client-subnav-btn ${activeSubtab === 'compras' ? 'active' : ''}`}
-          onClick={() => { soundService.playTap(); setActiveSubtab('compras'); }}
-        >
-          <ChartBarIcon size={15} /> Control de Compras (80%/40%)
-        </button>
-        <button
-          type="button"
-          className={`client-subnav-btn ${activeSubtab === 'dfe' ? 'active' : ''}`}
-          onClick={() => { soundService.playTap(); setActiveSubtab('dfe'); }}
-        >
-          <FileTextIcon size={15} /> E-Ventanilla DFE (15 Días)
-        </button>
-        <button
-          type="button"
-          className={`client-subnav-btn ${activeSubtab === 'recurrentes' ? 'active' : ''}`}
-          onClick={() => { soundService.playTap(); setActiveSubtab('recurrentes'); }}
-        >
-          <BoltIcon size={15} /> Abonos Recurrentes
-        </button>
-      </div>
+      )}
 
       {activeSubtab === 'fiscal' && (
         <>
