@@ -79,55 +79,124 @@
   color: #ffffff;
 }
 
-/* 2. Mobile Nav (< 768px): Solo navbar superior horizontal, sin barra inferior repetida */
+/* 2. Mobile Floating Bottom Bar (< 768px) */
 .navbar-mobile-bottom {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 768px) {
-  /* En móviles, eliminamos la barra inferior repetida y su padding */
-  .app-main-content:not(.pos-view-active),
-  .app-main-content.pos-view-active,
-  main,
-  .app-main-content {
-    padding-bottom: 1.5rem !important;
+  /* En móviles, añadimos padding inferior para evitar solapamiento con la barra */
+  .app-main-content:not(.pos-view-active) {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Mantenemos visible el navbar superior con scroll horizontal suave estilo pill tabs */
+  .app-main-content.pos-view-active {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* En móviles, OCULTAMOS el segment superior tal como solicitó el usuario */
   .navbar-desktop-segment {
-    display: flex !important;
+    display: none !important;
+  }
+
+  /* Mostramos la Bottom Tab Bar estilo iOS ergonómica */
+  .navbar-mobile-bottom {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  }
+
+  .navbar-bottom-inner {
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
-    padding: 0.4rem 0.5rem;
+    height: 56px;
+    padding: 0 0.25rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    width: 100%;
-    max-width: 100%;
+    gap: 2px;
   }
 
-  .navbar-desktop-segment::-webkit-scrollbar {
+  .navbar-bottom-inner::-webkit-scrollbar {
     display: none;
   }
 
-  .navbar-segment-container {
+  .navbar-bottom-tab {
+    flex: 1 0 auto;
+    min-width: 52px;
+    max-width: 76px;
     display: flex;
-    flex-wrap: nowrap;
-    min-width: max-content;
-    gap: 4px;
-    padding: 3px;
-    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 0.25rem 0.1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    gap: 2px;
+    border-radius: 8px;
   }
 
-  .navbar-segment-btn {
-    padding: 0.38rem 0.75rem;
-    font-size: 0.78rem;
+  .navbar-bottom-tab:active {
+    transform: scale(0.92);
+  }
+
+  .navbar-bottom-tab.active {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+  }
+
+  .navbar-bottom-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-bottom-dot {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .navbar-bottom-dot.dot-blue { background: #38bdf8; }
+  .navbar-bottom-dot.dot-green { background: #10b981; }
+  .navbar-bottom-dot.dot-yellow { background: #f59e0b; }
+  .navbar-bottom-dot.dot-red { background: #ef4444; }
+
+  .navbar-bottom-label {
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
     white-space: nowrap;
-    gap: 0.35rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 62px;
   }
 
-  .navbar-mobile-bottom {
-    display: none !important;
+  .navbar-bottom-tab.active .navbar-bottom-label {
+    font-weight: 700;
+  }
+
+  /* Ajuste de padding inferior para el contenedor principal de la app */
+  main,
+  .app-main-content {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
@@ -149,5 +218,20 @@
 [data-theme="light"] .navbar-segment-btn.active {
   background: #0284c7;
   color: #ffffff;
+}
+
+[data-theme="light"] .navbar-mobile-bottom {
+  background: rgba(255, 255, 255, 0.94);
+  border-top-color: rgba(226, 232, 240, 0.9);
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .navbar-bottom-tab {
+  color: #64748b;
+}
+
+[data-theme="light"] .navbar-bottom-tab.active {
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.08);
 }
 

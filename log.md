@@ -4,6 +4,18 @@ Registro cronológico y auditable de todas las operaciones ejecutadas en la wiki
 
 ---
 
+## [2026-10-11] lint | Restauración de Bottom Tab Bar Inferior y Ocultamiento de Barra Superior en Mobile
+- **1. Reincorporación de la Barra de Navegación Inferior en Mobile (`Navbar.jsx`, `navbar.css`)**:
+  - Conforme al requerimiento explícito del usuario, en pantallas móviles (`< 768px`) se restauró la barra de pestañas fija inferior estilo iOS `.navbar-mobile-bottom` con acceso táctil ergonómico para todos los roles (Comercio, Contador y SuperAdmin).
+- **2. Supresión del Menú Superior en Mobile (`navbar.css`)**:
+  - En `@media (max-width: 768px)`, la barra superior segmentada `.navbar-desktop-segment` se oculta por completo (`display: none !important`), dejando la cabecera limpia y otorgando máximo espacio vertical a los contenidos y tarjetas del sistema.
+- **3. Padding de Resguardo en Contenido Principal**:
+  - Se configuró `padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px))` para garantizar que ningún elemento o botón sea tapado por la barra flotante.
+- **4. Verificación Automatizada con Playwright**:
+  - Validación en viewport iPhone 14 (390x844) confirmando que la barra superior está ausente, la barra inferior está visible y funcional con cambio de pestañas interactivo, y en desktop (1280x800) se mantiene la barra segmentada superior.
+- **5. Regresión de Tests Vitest**:
+  - **107 de 107 tests aprobados en Vitest (100% verde)**.
+
 ## [2026-10-10] lint | Rediseño Calendario CUIT, Cards Mobile en Tablas, Aislamiento de Cabecera y Ancho 100%
 - **1. Aislamiento de la Cabecera del Contador (`AccountantPortal.jsx`)**:
   - Se condicionó el bloque `.accountant-header` exclusivamente a `{activeTab === 'clientes' && (...)}`.

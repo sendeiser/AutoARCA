@@ -150,32 +150,64 @@ export default function Navbar({
   if (tabs.length === 0) return null;
 
   return (
-    <nav className="navbar-desktop-segment" aria-label="Navegación principal">
-      <div className="navbar-segment-container">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key || (tab.key === 'dashboard' && activeTab === 'fiscal');
-          return (
-            <button
-              key={tab.key}
-              type="button"
-              className={`navbar-segment-btn ${isActive ? 'active' : ''}`}
-              onClick={() => handleSelect(tab.key)}
-              aria-selected={isActive}
-              role="tab"
-              data-testid={`nav-tab-${tab.key}`}
-            >
-              <Icon size={15} />
-              <span className="navbar-segment-label">{tab.label}</span>
-              {tab.badge !== null && tab.badge !== undefined && (
-                <span className={`navbar-segment-badge badge-${tab.badgeColor}`}>
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </nav>
+    <>
+      {/* 1. Barra de Navegación para Desktop y Tablet (Sub-header) */}
+      <nav className="navbar-desktop-segment" aria-label="Navegación principal">
+        <div className="navbar-segment-container">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key || (tab.key === 'dashboard' && activeTab === 'fiscal');
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={`navbar-segment-btn ${isActive ? 'active' : ''}`}
+                onClick={() => handleSelect(tab.key)}
+                aria-selected={isActive}
+                role="tab"
+                data-testid={`nav-tab-${tab.key}`}
+              >
+                <Icon size={15} />
+                <span className="navbar-segment-label">{tab.label}</span>
+                {tab.badge !== null && tab.badge !== undefined && (
+                  <span className={`navbar-segment-badge badge-${tab.badgeColor}`}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* 2. Floating Bottom Tab Bar para Mobile (< 768px) */}
+      <nav className="navbar-mobile-bottom" aria-label="Navegación móvil">
+        <div className="navbar-bottom-inner">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.key || (tab.key === 'dashboard' && activeTab === 'fiscal');
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={`navbar-bottom-tab ${isActive ? 'active' : ''}`}
+                onClick={() => handleSelect(tab.key)}
+                aria-selected={isActive}
+                role="tab"
+                data-testid={`nav-tab-mobile-${tab.key}`}
+              >
+                <div className="navbar-bottom-icon-wrap">
+                  <Icon size={19} />
+                  {tab.badge !== null && tab.badge !== undefined && (
+                    <span className={`navbar-bottom-dot dot-${tab.badgeColor}`} />
+                  )}
+                </div>
+                <span className="navbar-bottom-label">{tab.mobileLabel}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }

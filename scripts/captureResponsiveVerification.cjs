@@ -18,7 +18,7 @@ async function run() {
   });
   const page = await mobileContext.newPage();
 
-  console.log('Navigating to http://localhost:5173/ ...');
+  console.log('Navigating to http://localhost:5173/ in mobile...');
   await page.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
 
   // Authenticate as accountant using autoarca_session_v2
@@ -43,60 +43,42 @@ async function run() {
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForTimeout(1000);
 
-  // 1. Cartera & Lotes (first tab)
-  console.log('1. Checking Cartera & Lotes...');
-  const headerVisible1 = await page.isVisible('.accountant-header');
-  console.log('Header visible on clientes tab:', headerVisible1);
-  const p1 = path.join(ARTIFACT_DIR, 'media_accountant_clientes_mobile.png');
+  // 1. Verify navbars in mobile
+  const topNavMobileVisible = await page.isVisible('.navbar-desktop-segment');
+  const bottomNavMobileVisible = await page.isVisible('.navbar-mobile-bottom');
+  console.log('Mobile - Top navbar visible (should be false):', topNavMobileVisible);
+  console.log('Mobile - Bottom navbar visible (should be true):', bottomNavMobileVisible);
+
+  const p1 = path.join(ARTIFACT_DIR, 'media_mobile_bottom_bar_clientes.png');
   await page.screenshot({ path: p1, fullPage: false });
 
-  // 2. Recategorización tab
-  console.log('2. Clicking Recategorización tab...');
-  const recatTab = await page.$('[data-testid="nav-tab-recategorizacion"]');
-  if (recatTab) {
-    await recatTab.click();
-    console.log('Clicked recat tab');
+  // 2. Switch tab via bottom bar: Recategorización
+  console.log('2. Clicking Recat via bottom bar...');
+  const recatMobileBtn = await page.$('[data-testid="nav-tab-mobile-recategorizacion"]');
+  if (recatMobileBtn) {
+    await recatMobileBtn.click();
+    console.log('Clicked recat on mobile bottom bar');
   } else {
-    console.log('recat tab NOT found');
+    console.log('Recat button NOT found on mobile bottom bar');
   }
   await page.waitForTimeout(600);
-  const headerVisible2 = await page.isVisible('.accountant-header');
-  console.log('Header visible on recategorizacion tab:', headerVisible2);
-  const p2 = path.join(ARTIFACT_DIR, 'media_accountant_recat_mobile.png');
+  const p2 = path.join(ARTIFACT_DIR, 'media_mobile_bottom_bar_recat.png');
   await page.screenshot({ path: p2, fullPage: false });
 
-  // 3. Calendario CUIT tab
-  console.log('3. Clicking Calendario CUIT tab...');
-  const calTab = await page.$('[data-testid="nav-tab-calendario"]');
-  if (calTab) {
-    await calTab.click();
-    console.log('Clicked calendario tab');
+  // 3. Switch tab via bottom bar: Calendario CUIT
+  console.log('3. Clicking Calendario via bottom bar...');
+  const calMobileBtn = await page.$('[data-testid="nav-tab-mobile-calendario"]');
+  if (calMobileBtn) {
+    await calMobileBtn.click();
+    console.log('Clicked calendario on mobile bottom bar');
   } else {
-    console.log('calendario tab NOT found');
+    console.log('Calendario button NOT found on mobile bottom bar');
   }
   await page.waitForTimeout(600);
-  const headerVisible3 = await page.isVisible('.accountant-header');
-  console.log('Header visible on calendario tab:', headerVisible3);
-  const p3 = path.join(ARTIFACT_DIR, 'media_accountant_calendar_mobile.png');
+  const p3 = path.join(ARTIFACT_DIR, 'media_mobile_bottom_bar_cal.png');
   await page.screenshot({ path: p3, fullPage: false });
 
-  // 4. Honorarios tab
-  console.log('4. Clicking Honorarios tab...');
-  const feesTab = await page.$('[data-testid="nav-tab-honorarios"]');
-  if (feesTab) {
-    await feesTab.click();
-    console.log('Clicked honorarios tab');
-  } else {
-    console.log('honorarios tab NOT found');
-  }
-  await page.waitForTimeout(600);
-  const headerVisible4 = await page.isVisible('.accountant-header');
-  console.log('Header visible on honorarios tab:', headerVisible4);
-  const p4 = path.join(ARTIFACT_DIR, 'media_accountant_fees_mobile.png');
-  await page.screenshot({ path: p4, fullPage: false });
-
-  // 5. Desktop context for Redesigned Calendar
-  console.log('5. Capturing desktop calendar...');
+  // 4. Desktop context (1280x800)
   const desktopContext = await browser.newContext({
     viewport: { width: 1280, height: 800 },
     deviceScaleFactor: 1
@@ -121,17 +103,19 @@ async function run() {
     localStorage.setItem('autoarca_active_role', 'accountant');
   });
   await desktopPage.reload({ waitUntil: 'networkidle' });
-  await desktopPage.waitForTimeout(500);
-  const calTabDesk = await desktopPage.$('[data-testid="nav-tab-calendario"]');
-  if (calTabDesk) await calTabDesk.click();
-  await desktopPage.waitForTimeout(500);
-  const p5 = path.join(ARTIFACT_DIR, 'media_accountant_calendar_desktop.png');
-  await desktopPage.screenshot({ path: p5, fullPage: false });
+  await desktopPage.waitForTimeout(600);
+
+  const topNavDesktopVisible = await desktopPage.isVisible('.navbar-desktop-segment');
+  const bottomNavDesktopVisible = await desktopPage.isVisible('.navbar-mobile-bottom');
+  console.log('Desktop - Top navbar visible (should be true):', topNavDesktopVisible);
+  console.log('Desktop - Bottom navbar visible (should be false):', bottomNavDesktopVisible);
+
+  const p4 = path.join(ARTIFACT_DIR, 'media_desktop_top_bar.png');
+  await desktopPage.screenshot({ path: p4, fullPage: false });
 
   await browser.close();
-  console.log('All screenshots captured successfully!');
-  console.log('Artifacts:');
-  console.log(p1, p2, p3, p4, p5);
+  console.log('Verification completed successfully!');
+  console.log(p1, p2, p3, p4);
 }
 
 run().catch(console.error);
