@@ -425,3 +425,183 @@
     gap: 0.3rem;
   }
 }
+
+/* ==========================================================================
+   Calendar Viewmode Toggle & Circular Progress Donut
+   ========================================================================== */
+.cal-viewmode-toggle {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  gap: 0.25rem;
+}
+
+.cal-view-btn {
+  padding: 0.4rem 0.85rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cal-view-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main, #f8fafc);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.cal-donut-wrap {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cal-donut-text {
+  position: absolute;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-main, #f8fafc);
+}
+
+/* ==========================================================================
+   Tablero Kanban de Vencimientos por Urgencia
+   ========================================================================== */
+.calendar-kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.kanban-col {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 380px;
+}
+
+.kanban-urgent48h {
+  border-top: 3px solid #ef4444;
+}
+
+.kanban-upcoming5d {
+  border-top: 3px solid #f59e0b;
+}
+
+.kanban-monotributoDay20 {
+  border-top: 3px solid #3b82f6;
+}
+
+.kanban-completed {
+  border-top: 3px solid #10b981;
+}
+
+.kanban-col-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.65rem;
+}
+
+.kanban-col-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-main, #f8fafc);
+}
+
+.kanban-col-desc {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.kanban-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+
+.kanban-empty-msg {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0.5rem;
+}
+
+.kanban-client-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: all 0.15s ease;
+}
+
+.kanban-client-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.kanban-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.kanban-client-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+}
+
+.kanban-client-cuit {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.kanban-checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+}
+
+.kanban-checks .cal-check-item {
+  font-size: 0.68rem;
+  padding: 0.3rem 0.2rem;
+}
+
+@media (max-width: 1024px) {
+  .calendar-kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar-kanban-board {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -11,7 +11,8 @@ import {
   DownloadIcon,
   CheckCircleIcon,
   AlertTriangleIcon,
-  RefreshIcon
+  RefreshIcon,
+  SlidersIcon
 } from './Icons.jsx';
 import '../styles/accountantRecatMatrix.css';
 
@@ -37,6 +38,8 @@ export default function AccountantRecategorizationMatrix({
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAction, setFilterAction] = useState('all'); // 'all' | 'changes' | 'up' | 'down'
   const [copiedClientId, setCopiedClientId] = useState(null);
+  const [simulatedClientId, setSimulatedClientId] = useState('');
+  const [projectedAdditionalBilling, setProjectedAdditionalBilling] = useState(2500000);
 
   // Mapeo y análisis de recategorización de cada cliente de la cartera
   const evaluatedClients = useMemo(() => {
@@ -95,6 +98,25 @@ export default function AccountantRecategorizationMatrix({
       };
     });
   }, [clients, scales]);
+
+  // Cálculo de simulación What-If
+  const targetSimClient = evaluatedClients.find((c) => c.id === simulatedClientId) || evaluatedClients[0];
+  const baseSales = targetSimClient ? targetSimClient.rollingSales : 6850000;
+  const simRollingTotal = baseSales + Number(projectedAdditionalBilling);
+
+  let simTargetScale = scales.find((s) => simRollingTotal <= s.max_annual_billing);
+  let simIsExceeded = false;
+  if (!simTargetScale) {
+    simTargetScale = scales[scales.length - 1];
+    simIsExceeded = simRollingTotal > simTargetScale.max_annual_billing;
+  }
+
+  const simCurrentScale = scales.find((s) => s.category === (targetSimClient?.currentCat || 'D')) || scales[3];
+  const simCurrentQuota = simCurrentScale.monthly_quota || 45440;
+  const simTargetQuota = simTargetScale.monthly_quota || 45440;
+  const simQuotaDiff = simTargetQuota - simCurrentQuota;
+  const maxLimitMonotributo = scales[scales.length - 1].max_annual_billing; // $68M
+  const percentToExclusion = Math.min(100, Math.round((simRollingTotal / maxLimitMonotributo) * 100));
 
   // Filtrado de la tabla
   const filtered = evaluatedClients.filter((c) => {
@@ -199,6 +221,107 @@ export default function AccountantRecategorizationMatrix({
             <span className="recat-kpi-lbl">Bajan de Categoría</span>
             <span className="recat-kpi-val text-success">{downCount}</span>
             <span className="recat-kpi-sub">Ahorro en cuota para el cliente</span>
+          </div>
+        </div>
+
+        {/* Simulador Interactivo What-If de Recategorización */}
+        <div className="recat-simulator-card">
+          <div className="recat-sim-header">
+            <div className="recat-sim-title-group">
+              <div className="recat-sim-badge">
+                <SlidersIcon size={14} /> SIMULADOR FISCAL WHAT-IF
+              </div>
+              <h4 className="recat-sim-title">Simulador de Salto de Categoría & Proyección ARCA</h4>
+              <p className="recat-sim-subtitle">Simula el impacto de facturación futura en la escala y cuota mensual del contribuyente.</p>
+            </div>
+            <div className="recat-sim-client-picker">
+              <label htmlFor="sim-client-select">Contribuyente:</label>
+              <select
+                id="sim-client-select"
+                value={simulatedClientId || targetSimClient?.id || ''}
+                onChange={(e) => {
+                  soundService.playTap();
+                  setSimulatedClientId(e.target.value);
+                }}
+                className="sim-select-input"
+              >
+                {evaluatedClients.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.fantasy_name || c.razon_social} (Cat. {c.currentCat})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="recat-sim-slider-row">
+            <div className="sim-slider-meta">
+              <span className="sim-slider-lbl">Incremento de Facturación Proyectado a 12 Meses:</span>
+              <span className="sim-slider-val font-mono">+{formatCurrencyARS(projectedAdditionalBilling)}</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="25000000"
+              step="250000"
+              value={projectedAdditionalBilling}
+              onChange={(e) => setProjectedAdditionalBilling(Number(e.target.value))}
+              className="sim-range-input"
+              aria-label="Incremento proyectado"
+            />
+            <div className="sim-quick-pills">
+              <button type="button" className="sim-pill" onClick={() => setProjectedAdditionalBilling(500000)}>+$500k</button>
+              <button type="button" className="sim-pill" onClick={() => setProjectedAdditionalBilling(1500000)}>+$1.5M</button>
+              <button type="button" className="sim-pill" onClick={() => setProjectedAdditionalBilling(3000000)}>+$3M</button>
+              <button type="button" className="sim-pill" onClick={() => setProjectedAdditionalBilling(6000000)}>+$6M</button>
+              <button type="button" className="sim-pill" onClick={() => setProjectedAdditionalBilling(12000000)}>+$12M</button>
+              <button type="button" className="sim-pill reset" onClick={() => setProjectedAdditionalBilling(0)}>Reset ($0)</button>
+            </div>
+          </div>
+
+          <div className="recat-sim-result-grid">
+            {/* Columna 1: Actual */}
+            <div className="sim-result-col current-box">
+              <span className="sim-col-tag">SITUACIÓN BASE</span>
+              <div className="sim-cat-display">Cat. {targetSimClient?.currentCat || 'D'}</div>
+              <div className="sim-col-sub font-mono">{formatCurrencyARS(baseSales)} / año</div>
+              <div className="sim-col-quota font-mono">Cuota: {formatCurrencyARS(simCurrentQuota)}/mes</div>
+            </div>
+
+            {/* Flecha de Transición */}
+            <div className="sim-result-arrow">
+              <span>➔</span>
+            </div>
+
+            {/* Columna 2: Proyectado */}
+            <div className={`sim-result-col projected-box ${simIsExceeded ? 'exceeded-box' : ''}`}>
+              <span className="sim-col-tag">CATEGORÍA PROYECTADA</span>
+              <div className="sim-cat-display font-mono">
+                {simIsExceeded ? 'EXCLUSIÓN' : `Cat. ${simTargetScale.category}`}
+              </div>
+              <div className="sim-col-sub font-mono">{formatCurrencyARS(simRollingTotal)} / año</div>
+              <div className="sim-col-quota font-mono">
+                {simIsExceeded ? 'Pasa a IVA + Ganancias' : `Cuota: ${formatCurrencyARS(simTargetQuota)}/mes`}
+              </div>
+            </div>
+
+            {/* Columna 3: Diferencia Financiera */}
+            <div className="sim-result-col diff-box">
+              <span className="sim-col-tag">VARIACIÓN DE CUOTA</span>
+              <div className={`sim-diff-display font-mono ${simQuotaDiff > 0 ? 'text-warning' : (simQuotaDiff < 0 ? 'text-success' : '')}`}>
+                {simQuotaDiff > 0 ? `+${formatCurrencyARS(simQuotaDiff)}` : (simQuotaDiff < 0 ? `-${formatCurrencyARS(Math.abs(simQuotaDiff))}` : 'Sin variación')}
+              </div>
+              <div className="sim-col-sub font-mono">
+                {simQuotaDiff !== 0 ? `${formatCurrencyARS(Math.abs(simQuotaDiff) * 12)} / año` : 'Mantiene categoría'}
+              </div>
+              <div className="sim-col-quota">
+                {simIsExceeded ? (
+                  <span className="text-danger font-semibold">🚨 Excede tope máximo ($68M)</span>
+                ) : (
+                  <span>Distancia a Exclusión: {100 - percentToExclusion}% libre</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 import { formatCurrencyARS } from '../services/taxAlertEngine.js';
 import { soundService } from '../services/soundService.js';
@@ -15,9 +15,12 @@ import {
   AlertTriangleIcon,
   ReceiptTaxIcon,
   FileTextIcon,
-  FileSpreadsheetIcon
+  FileSpreadsheetIcon,
+  EyeIcon,
+  CheckCircleIcon
 } from './Icons.jsx';
 import AccountantLinkModal from './AccountantLinkModal.jsx';
+import AccountantClientDrawer from './AccountantClientDrawer.jsx';
 import { Button } from './untitled-ui/Button.jsx';
 import { Badge } from './untitled-ui/Badge.jsx';
 import { StatCard, StatGrid } from './untitled-ui/StatCard.jsx';
@@ -58,12 +61,24 @@ export default function AccountantPortal({
   const [selectedClientForConstancia, setSelectedClientForConstancia] = useState(null);
   const [selectedClientForCert, setSelectedClientForCert] = useState(null);
   const [selectedClientForExport, setSelectedClientForExport] = useState(null);
+  const [drawerClient, setDrawerClient] = useState(null);
+  const [selectedClientIds, setSelectedClientIds] = useState([]);
+  const [openMenuId, setOpenMenuId] = useState(null);
   const [internalActiveTab, setInternalActiveTab] = useState('clientes'); // 'clientes' | 'recategorizacion' | 'dfe' | 'riesgo_bancario' | 'calendario' | 'honorarios'
   const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const setActiveTab = (tab) => {
     setInternalActiveTab(tab);
     if (controlledOnTabChange) controlledOnTabChange(tab);
   };
+
+  // Cerrar menú contextual al hacer clic fuera
+  useEffect(() => {
+    const handleOutsideClick = () => setOpenMenuId(null);
+    if (openMenuId) {
+      window.addEventListener('click', handleOutsideClick);
+      return () => window.removeEventListener('click', handleOutsideClick);
+    }
+  }, [openMenuId]);
 
   // Sync state if props change
   React.useEffect(() => {
@@ -116,10 +131,30 @@ export default function AccountantPortal({
     soundService.playSuccessChime();
   };
 
-  const handleBulkZip = async () => {
+  const allSelected = filteredClients.length > 0 && filteredClients.every((c) => selectedClientIds.includes(c.id));
+
+  const toggleSelectAll = () => {
     soundService.playKeyTap();
+    if (allSelected) {
+      setSelectedClientIds([]);
+    } else {
+      setSelectedClientIds(filteredClients.map((c) => c.id));
+    }
+  };
+
+  const toggleSelectClient = (id, e) => {
+    if (e) e.stopPropagation();
+    soundService.playTap();
+    setSelectedClientIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkZip = async (customClients = null) => {
+    soundService.playKeyTap();
+    const clientsToUse = Array.isArray(customClients) ? customClients : filteredClients;
     if (onDownloadZip) {
-      onDownloadZip(selectedDate, filteredClients);
+      onDownloadZip(selectedDate, clientsToUse);
       return;
     }
 
@@ -128,7 +163,7 @@ export default function AccountantPortal({
       const zip = new JSZip();
       let addedFilesCount = 0;
 
-      filteredClients.forEach((client) => {
+      clientsToUse.forEach((client) => {
         if (client.todayBatch && client.todayBatch.file_content_arca) {
           const filename = client.todayBatch.filename || `comprobantes_arca_${client.cuit}_${selectedDate}.csv`;
           zip.file(filename, client.todayBatch.file_content_arca);
@@ -216,11 +251,12 @@ export default function AccountantPortal({
     }
   };
 
-  const handleDownloadPortfolioPdf = () => {
+  const handleDownloadPortfolioPdf = (customClients = null) => {
     soundService.playKeyTap();
+    const clientsToUse = Array.isArray(customClients) ? customClients : filteredClients;
     try {
       reportPdfService.generateAccountantPortfolioReport({
-        clients: filteredClients,
+        clients: clientsToUse,
         accountantProfile
       });
       soundService.playSuccessChime();
@@ -485,18 +521,28 @@ export default function AccountantPortal({
               <table className="clients-table">
                 <thead>
                   <tr>
+                    <th style={{ width: '42px', textAlign: 'center' }}>
+                      <input
+                        type="checkbox"
+                        className="table-checkbox-header"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        title="Seleccionar o deseleccionar todos los comercios"
+                        aria-label="Seleccionar todos"
+                      />
+                    </th>
                     <th>Comercio / Profesional</th>
                     <th>CUIT</th>
                     <th>Categoría</th>
                     <th>Semáforo Fiscal</th>
                     <th>Cierre del Día</th>
-                    <th>Acción</th>
+                    <th style={{ textAlign: 'right' }}>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredClients.length === 0 ? (
                     <tr>
-                      <td colSpan="6" style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>
+                      <td colSpan="7" style={{ textAlign: 'center', padding: '2.5rem', color: '#94a3b8' }}>
                         No se encontraron clientes asociados con los filtros aplicados.
                       </td>
                     </tr>
@@ -504,10 +550,25 @@ export default function AccountantPortal({
                     filteredClients.map((client) => {
                       const color = client.trafficColor || 'green';
                       const hasBatch = !!client.todayBatch;
+                      const isSelected = selectedClientIds.includes(client.id);
 
                       return (
-                        <tr key={client.id}>
-                          <td className="client-td-name" data-label="Comercio">
+                        <tr key={client.id} className={isSelected ? 'row-selected' : ''}>
+                          <td style={{ textAlign: 'center' }}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={(e) => toggleSelectClient(client.id, e)}
+                              aria-label={`Seleccionar ${client.fantasy_name || client.razon_social}`}
+                            />
+                          </td>
+                          <td
+                            className="client-td-name"
+                            data-label="Comercio"
+                            onClick={() => { soundService.playKeyTap(); setDrawerClient(client); }}
+                            style={{ cursor: 'pointer' }}
+                            title="Haz clic para ver Ficha 360°"
+                          >
                             <strong>{client.fantasy_name || client.razon_social}</strong>
                             <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{client.razon_social}</div>
                           </td>
@@ -540,74 +601,118 @@ export default function AccountantPortal({
                             )}
                           </td>
                           <td className="client-td-actions" data-label="Acciones">
-                            <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <div className="table-actions-consolidated">
                               <button
                                 type="button"
-                                className="btn-download-single"
-                                onClick={() => handleDownloadClientPdf(client)}
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
-                                title="Descargar informe fiscal en PDF"
-                              >
-                                <FileTextIcon size={13} /> PDF Fiscal
-                              </button>
-                              <button
-                                type="button"
-                                className="btn-download-single"
-                                onClick={() => handleDownloadClientExcel(client)}
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
-                                title="Descargar Libro de Ventas en formato Excel/CSV"
-                              >
-                                <FileSpreadsheetIcon size={13} /> Excel
-                              </button>
-                              <button
-                                type="button"
-                                className="btn-download-single"
+                                className="btn-action-primary"
                                 onClick={() => {
                                   soundService.playKeyTap();
-                                  setSelectedClientForConstancia(client);
+                                  setDrawerClient(client);
                                 }}
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(124, 58, 237, 0.12)', borderColor: 'rgba(124, 58, 237, 0.3)', color: '#c4b5fd' }}
-                                title="Descargar Constancia de Inscripción oficial y Credencial F. 152 con QR ARCA"
+                                title="Abrir Ficha 360° del Cliente"
                               >
-                                <ShieldCheckIcon size={13} /> Constancia
+                                <EyeIcon size={13} /> Ficha 360°
                               </button>
-                              <button
-                                type="button"
-                                className="btn-download-single"
-                                onClick={() => {
-                                  soundService.playKeyTap();
-                                  setSelectedClientForCert(client);
-                                }}
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' }}
-                                title="Emitir Certificación de Ingresos FACPCE Res. 37"
-                              >
-                                <FileTextIcon size={13} /> Certificación
-                              </button>
-                              <button
-                                type="button"
-                                className="btn-download-single"
-                                onClick={() => {
-                                  soundService.playKeyTap();
-                                  setSelectedClientForExport(client);
-                                }}
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }}
-                                title="Exportar a Tango, Holistor, Bejerman o Excel"
-                              >
-                                <DownloadIcon size={13} /> Exportar
-                              </button>
-                              {hasBatch ? (
+
+                              {hasBatch && (
                                 <button
                                   type="button"
-                                  className="btn-download-single"
+                                  className="btn-action-batch"
                                   onClick={() => handleDownloadSingle(client)}
-                                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
                                   title="Descargar lote CSV ARCA"
                                 >
-                                  <DownloadIcon size={13} /> CSV ARCA
+                                  <DownloadIcon size={13} /> CSV
                                 </button>
-                              ) : (
-                                <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Sin lote</span>
                               )}
+
+                              <div className="action-menu-anchor" style={{ position: 'relative' }}>
+                                <button
+                                  type="button"
+                                  className={`btn-action-menu ${openMenuId === client.id ? 'active' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    soundService.playTap();
+                                    setOpenMenuId(openMenuId === client.id ? null : client.id);
+                                  }}
+                                  title="Más opciones de descarga y exportación"
+                                  aria-label="Más opciones"
+                                >
+                                  •••
+                                </button>
+
+                                {openMenuId === client.id && (
+                                  <div className="action-dropdown-popover" onClick={(e) => e.stopPropagation()}>
+                                    <div className="dropdown-popover-header">
+                                      <span>{client.fantasy_name || client.razon_social}</span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="dropdown-item"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        handleDownloadClientPdf(client);
+                                      }}
+                                    >
+                                      <FileTextIcon size={14} className="icon-sky" /> PDF Fiscal
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="dropdown-item"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        handleDownloadClientExcel(client);
+                                      }}
+                                    >
+                                      <FileSpreadsheetIcon size={14} className="icon-emerald" /> Excel Libro Ventas
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="dropdown-item"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        soundService.playKeyTap();
+                                        setSelectedClientForConstancia(client);
+                                      }}
+                                    >
+                                      <ShieldCheckIcon size={14} className="icon-violet" /> Constancia F.152 & QR
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="dropdown-item"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        soundService.playKeyTap();
+                                        setSelectedClientForCert(client);
+                                      }}
+                                    >
+                                      <FileTextIcon size={14} className="icon-amber" /> Certificación FACPCE
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="dropdown-item"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        soundService.playKeyTap();
+                                        setSelectedClientForExport(client);
+                                      }}
+                                    >
+                                      <DownloadIcon size={14} className="icon-indigo" /> Exportar Tango / Holistor
+                                    </button>
+                                    <div className="dropdown-divider" />
+                                    <button
+                                      type="button"
+                                      className="dropdown-item highlight"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        soundService.playKeyTap();
+                                        setDrawerClient(client);
+                                      }}
+                                    >
+                                      <EyeIcon size={14} /> Ficha 360° Completa
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -628,13 +733,29 @@ export default function AccountantPortal({
                 filteredClients.map((client) => {
                   const color = client.trafficColor || 'green';
                   const hasBatch = !!client.todayBatch;
+                  const isSelected = selectedClientIds.includes(client.id);
 
                   return (
-                    <div key={client.id} className="client-grid-card">
+                    <div key={client.id} className={`client-grid-card ${isSelected ? 'card-selected' : ''}`}>
                       <div className="client-card-top">
-                        <div>
-                          <h3 className="client-card-title">{client.fantasy_name || client.razon_social}</h3>
-                          <div className="client-card-subtitle">{client.razon_social}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => toggleSelectClient(client.id, e)}
+                            aria-label={`Seleccionar ${client.fantasy_name || client.razon_social}`}
+                          />
+                          <div>
+                            <h3
+                              className="client-card-title"
+                              onClick={() => { soundService.playKeyTap(); setDrawerClient(client); }}
+                              style={{ cursor: 'pointer' }}
+                              title="Abrir Ficha 360°"
+                            >
+                              {client.fantasy_name || client.razon_social}
+                            </h3>
+                            <div className="client-card-subtitle">{client.razon_social}</div>
+                          </div>
                         </div>
                         <span className="client-cat-badge">Cat. {client.monotributo_category || 'A'}</span>
                       </div>
@@ -673,32 +794,13 @@ export default function AccountantPortal({
                         <button
                           type="button"
                           className="btn-download-single"
-                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(56, 189, 248, 0.12)', borderColor: 'rgba(56, 189, 248, 0.3)', color: '#38bdf8' }}
-                          onClick={() => handleDownloadClientPdf(client)}
-                        >
-                          <FileTextIcon size={13} /> PDF
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-download-single"
-                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' }}
+                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: 'rgba(59, 130, 246, 0.15)', borderColor: 'rgba(59, 130, 246, 0.4)', color: '#60a5fa', fontWeight: 700 }}
                           onClick={() => {
                             soundService.playKeyTap();
-                            setSelectedClientForCert(client);
+                            setDrawerClient(client);
                           }}
                         >
-                          <FileTextIcon size={13} /> Cert.
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-download-single"
-                          style={{ flex: 1, padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem', background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }}
-                          onClick={() => {
-                            soundService.playKeyTap();
-                            setSelectedClientForExport(client);
-                          }}
-                        >
-                          <DownloadIcon size={13} /> Exp.
+                          <EyeIcon size={13} /> Ficha 360°
                         </button>
                         {hasBatch && (
                           <button
@@ -710,6 +812,15 @@ export default function AccountantPortal({
                             <DownloadIcon size={13} /> CSV
                           </button>
                         )}
+                        <button
+                          type="button"
+                          className="btn-download-single"
+                          style={{ padding: '0.5rem 0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          onClick={() => handleDownloadClientPdf(client)}
+                          title="Descargar PDF Fiscal"
+                        >
+                          <FileTextIcon size={13} /> PDF
+                        </button>
                       </div>
                     </div>
                   );
@@ -717,6 +828,64 @@ export default function AccountantPortal({
               )}
             </div>
           )}
+
+          {/* Barra Flotante de Acciones en Lote (Bulk Actions Bar) */}
+          {selectedClientIds.length > 0 && (
+            <div className="accountant-bulk-bar">
+              <div className="bulk-bar-badge font-mono">
+                <CheckCircleIcon size={15} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '6px' }} />
+                <span>{selectedClientIds.length}</span> {selectedClientIds.length === 1 ? 'cliente seleccionado' : 'clientes seleccionados'}
+              </div>
+              <div className="bulk-bar-actions">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => {
+                    const selected = filteredClients.filter((c) => selectedClientIds.includes(c.id));
+                    handleBulkZip(selected);
+                  }}
+                  iconLeading={<DownloadIcon size={14} />}
+                >
+                  Descargar ZIP ({selectedClientIds.length})
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    const selected = filteredClients.filter((c) => selectedClientIds.includes(c.id));
+                    handleDownloadPortfolioPdf(selected);
+                  }}
+                  iconLeading={<FileTextIcon size={14} />}
+                >
+                  PDF Cartera ({selectedClientIds.length})
+                </Button>
+                <button
+                  type="button"
+                  className="btn-bulk-clear"
+                  onClick={() => {
+                    soundService.playTap();
+                    setSelectedClientIds([]);
+                  }}
+                  title="Limpiar selección"
+                >
+                  ✕ Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Ficha 360° del Cliente (Slide-Over Drawer) */}
+          <AccountantClientDrawer
+            client={drawerClient}
+            onClose={() => setDrawerClient(null)}
+            onDownloadPdf={handleDownloadClientPdf}
+            onDownloadExcel={handleDownloadClientExcel}
+            onOpenConstancia={setSelectedClientForConstancia}
+            onOpenCert={setSelectedClientForCert}
+            onOpenExport={setSelectedClientForExport}
+            onDownloadSingleBatch={handleDownloadSingle}
+            accountantProfile={accountantProfile}
+          />
         </>
       )}
 
