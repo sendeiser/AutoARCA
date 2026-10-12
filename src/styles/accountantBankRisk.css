@@ -20,6 +20,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .bank-risk-legal-tag {
@@ -38,6 +39,7 @@
   gap: 1.25rem;
 }
 
+/* KPIs de Riesgo */
 .bank-risk-kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -51,11 +53,38 @@
   padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
 }
 
 .bank-risk-kpi:hover {
-  border-color: var(--color-brand-500, #444ce7);
+  border-color: var(--color-brand-500, #38bdf8);
+  transform: translateY(-1px);
+}
+
+.bank-risk-kpi.active {
+  border-color: var(--color-brand-500, #38bdf8);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.bank-risk-kpi.danger.active {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.bank-risk-kpi.warning.active {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.bank-risk-kpi.success.active {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.06);
 }
 
 .risk-kpi-lbl {
@@ -79,11 +108,19 @@
   margin-top: 0.2rem;
 }
 
+/* Barra de Filtros y Controles */
 .bank-risk-filters-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bank-risk-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -99,19 +136,489 @@
 .bank-tab-btn {
   background: none;
   border: none;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-muted);
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.bank-tab-btn:hover {
+  color: var(--text-main);
 }
 
 .bank-tab-btn.active {
   background: var(--bg-surface);
   color: var(--text-main);
   box-shadow: var(--shadow-xs);
+}
+
+.bank-tab-btn.tab-danger.active {
+  color: #ef4444;
+}
+
+.bank-tab-btn.tab-warning.active {
+  color: #f59e0b;
+}
+
+.bank-tab-btn.tab-success.active {
+  color: #10b981;
+}
+
+/* Conmutador de Modo de Vista (Tarjetas Móvil vs Tabla) */
+.bank-viewmode-toggle {
+  display: flex;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  gap: 2px;
+}
+
+.bank-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.bank-view-btn:hover {
+  color: var(--text-main);
+}
+
+.bank-view-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  box-shadow: var(--shadow-xs);
+}
+
+/* ==========================================================================
+   VISTA 1: TARJETAS REDISEÑADAS PARA MÓVIL (MOBILE CARDS)
+   ========================================================================== */
+.bank-risk-mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bank-risk-mobile-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bank-risk-mobile-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Modificadores de Riesgo con Acentos Cromáticos */
+.bank-risk-mobile-card.card-risk-red {
+  border-left: 4px solid #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, var(--bg-surface) 40%);
+}
+
+.bank-risk-mobile-card.card-risk-yellow {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, var(--bg-surface) 40%);
+}
+
+.bank-risk-mobile-card.card-risk-green {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, var(--bg-surface) 40%);
+}
+
+/* Cabecera de la Tarjeta */
+.m-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.m-card-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.m-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.avatar-red {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.avatar-yellow {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.avatar-green {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.m-card-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.m-card-name {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.m-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.m-card-cuit {
+  font-size: 0.75rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.m-card-badge-wrap {
+  flex-shrink: 0;
+}
+
+/* Grilla Financiera (3 Cajas) */
+.m-card-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.m-metric-box {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.m-metric-box.box-danger {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.m-metric-box.box-success {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.m-metric-title {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-metric-number {
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-cyan {
+  color: #38bdf8 !important;
+}
+
+.m-metric-hint {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Termómetro Visual de Cruce Bancario */
+.m-card-thermometer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.85rem;
+}
+
+.m-thermo-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+}
+
+.m-thermo-title {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.m-thermo-value {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.m-thermo-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+
+.m-thermo-bar-invoiced {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #0284c7);
+  border-radius: 9999px 0 0 9999px;
+  transition: width 0.3s ease;
+}
+
+.m-thermo-bar-gap {
+  height: 100%;
+  border-radius: 0 9999px 9999px 0;
+  transition: width 0.3s ease;
+}
+
+.m-thermo-bar-gap.bar-gap-red {
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
+}
+
+.m-thermo-bar-gap.bar-gap-yellow {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.m-thermo-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.m-leg-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.m-leg-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-invoiced {
+  background: #38bdf8;
+}
+
+.dot-gap-red {
+  background: #ef4444;
+}
+
+.dot-gap-yellow {
+  background: #f59e0b;
+}
+
+.dot-safe {
+  background: #10b981;
+}
+
+/* Callout de Diagnóstico ARCA */
+.m-card-callout {
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.m-card-callout.callout-red {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.m-card-callout.callout-yellow {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.m-card-callout.callout-green {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.m-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.m-callout-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.m-callout-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.m-callout-law {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* Acciones Táctiles Rápidas Mobile */
+.m-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 0.15rem;
+}
+
+.m-btn-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 40px;
+  background: rgba(37, 211, 102, 0.14);
+  color: #25d366;
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.m-btn-wa:hover {
+  background: rgba(37, 211, 102, 0.22);
+  border-color: #25d366;
+  color: #25d366;
+}
+
+.m-btn-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 40px;
+  background: var(--bg-surface-subtle);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.m-btn-copy:hover {
+  background: var(--bg-surface);
+  border-color: var(--color-brand-500, #38bdf8);
+}
+
+.bank-risk-empty-cards {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: var(--bg-surface-subtle);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bank-risk-empty-cards h4 {
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.bank-risk-empty-cards p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   VISTA 2: TABLA CLÁSICA (DESKTOP)
+   ========================================================================== */
+.bank-risk-desktop-table {
+  width: 100%;
 }
 
 .bank-risk-table-wrap {
@@ -135,6 +642,7 @@
   letter-spacing: 0.05em;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
 }
 
 .bank-risk-table td {
@@ -143,8 +651,16 @@
   vertical-align: middle;
 }
 
+.bank-risk-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .row-bank-red {
-  background: rgba(240, 68, 56, 0.03);
+  background: rgba(240, 68, 56, 0.04);
+}
+
+.row-bank-red:hover td {
+  background: rgba(240, 68, 56, 0.07) !important;
 }
 
 .bank-risk-diag-title {
@@ -160,7 +676,28 @@
   line-height: 1.35;
 }
 
-@media (max-width: 640px) {
+/* ==========================================================================
+   ADAPTABILIDAD RESPONSIVA (MEDIA QUERIES)
+   ========================================================================== */
+
+/* Por defecto en Desktop (> 768px): ocultar tarjetas móvil, mostrar tabla */
+@media (min-width: 769px) {
+  .bank-risk-mobile-cards {
+    display: none;
+  }
+  .bank-risk-desktop-table {
+    display: block;
+  }
+}
+
+/* En Móvil y Pantallas Táctiles (<= 768px): ocultar tabla, mostrar tarjetas */
+@media (max-width: 768px) {
+  .bank-risk-desktop-table {
+    display: none;
+  }
+  .bank-risk-mobile-cards {
+    display: flex;
+  }
   .bank-risk-body {
     padding: 1rem 0.75rem;
   }
@@ -177,12 +714,17 @@
     padding: 0.65rem 0.75rem;
   }
   .bank-risk-kpi .risk-kpi-val {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
   }
   .bank-risk-filters-bar {
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
+  }
+  .bank-risk-controls-right {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
   }
   .bank-risk-tabs {
     width: 100%;
@@ -190,9 +732,48 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
-  .bank-tab-btn {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 0.4rem 0.6rem;
+  .bank-risk-tabs::-webkit-scrollbar {
+    display: none;
   }
+  .bank-tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.74rem;
+  }
+  .bank-viewmode-toggle {
+    width: 100%;
+  }
+  .bank-view-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 0.45rem 0.5rem;
+  }
+}
+
+/* Pantallas extra pequeñas (< 420px) */
+@media (max-width: 420px) {
+  .m-metric-number {
+    font-size: 0.78rem;
+  }
+  .m-metric-box {
+    padding: 0.5rem 0.3rem;
+  }
+  .m-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Forzado explícito mediante clases de control */
+.bank-risk-mobile-cards.force-visible {
+  display: flex !important;
+}
+.bank-risk-mobile-cards.force-hidden {
+  display: none !important;
+}
+.bank-risk-desktop-table.force-visible {
+  display: block !important;
+}
+.bank-risk-desktop-table.force-hidden {
+  display: none !important;
 }
