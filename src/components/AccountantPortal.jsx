@@ -36,6 +36,7 @@ import AccountantTaxCalendar from './AccountantTaxCalendar.jsx';
 import AccountantIncomeCertificateModal from './AccountantIncomeCertificateModal.jsx';
 import AccountantFeesManager from './AccountantFeesManager.jsx';
 import AccountantMultiSoftwareExportModal from './AccountantMultiSoftwareExportModal.jsx';
+import AccountantFinancialStatements from './AccountantFinancialStatements.jsx';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -902,6 +903,11 @@ export default function AccountantPortal({
       {/* Pestaña: Tablero de Exclusión y Riesgo Bancario */}
       {activeTab === 'riesgo_bancario' && (
         <AccountantBankRiskDashboard clients={clientList} />
+      )}
+
+      {/* Pestaña: Balances Comerciales & Ratios para Bancos y SGR */}
+      {activeTab === 'balances' && (
+        <AccountantFinancialStatements clients={clientList} accountantProfile={accountantProfile} />
       )}
 
       {/* Pestaña: Calendario Impositivo por CUIT */}

@@ -1,0 +1,569 @@
+/* AutoARCA — Estilos del Módulo de Balances y Estados Contables Comerciales */
+
+.accountant-balance-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.balance-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.balance-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.balance-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.balance-legal-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-surface-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+}
+
+.balance-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.btn-balance-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(37, 211, 102, 0.12);
+  color: #25d366;
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-balance-wa:hover {
+  background: rgba(37, 211, 102, 0.22);
+  border-color: #25d366;
+  color: #25d366;
+}
+
+/* Selector de Cliente y Rubro */
+.balance-control-panel {
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-color);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.balance-ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.balance-ctrl-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.balance-client-select {
+  padding: 0.65rem 0.9rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.balance-client-select:focus {
+  border-color: var(--color-brand-500, #38bdf8);
+}
+
+.rubro-pills {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--bg-surface);
+  padding: 3px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.rubro-pill-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rubro-pill-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Scorecard de Calificación Bancaria */
+.balance-score-strip {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.06) 0%, rgba(30, 41, 59, 0.4) 100%);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.balance-score-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.balance-score-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.balance-score-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.balance-score-verdict {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.balance-score-kpis {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.score-mini-kpi {
+  display: flex;
+  flex-direction: column;
+}
+
+.score-mini-lbl {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.score-mini-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+/* Layout Principal de 3 Paneles */
+.balance-main-grid {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.balance-section-box {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-box-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-box-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Filas Contables de Estado */
+.accounting-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.acc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0.65rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+}
+
+.acc-row.indent {
+  margin-left: 0.75rem;
+  background: transparent;
+  border-style: dashed;
+}
+
+.acc-row.total-row {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.3);
+  font-weight: 800;
+}
+
+.acc-row.net-worth-row {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+.acc-row-lbl {
+  color: var(--text-main);
+}
+
+.acc-row-val {
+  font-weight: 700;
+}
+
+/* Cascada de Resultados */
+.income-cascade {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cascade-step {
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.cascade-step.gross-sales {
+  border-left: 4px solid #38bdf8;
+}
+
+.cascade-step.cost-sub {
+  border-left: 4px solid #f59e0b;
+}
+
+.cascade-step.operating-margin {
+  border-left: 4px solid #6366f1;
+  background: rgba(99, 102, 241, 0.05);
+  font-weight: 700;
+}
+
+.cascade-step.expenses-sub {
+  border-left: 4px solid #ef4444;
+}
+
+.cascade-step.net-result {
+  border-left: 4px solid #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.35);
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+/* Sliders de Calibración Rápida (What-If) */
+.balance-calibrator-card {
+  margin: 0 1.5rem 1.5rem 1.5rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.calibrator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calibrator-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calibrator-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.slider-lbl-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.slider-lbl-title {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.slider-lbl-val {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.balance-slider {
+  width: 100%;
+  accent-color: var(--color-brand-500, #38bdf8);
+  cursor: pointer;
+}
+
+/* Adaptabilidad Responsiva (Mobile) */
+@media (max-width: 900px) {
+  .balance-control-panel {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  .balance-main-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  .calibrator-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .balance-calibrator-card {
+    margin: 0 1rem 1rem 1rem;
+    padding: 1rem;
+  }
+  .balance-score-strip {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .balance-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .balance-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .balance-header-actions button,
+  .balance-header-actions a {
+    width: 100%;
+    justify-content: center;
+  }
+  .rubro-pills {
+    flex-direction: column;
+  }
+  .balance-score-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .balance-score-kpis {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* ==============================================================================
+   Modo Claro: Balances Comerciales y Estados Contables
+   ============================================================================== */
+[data-theme="light"] .balance-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .balance-control-panel {
+  background: #f8fafc !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .balance-client-select {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .rubro-pills {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .rubro-pill-btn {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .rubro-pill-btn.active {
+  background: #ffffff !important;
+  color: #0284c7 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .balance-score-strip {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.08) 0%, #ffffff 100%) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .balance-score-icon {
+  background: #e0f2fe !important;
+  border-color: #bae6fd !important;
+}
+
+[data-theme="light"] .balance-score-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .balance-score-verdict {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .score-mini-lbl {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .score-mini-val {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .balance-section-box {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .section-box-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .acc-row {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .acc-row-lbl {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .acc-row-val {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .acc-row.total-row {
+  background: #f0f9ff !important;
+  border-color: #bae6fd !important;
+}
+
+[data-theme="light"] .acc-row.net-worth-row {
+  background: linear-gradient(90deg, #ecfdf5 0%, #f0f9ff 100%) !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme="light"] .cascade-step {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cascade-step.operating-margin {
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+}
+
+[data-theme="light"] .cascade-step.net-result {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme="light"] .balance-calibrator-card {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .calibrator-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .slider-lbl-title {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .slider-lbl-val {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .balance-slider {
+  background: #e2e8f0 !important;
+}

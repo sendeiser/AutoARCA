@@ -403,6 +403,227 @@ export const reportPdfService = {
     const filename = `Cartera_Clientes_Estudio_${new Date().toISOString().slice(0, 10)}.pdf`;
     doc.save(filename);
     return filename;
+  },
+
+  /**
+   * Genera el Estado de Situación Patrimonial y Rendición Operativa para Bancos y SGR
+   */
+  generateCommercialBalancePdf({
+    client,
+    balanceData,
+    accountantProfile = null
+  }) {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const primaryColor = [15, 23, 42]; // Slate 900
+    const brandBlue = [37, 99, 235]; // Blue 600
+    const grayText = [100, 116, 139]; // Slate 500
+    const lightBg = [248, 250, 252]; // Slate 50
+
+    const bs = balanceData.financialStatements.balanceSheet;
+    const is = balanceData.financialStatements.incomeStatement;
+    const ratios = balanceData.ratios;
+
+    // 1. Cabecera Formal
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.rect(0, 0, 210, 22, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12.5);
+    doc.text('ESTADO DE SITUACIÓN PATRIMONIAL Y RENDICIÓN OPERATIVA', 14, 10);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(203, 213, 225);
+    doc.text(`Informe para Calificación Crediticia, Bancos y SGR | Período: ${balanceData.period} | Emisión: ${formatDate()}`, 14, 16);
+
+    // 2. Bloques de Información (Estudio y Contribuyente)
+    let currentY = 28;
+
+    // Caja Estudio Contable
+    doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(14, currentY, 88, 26, 2, 2, 'FD');
+
+    doc.setTextColor(brandBlue[0], brandBlue[1], brandBlue[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.text('PROFESIONAL ACTUANTE / ESTUDIO', 18, currentY + 5.5);
+
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text(accountantProfile?.full_name || 'Cr. Juan Pérez — Contador Público', 18, currentY + 11.5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+    doc.text(`Matrícula: ${accountantProfile?.cpce_registration || 'T° 142 F° 88 CPCECABA'}`, 18, currentY + 17);
+    doc.text(`CUIT: ${accountantProfile?.cuit || '20-25896321-4'}`, 18, currentY + 22);
+
+    // Caja Contribuyente / Comercio
+    doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
+    doc.roundedRect(108, currentY, 88, 26, 2, 2, 'FD');
+
+    doc.setTextColor(brandBlue[0], brandBlue[1], brandBlue[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.text('TITULAR DEL COMERCIO / CONTRIBUYENTE', 112, currentY + 5.5);
+
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text(client.fantasy_name || client.razon_social || 'Cliente Comercial', 112, currentY + 11.5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+    doc.text(`CUIT: ${client.cuit} | Cat. Monotributo: ${client.monotributo_category || 'D'}`, 112, currentY + 17);
+    doc.text(`Actividad / Rubro: ${(balanceData.rubro || 'Comercio').toUpperCase()} | Domicilio Fiscal Auditado`, 112, currentY + 22);
+
+    currentY += 32;
+
+    // 3. Tabla: Estado de Situación Patrimonial
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('I. ESTADO DE SITUACIÓN PATRIMONIAL SIMPLIFICADO', 14, currentY);
+
+    autoTable(doc, {
+      startY: currentY + 3,
+      margin: { left: 14, right: 14 },
+      head: [['Concepto Patrimonial', 'Subtotal Parcial', 'Total Consolidado']],
+      body: [
+        ['ACTIVO CORRIENTE (Disponibilidades en Caja, CBU y Mercado Pago)', formatCurrency(bs.assets.current.cashAndBank), ''],
+        ['Créditos por Ventas / Cupones POS pendientes de acreditación', formatCurrency(bs.assets.current.accountsReceivable), ''],
+        ['Bienes de Cambio (Inventario y Stock comercial valorizado)', formatCurrency(bs.assets.current.inventory), formatCurrency(bs.assets.current.total)],
+        ['ACTIVO NO CORRIENTE (Bienes de Uso, rodados y equipamiento amortizado)', formatCurrency(bs.assets.nonCurrent.fixedAssets), formatCurrency(bs.assets.nonCurrent.total)],
+        [{ content: 'TOTAL ACTIVO (A)', styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }, '', { content: formatCurrency(bs.assets.totalAssets), styles: { fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42] } }],
+        ['PASIVO CORRIENTE (Deudas con Proveedores comerciales)', formatCurrency(bs.liabilities.current.tradePayables), ''],
+        ['Deudas Fiscales y Cargas Sociales devengadas (ARCA / IIBB)', formatCurrency(bs.liabilities.current.taxPayables), ''],
+        ['Préstamos bancarios a corto plazo / Saldos en C/C', formatCurrency(bs.liabilities.current.shortTermDebt), formatCurrency(bs.liabilities.current.total)],
+        [{ content: 'TOTAL PASIVO (B)', styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }, '', { content: formatCurrency(bs.liabilities.totalLiabilities), styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }],
+        [{ content: 'PATRIMONIO NETO DECLARADO (A - B)', styles: { fontStyle: 'bold', fillColor: [224, 242, 254], textColor: [3, 105, 161] } }, '', { content: formatCurrency(bs.netWorth), styles: { fontStyle: 'bold', fillColor: [224, 242, 254], textColor: [3, 105, 161] } }]
+      ],
+      theme: 'grid',
+      styles: { fontSize: 7.5, cellPadding: 2.2 },
+      headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 105 },
+        1: { halign: 'right', cellWidth: 38 },
+        2: { halign: 'right', fontStyle: 'bold', cellWidth: 39 }
+      }
+    });
+
+    currentY = doc.lastAutoTable.finalY + 8;
+
+    // 4. Tabla: Estado de Resultados Operativo
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('II. RENDICIÓN OPERATIVA Y RESULTADO NETO (ÚLTIMOS 12 MESES)', 14, currentY);
+
+    autoTable(doc, {
+      startY: currentY + 3,
+      margin: { left: 14, right: 14 },
+      head: [['Renglón de Ganancias y Pérdidas', 'Importe ARS', '% s/ Ventas']],
+      body: [
+        ['Facturación Bruta Anual Declarada (Comprobantes AutoARCA emitidos)', formatCurrency(is.annualSales), '100.0%'],
+        ['(-) Costo de Mercaderías Vendidas e Insumos Directos (CMV)', `-${formatCurrency(is.costOfSales)}`, `${((is.costOfSales / is.annualSales) * 100).toFixed(1)}%`],
+        [{ content: '(=) MARGEN BRUTO OPERATIVO', styles: { fontStyle: 'bold' } }, formatCurrency(is.grossProfit), `${((is.grossProfit / is.annualSales) * 100).toFixed(1)}%`],
+        ['(-) Gastos de Estructura, Alquileres, Servicios y Comisiones POS', `-${formatCurrency(is.operatingExpenses)}`, `${((is.operatingExpenses / is.annualSales) * 100).toFixed(1)}%`],
+        [{ content: '(=) RESULTADO NETO DISPONIBLE DEL EJERCICIO', styles: { fontStyle: 'bold', fillColor: [236, 253, 245], textColor: [5, 150, 105] } }, { content: formatCurrency(is.netOperatingIncome), styles: { fontStyle: 'bold', fillColor: [236, 253, 245], textColor: [5, 150, 105] } }, `${is.netMarginPct}%`],
+        ['Promedio Mensual de Ingresos Netos Disponibles', formatCurrency(is.monthlyNetIncome), '—']
+      ],
+      theme: 'grid',
+      styles: { fontSize: 7.5, cellPadding: 2.2 },
+      headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 110 },
+        1: { halign: 'right', fontStyle: 'bold', cellWidth: 42 },
+        2: { halign: 'center', cellWidth: 30 }
+      }
+    });
+
+    currentY = doc.lastAutoTable.finalY + 8;
+
+    // 5. Ratios Bancarios y Calificación Crediticia
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('III. RATIOS FINANCIEROS Y EVALUACIÓN DE RIESGO BANCARIO (BCRA / SGR)', 14, currentY);
+
+    autoTable(doc, {
+      startY: currentY + 3,
+      margin: { left: 14, right: 14 },
+      head: [['Indicador Crediticio', 'Valor Obtenido', 'Referencia Bancaria', 'Diagnóstico']],
+      body: [
+        ['Ratio de Liquidez Corriente', `${ratios.currentRatio}x`, 'Mínimo aconsejable > 1.20', ratios.currentRatio >= 1.2 ? 'SALUDABLE' : 'AJUSTADA'],
+        ['Ratio de Solvencia', `${ratios.solvencyRatio}x`, 'Mínimo aconsejable > 1.00', ratios.solvencyRatio >= 1.0 ? 'SOLVENTE' : 'COMPROMETIDA'],
+        ['Nivel de Endeudamiento', `${ratios.leveragePct}%`, 'Máximo sugerido < 65.0%', ratios.leveragePct < 65 ? 'BAJO' : 'ELEVADO'],
+        [{ content: 'Capacidad Máxima de Cuota Mensual', styles: { fontStyle: 'bold' } }, { content: formatCurrency(ratios.maxCreditInstallmentMonthly), styles: { fontStyle: 'bold', textColor: [37, 99, 235] } }, '30% del Ingreso Neto', 'APTO CRÉDITO']
+      ],
+      theme: 'grid',
+      styles: { fontSize: 7.5, cellPadding: 2.2 },
+      headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 65 },
+        1: { halign: 'center', fontStyle: 'bold', cellWidth: 35 },
+        2: { halign: 'center', cellWidth: 45 },
+        3: { halign: 'center', fontStyle: 'bold', cellWidth: 37 }
+      }
+    });
+
+    currentY = doc.lastAutoTable.finalY + 12;
+
+    // 6. Espacio para Firma Profesional y Leyenda CPCE
+    if (currentY > 240) {
+      doc.addPage();
+      currentY = 24;
+    }
+
+    doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(14, currentY, 182, 32, 2, 2, 'FD');
+
+    doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.2);
+    doc.text('DECLARACIÓN PROFESIONAL: El presente estado de situación patrimonial y rendición operativa ha sido confeccionado en base a los registros de facturación electrónica obrantes en los sistemas de ARCA, declaraciones informadas por el contribuyente y documentación de respaldo exhibida al profesional actuante para fines estrictamente comerciales y de calificación crediticia.', 18, currentY + 6, { maxWidth: 120 });
+
+    // Espacio de firma a la derecha
+    doc.setDrawColor(15, 23, 42);
+    doc.line(146, currentY + 22, 188, currentY + 22);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text('Firma y Sello del Profesional', 148, currentY + 26);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6.8);
+    doc.text('Contador Público — Matrícula CPCE', 148, currentY + 29.5);
+
+    // Pie de página
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+      doc.setDrawColor(226, 232, 240);
+      doc.line(14, 287, 196, 287);
+      doc.text('AutoARCA PRO — Balance Comercial y Rendición Contable para Bancos y Entidades Financieras', 14, 291);
+      doc.text(`Página ${i} de ${pageCount}`, 196, 291, { align: 'right' });
+    }
+
+    const filename = `Balance_Comercial_${client.cuit || 'Cliente'}_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(filename);
+    return filename;
   }
 };
 

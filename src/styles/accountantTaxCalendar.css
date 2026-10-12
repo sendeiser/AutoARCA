@@ -38,12 +38,22 @@
 .calendar-progress-widget {
   background: var(--bg-surface-subtle);
   border: 1px solid var(--border-color);
-  padding: 0.65rem 1rem;
+  padding: 0.5rem 0.85rem;
   border-radius: var(--radius-md);
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 190px;
+}
+
+.cal-progress-text-col {
+  display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  min-width: 200px;
+}
+
+.cal-donut-track {
+  stroke: rgba(255, 255, 255, 0.1);
 }
 
 .cal-progress-meta {
@@ -603,5 +613,115 @@
   .calendar-kanban-board {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==============================================================================
+   Modo Claro: Calendario CUIT, Toggle de Vista y Kanban
+   ============================================================================== */
+[data-theme="light"] .tax-calendar-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .cal-viewmode-toggle {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .cal-view-btn {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .cal-view-btn:hover {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cal-view-btn.active {
+  background: #ffffff !important;
+  color: #0284c7 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .calendar-progress-widget {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .cal-donut-wrap {
+  background: transparent !important;
+}
+
+[data-theme="light"] .cal-donut-track {
+  stroke: #e2e8f0 !important;
+}
+
+[data-theme="light"] .cal-donut-text {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cal-progress-lbl {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .cal-progress-sub {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .cal-filter-tabs {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .cal-filter-tab {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .cal-filter-tab.active {
+  background: #ffffff !important;
+  color: #0284c7 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .kanban-col {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .kanban-col-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .kanban-col-desc {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .kanban-col-header {
+  border-bottom-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .kanban-client-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .kanban-client-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .cal-check-item {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .cal-check-item:hover {
+  background: #ffffff !important;
+  border-color: #93c5fd !important;
+}
+
+[data-theme="light"] .cal-check-item.checked {
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
 }
 

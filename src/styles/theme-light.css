@@ -42,6 +42,10 @@ body[data-theme="light"] {
   /* Mapeo de compatibilidad */
   --bg-main: var(--apple-bg-base);
   --bg-card: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-surface-subtle: #f8fafc;
+  --bg-hover: #f1f5f9;
+  --border-color: rgba(15, 23, 42, 0.08);
   --border-card: rgba(15, 23, 42, 0.08);
   --border-glow: var(--apple-glow-blue);
   --primary: #10b981;
@@ -757,7 +761,43 @@ body[data-theme="light"] {
 }
 
 [data-theme="light"] .uui-table-toolbar {
-  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+  background: #f8fafc !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .uui-table-toolbar h3,
+[data-theme="light"] .uui-table-toolbar .dashboard-section-subtitle {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .uui-badge-gray {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .uui-badge-primary {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border-color: #bfdbfe !important;
+}
+
+[data-theme="light"] .uui-badge-success {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+
+[data-theme="light"] .uui-badge-warning {
+  background: #fffbeb !important;
+  color: #b45309 !important;
+  border-color: #fde68a !important;
+}
+
+[data-theme="light"] .uui-badge-danger {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
 }
 
 [data-theme="light"] .uui-th {

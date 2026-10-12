@@ -559,3 +559,118 @@
   }
 }
 
+/* ==============================================================================
+   Modo Claro: Simulador Fiscal What-If y Matriz de Recategorización
+   ============================================================================== */
+[data-theme="light"] .recat-matrix-card {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .recat-simulator-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 1px solid rgba(124, 58, 237, 0.22) !important;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .recat-sim-badge {
+  background: rgba(124, 58, 237, 0.1) !important;
+  color: #7c3aed !important;
+  border-color: rgba(124, 58, 237, 0.25) !important;
+}
+
+[data-theme="light"] .recat-sim-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .recat-sim-subtitle {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .recat-sim-client-picker label {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .sim-select-input {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .recat-sim-slider-row {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .sim-slider-lbl {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .sim-range-input {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .sim-pill {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .sim-pill:hover {
+  background: #ede9fe !important;
+  border-color: #c4b5fd !important;
+  color: #6d28d9 !important;
+}
+
+[data-theme="light"] .sim-pill.reset {
+  background: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+  color: #dc2626 !important;
+}
+
+[data-theme="light"] .sim-result-col {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .sim-cat-display {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .sim-col-tag {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .sim-col-sub {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .sim-col-quota {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .projected-box {
+  background: #f5f3ff !important;
+  border-color: #c4b5fd !important;
+}
+
+[data-theme="light"] .projected-box .sim-cat-display {
+  color: #6d28d9 !important;
+}
+
+[data-theme="light"] .diff-box {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+[data-theme="light"] .sim-result-arrow {
+  color: #7c3aed !important;
+}
+
+[data-theme="light"] .sim-slider-val {
+  color: #0284c7 !important;
+}
+
+

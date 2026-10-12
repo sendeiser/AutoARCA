@@ -110,6 +110,12 @@ export default function Navbar({
           icon: AlertTriangleIcon
         },
         {
+          key: 'balances',
+          label: 'Balances & Ratios',
+          mobileLabel: 'Balances',
+          icon: ChartBarIcon
+        },
+        {
           key: 'calendario',
           label: 'Calendario CUIT',
           mobileLabel: 'Calendario',

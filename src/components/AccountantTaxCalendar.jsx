@@ -130,7 +130,7 @@ export default function AccountantTaxCalendar({
             <div className="calendar-progress-widget">
               <div className="cal-donut-wrap">
                 <svg width="42" height="42" viewBox="0 0 42 42" className="cal-donut-svg">
-                  <circle cx="21" cy="21" r="16" fill="transparent" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                  <circle cx="21" cy="21" r="16" fill="transparent" className="cal-donut-track" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
                   <circle
                     cx="21"
                     cy="21"
@@ -146,7 +146,7 @@ export default function AccountantTaxCalendar({
                 </svg>
                 <span className="cal-donut-text font-mono">{progressPercent}%</span>
               </div>
-              <div>
+              <div className="cal-progress-text-col">
                 <span className="cal-progress-lbl">Cumplimiento Mensual</span>
                 <span className="cal-progress-sub font-mono">
                   {completedTasks} de {totalTasks} tareas listas

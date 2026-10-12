@@ -300,8 +300,8 @@ export default function ClientDashboard({
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '0.65rem 0.85rem',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'var(--bg-surface-subtle, #f8fafc)',
+                    border: '1px solid var(--border-color, #e2e8f0)',
                     borderRadius: '10px',
                     fontSize: '0.82rem',
                     gap: '0.5rem',
@@ -313,17 +313,17 @@ export default function ClientDashboard({
                       C
                     </div>
                     <div>
-                      <strong style={{ color: 'var(--text-main, #ffffff)', display: 'block' }}>
+                      <strong style={{ color: 'var(--text-main)', display: 'block' }}>
                         {sale.customer_name || 'Consumidor Final'}
                       </strong>
-                      <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
                         {sale.date || 'Hoy'} · {sale.payment_method === 'cash' ? 'Efectivo' : sale.payment_method === 'card' ? 'Tarjeta' : 'Transferencia QR'}
                       </span>
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-main, #ffffff)' }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-main)' }}>
                       {formatCurrencyARS(sale.amount)}
                     </span>
                     <button
@@ -362,10 +362,10 @@ export default function ClientDashboard({
       <TableContainer>
         <TableToolbar>
           <div>
-            <h3 className="dashboard-section-subtitle" style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main, #ffffff)' }}>
+            <h3 className="dashboard-section-subtitle" style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>
               Historial de Lotes Diarios para ARCA
             </h3>
-            <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
               Archivos consolidados listos para exportación oficial
             </span>
           </div>

@@ -43,6 +43,14 @@
   --uui-shadow-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
   --uui-shadow-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
   --uui-shadow-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+
+  /* Superficies Globales (Default Dark) */
+  --bg-surface: rgba(30, 41, 59, 0.7);
+  --bg-surface-subtle: rgba(15, 23, 42, 0.6);
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
 }
 
 /* ==============================================================================
