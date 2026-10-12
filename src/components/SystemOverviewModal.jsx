@@ -59,44 +59,47 @@ export default function SystemOverviewModal({
       }
     >
       <div className="system-overview-container">
-        {/* Barra de Selección de Rol */}
+        {/* Barra de Selección de Rol Compacta */}
         <div className="overview-roles-bar">
           <button
             type="button"
+            aria-label="Comercio / Monotributista"
             className={`overview-role-btn role-client ${selectedRole === 'client' ? 'active' : ''}`}
             onClick={() => {
               soundService.playKeyTap();
               setSelectedRole('client');
             }}
           >
-            <StoreIcon size={16} />
-            <span>Comercio / Monotributista</span>
+            <StoreIcon size={15} />
+            <span>Comercio</span>
             {currentRole === 'client' && <span className="overview-active-tag">Tu Rol</span>}
           </button>
 
           <button
             type="button"
+            aria-label="Estudio Contable / Contador"
             className={`overview-role-btn role-accountant ${selectedRole === 'accountant' ? 'active' : ''}`}
             onClick={() => {
               soundService.playKeyTap();
               setSelectedRole('accountant');
             }}
           >
-            <UsersIcon size={16} />
-            <span>Estudio Contable / Contador</span>
+            <UsersIcon size={15} />
+            <span>Contador</span>
             {currentRole === 'accountant' && <span className="overview-active-tag">Tu Rol</span>}
           </button>
 
           <button
             type="button"
+            aria-label="Super Administrador SaaS"
             className={`overview-role-btn role-superadmin ${selectedRole === 'superadmin' ? 'active' : ''}`}
             onClick={() => {
               soundService.playKeyTap();
               setSelectedRole('superadmin');
             }}
           >
-            <CrownIcon size={16} />
-            <span>Super Administrador SaaS</span>
+            <CrownIcon size={15} />
+            <span>SuperAdmin</span>
             {currentRole === 'superadmin' && <span className="overview-active-tag">Tu Rol</span>}
           </button>
         </div>
@@ -107,17 +110,17 @@ export default function SystemOverviewModal({
         {selectedRole === 'client' && (
           <>
             <div className="overview-hero-card">
+              <div className="overview-hero-badge badge-client">
+                <span>Modo Contribuyente</span>
+              </div>
               <div className="overview-hero-content">
                 <h3>
-                  <StoreIcon size={20} className="text-success" />
+                  <StoreIcon size={18} className="text-success" />
                   Módulos para Comercios y Profesionales Monotributistas
                 </h3>
                 <p>
                   Diseñado para que factures en mostrador en segundos, cuides tu categoría de Monotributo en tiempo real y automatices el envío de información fiscal a tu contador sin planillas ni fotos de comprobantes.
                 </p>
-              </div>
-              <div className="overview-hero-badge badge-client">
-                <span>Modo Contribuyente</span>
               </div>
             </div>
 
@@ -327,17 +330,17 @@ export default function SystemOverviewModal({
         {selectedRole === 'accountant' && (
           <>
             <div className="overview-hero-card">
+              <div className="overview-hero-badge badge-accountant">
+                <span>Modo Contador Matriculado</span>
+              </div>
               <div className="overview-hero-content">
                 <h3>
-                  <UsersIcon size={20} className="text-primary" />
+                  <UsersIcon size={18} className="text-primary" />
                   Módulos del Portal Profesional Contable
                 </h3>
                 <p>
                   Herramientas diseñadas para estudios contables en Argentina: supervisá decenas de CUITs en simultáneo, auditá riesgos antes de que ARCA intime y exportá a tus sistemas contables de escritorio sin tipeo manual.
                 </p>
-              </div>
-              <div className="overview-hero-badge badge-accountant">
-                <span>Modo Contador Matriculado</span>
               </div>
             </div>
 
@@ -531,17 +534,17 @@ export default function SystemOverviewModal({
         {selectedRole === 'superadmin' && (
           <>
             <div className="overview-hero-card">
+              <div className="overview-hero-badge badge-superadmin">
+                <span>Modo SuperAdmin</span>
+              </div>
               <div className="overview-hero-content">
                 <h3>
-                  <CrownIcon size={20} className="text-warning" />
+                  <CrownIcon size={18} className="text-warning" />
                   Módulos de Gobernanza & Super Administrador
                 </h3>
                 <p>
                   Panel de control de alto nivel para gestionar la infraestructura, auditar el volumen procesado del SaaS, regular las escalas impositivas oficiales y administrar el estado de suscripción de estudios y comercios.
                 </p>
-              </div>
-              <div className="overview-hero-badge badge-superadmin">
-                <span>Modo SuperAdmin</span>
               </div>
             </div>
 
