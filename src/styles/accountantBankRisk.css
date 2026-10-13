@@ -697,34 +697,83 @@
   }
   .bank-risk-mobile-cards {
     display: flex;
+    gap: 0.75rem;
+  }
+  .bank-risk-mobile-card {
+    padding: 0.85rem;
+    gap: 0.75rem;
+  }
+  .m-card-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem;
+  }
+  .m-card-metrics-grid .m-metric-box:last-child {
+    grid-column: 1 / -1;
+  }
+  .m-metric-box {
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+  }
+  .m-metric-title {
+    font-size: 0.62rem;
+  }
+  .m-metric-number {
+    font-size: 0.88rem;
+  }
+  .m-metric-hint {
+    font-size: 0.62rem;
+  }
+  .m-card-thermometer {
+    padding: 0.5rem 0.65rem;
+  }
+  .m-thermo-labels {
+    font-size: 0.68rem;
+    gap: 0.35rem;
+  }
+  .m-card-alert {
+    padding: 0.55rem 0.7rem;
+  }
+  .m-alert-title {
+    font-size: 0.78rem;
+  }
+  .m-alert-desc {
+    font-size: 0.72rem;
   }
   .bank-risk-body {
-    padding: 1rem 0.75rem;
+    padding: 0.75rem 0.5rem;
   }
   .bank-risk-header-flex {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
   .bank-risk-kpis {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    gap: 0.45rem;
   }
   .bank-risk-kpi {
-    padding: 0.65rem 0.75rem;
+    padding: 0.5rem 0.65rem;
+  }
+  .bank-risk-kpi .risk-kpi-lbl {
+    font-size: 0.66rem;
+    line-height: 1.2;
   }
   .bank-risk-kpi .risk-kpi-val {
     font-size: 1.2rem;
+    margin: 0.1rem 0;
+  }
+  .bank-risk-kpi .risk-kpi-sub {
+    font-size: 0.66rem;
   }
   .bank-risk-filters-bar {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
   .bank-risk-controls-right {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
   .bank-risk-tabs {
     width: 100%;
@@ -738,8 +787,8 @@
   .bank-tab-btn {
     flex: 1;
     text-align: center;
-    padding: 0.45rem 0.5rem;
-    font-size: 0.74rem;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.72rem;
   }
   .bank-viewmode-toggle {
     width: 100%;
@@ -747,7 +796,7 @@
   .bank-view-btn {
     flex: 1;
     justify-content: center;
-    padding: 0.45rem 0.5rem;
+    padding: 0.4rem 0.5rem;
   }
 }
 
