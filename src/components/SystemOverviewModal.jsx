@@ -20,7 +20,8 @@ import {
   CloudSyncIcon,
   SlidersIcon,
   LinkIcon,
-  BoltIcon
+  BoltIcon,
+  FolderIcon
 } from './Icons.jsx';
 import '../styles/systemOverviewModal.css';
 
@@ -319,6 +320,22 @@ export default function SystemOverviewModal({
                     <FileTextIcon size={13} /> RG 1817 / Formulario 152 oficial
                   </div>
                 </div>
+
+                <div className="overview-module-card">
+                  <div className="overview-module-top">
+                    <div className="overview-module-icon-wrap"><UsersIcon size={18} /></div>
+                    <div className="overview-module-meta">
+                      <h5>Clientes & Fiados (CRM Gen 2)</h5>
+                      <span className="overview-module-badge">Cuentas Corrientes</span>
+                    </div>
+                  </div>
+                  <p className="overview-module-desc">
+                    Libreta digital de clientes frecuentes, control de límites de crédito, registro de cobros parciales en POS y envío automático de resúmenes por WhatsApp.
+                  </p>
+                  <div className="overview-module-legal">
+                    <UsersIcon size={13} /> Libro Mayor & Cobranzas WhatsApp
+                  </div>
+                </div>
               </div>
             </div>
           </>
@@ -521,6 +538,22 @@ export default function SystemOverviewModal({
                   </p>
                   <div className="overview-module-legal">
                     <CreditCardIcon size={13} /> Seguimiento de cobranzas y recaudación
+                  </div>
+                </div>
+
+                <div className="overview-module-card">
+                  <div className="overview-module-top">
+                    <div className="overview-module-icon-wrap"><FolderIcon size={18} /></div>
+                    <div className="overview-module-meta">
+                      <h5>Portal Documental & Requerimientos (Gen 2)</h5>
+                      <span className="overview-module-badge">Onboarding & Papeles</span>
+                    </div>
+                  </div>
+                  <p className="overview-module-desc">
+                    Centraliza la recepción de extractos bancarios, facturas de compras y comprobantes de tu cartera con links únicos de carga, envío por WhatsApp y auditoría rápida.
+                  </p>
+                  <div className="overview-module-legal">
+                    <FolderIcon size={13} /> Recepción Digital sin Caos de Chats
                   </div>
                 </div>
               </div>

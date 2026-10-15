@@ -16,7 +16,8 @@ import {
   ReceiptTaxIcon,
   AlertTriangleIcon,
   TableIcon,
-  BriefcaseIcon
+  BriefcaseIcon,
+  FolderIcon
 } from './Icons.jsx';
 import { soundService } from '../services/soundService.js';
 import '../styles/navbar.css';
@@ -77,6 +78,14 @@ export default function Navbar({
           label: 'Abonos Mensuales',
           mobileLabel: 'Abonos',
           icon: BoltIcon
+        },
+        {
+          key: 'crm',
+          label: 'Clientes & Fiados (CRM)',
+          mobileLabel: 'Clientes',
+          icon: UsersIcon,
+          badge: badges.crmDebtorsCount > 0 ? '' : null,
+          badgeColor: 'amber'
         }
       ];
     }
@@ -126,6 +135,14 @@ export default function Navbar({
           label: 'Honorarios del Estudio',
           mobileLabel: 'Honorarios',
           icon: ShieldCheckIcon
+        },
+        {
+          key: 'documentacion',
+          label: 'Portal Documentación',
+          mobileLabel: 'Papeles',
+          icon: FolderIcon,
+          badge: badges.docPendingCount > 0 ? '' : null,
+          badgeColor: 'blue'
         }
       ];
     }

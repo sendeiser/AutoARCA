@@ -1,0 +1,344 @@
+/**
+ * crmAccountView.css — Estilos Premium para CRM Comercial & Cuentas Corrientes
+ * Soporte impecable en Dark Mode y Light Mode con tokens de Untitled UI.
+ */
+
+.crm-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 0.5rem 2rem 0.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.crm-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.crm-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-main, #ffffff);
+}
+
+.crm-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted, #94a3b8);
+  max-width: 650px;
+}
+
+.crm-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Barra de Herramientas y Filtros */
+.crm-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--bg-card, rgba(30, 41, 59, 0.45));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  padding: 0.65rem 0.85rem;
+  border-radius: 14px;
+}
+
+.crm-filter-tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.05));
+  padding: 0.25rem;
+  border-radius: 10px;
+}
+
+.crm-tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.crm-tab-btn:hover {
+  color: var(--text-main, #ffffff);
+}
+
+.crm-tab-btn.active {
+  background: var(--bg-primary, #0f172a);
+  color: var(--color-primary, #38bdf8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Buscador */
+.crm-search-wrap {
+  position: relative;
+  min-width: 280px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.crm-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted, #94a3b8);
+  pointer-events: none;
+}
+
+.crm-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.85rem 0.5rem 2.2rem;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  background: var(--bg-input, rgba(15, 23, 42, 0.6));
+  color: var(--text-main, #ffffff);
+  transition: all 0.15s ease;
+}
+
+.crm-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary, #38bdf8);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* Celdas de la Tabla */
+.crm-customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.crm-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+  flex-shrink: 0;
+}
+
+.crm-customer-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-main, #ffffff);
+}
+
+.crm-customer-notes {
+  font-size: 0.72rem;
+  color: var(--text-muted, #94a3b8);
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crm-doc-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.76rem;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.06));
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  color: var(--text-main, #ffffff);
+}
+
+.crm-wa-mini-btn {
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  color: #25d366;
+  border-radius: 6px;
+  padding: 0.2rem 0.35rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.crm-wa-mini-btn:hover {
+  background: #25d366;
+  color: #000000;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
+}
+
+.crm-debt-amount {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #f59e0b;
+  margin-right: 0.4rem;
+}
+
+/* Límite de Crédito Barra */
+.crm-limit-box {
+  width: 140px;
+}
+
+.crm-progress-track {
+  height: 6px;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.1));
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.crm-progress-bar {
+  height: 100%;
+  background: #10b981;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.crm-progress-bar.overlimit {
+  background: #ef4444;
+}
+
+/* Fila de Acciones */
+.crm-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.crm-empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted, #94a3b8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Atajos Rápidos de Pago en Modal */
+.crm-quick-pay-btn {
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  padding: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main, #ffffff);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.crm-quick-pay-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+/* Toast flotante */
+.crm-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #0284c7;
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  animation: crmSlideUp 0.25s ease-out;
+}
+
+@keyframes crmSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Adaptación a Modo Claro */
+[data-theme='light'] .crm-toolbar {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme='light'] .crm-tab-btn {
+  color: #64748b;
+}
+
+[data-theme='light'] .crm-tab-btn.active {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+[data-theme='light'] .crm-search-input {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme='light'] .crm-customer-name {
+  color: #0f172a;
+}
+
+[data-theme='light'] .crm-doc-badge {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+[data-theme='light'] .crm-quick-pay-btn {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .crm-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .crm-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .crm-search-wrap {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .crm-filter-tabs {
+    overflow-x: auto;
+  }
+
+  .crm-actions-row {
+    flex-wrap: wrap;
+  }
+}

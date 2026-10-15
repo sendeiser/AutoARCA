@@ -37,6 +37,7 @@ import AccountantIncomeCertificateModal from './AccountantIncomeCertificateModal
 import AccountantFeesManager from './AccountantFeesManager.jsx';
 import AccountantMultiSoftwareExportModal from './AccountantMultiSoftwareExportModal.jsx';
 import AccountantFinancialStatements from './AccountantFinancialStatements.jsx';
+import AccountantDocPortal from './AccountantDocPortal.jsx';
 import '../styles/accountantPortal.css';
 import '../styles/untitled-ui.css';
 
@@ -917,6 +918,11 @@ export default function AccountantPortal({
 
       {activeTab === 'honorarios' && (
         <AccountantFeesManager clients={clientList} accountantProfile={accountantProfile} />
+      )}
+
+      {/* Pestaña: Central Documental & Requerimientos de Clientes */}
+      {activeTab === 'documentacion' && (
+        <AccountantDocPortal clients={clientList} accountantProfile={accountantProfile} />
       )}
 
       {/* Modal de Vinculación de Nuevo Cliente */}

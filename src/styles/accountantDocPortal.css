@@ -1,0 +1,321 @@
+/**
+ * accountantDocPortal.css — Estilos para la Central de Documentación & Requerimientos
+ * Compatible con Untitled UI tokens, Dark Mode y Light Mode.
+ */
+
+.doc-portal-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 0.5rem 2rem 0.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.doc-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.doc-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-main, #ffffff);
+}
+
+.doc-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted, #94a3b8);
+  max-width: 650px;
+}
+
+.doc-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Sub-navegación de Vistas */
+.doc-subnav-row {
+  display: flex;
+  align-items: center;
+}
+
+.doc-subnav-tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--bg-card, rgba(30, 41, 59, 0.45));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  padding: 0.3rem;
+  border-radius: 12px;
+}
+
+.doc-subnav-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-subnav-btn:hover {
+  color: var(--text-main, #ffffff);
+}
+
+.doc-subnav-btn.active {
+  background: var(--bg-primary, #0f172a);
+  color: var(--color-primary, #38bdf8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Barra de Herramientas */
+.doc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--bg-card, rgba(30, 41, 59, 0.45));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  padding: 0.65rem 0.85rem;
+  border-radius: 14px;
+}
+
+.doc-filter-chips {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.doc-chip {
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-chip:hover {
+  color: var(--text-main, #ffffff);
+}
+
+.doc-chip.active {
+  background: var(--color-primary, #38bdf8);
+  color: #000000;
+  border-color: var(--color-primary, #38bdf8);
+}
+
+/* Buscador */
+.doc-search-wrap {
+  position: relative;
+  min-width: 260px;
+  flex: 1;
+  max-width: 380px;
+}
+
+.doc-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted, #94a3b8);
+  pointer-events: none;
+}
+
+.doc-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.85rem 0.5rem 2.2rem;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  background: var(--bg-input, rgba(15, 23, 42, 0.6));
+  color: var(--text-main, #ffffff);
+  transition: all 0.15s ease;
+}
+
+.doc-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary, #38bdf8);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* CUIT Badge y File icon */
+.doc-cuit-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.06));
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  color: var(--text-main, #ffffff);
+}
+
+.doc-file-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-wa-btn {
+  background: rgba(37, 211, 102, 0.14);
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  color: #25d366;
+  border-radius: 6px;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.doc-wa-btn:hover {
+  background: #25d366;
+  color: #000000;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
+}
+
+/* Empty State */
+.doc-empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted, #94a3b8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Simulador de Portal del Cliente */
+.doc-client-portal-preview {
+  padding: 1.5rem;
+}
+
+.doc-upload-box {
+  border: 2px dashed var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 16px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--bg-secondary, rgba(0, 0, 0, 0.2));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.doc-upload-box:hover {
+  border-color: var(--color-primary, #38bdf8);
+  background: rgba(56, 189, 248, 0.04);
+}
+
+.doc-upload-icon-pulse {
+  color: var(--color-primary, #38bdf8);
+  margin-bottom: 0.5rem;
+  animation: docIconBounce 2s infinite ease-in-out;
+}
+
+@keyframes docIconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Toast flotante */
+.doc-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #0284c7;
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  animation: docSlideUp 0.25s ease-out;
+}
+
+@keyframes docSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modo Claro */
+[data-theme='light'] .doc-subnav-tabs,
+[data-theme='light'] .doc-toolbar {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme='light'] .doc-subnav-btn.active {
+  background: #f1f5f9;
+  color: #0284c7;
+}
+
+[data-theme='light'] .doc-search-input {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+[data-theme='light'] .doc-cuit-badge {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+[data-theme='light'] .doc-upload-box {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .doc-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .doc-subnav-tabs {
+    overflow-x: auto;
+  }
+
+  .doc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doc-search-wrap {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}

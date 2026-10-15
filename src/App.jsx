@@ -11,10 +11,13 @@ import SupabaseStatusModal from './components/SupabaseStatusModal.jsx';
 import AccountantLinkModal from './components/AccountantLinkModal.jsx';
 import AuthScreen from './components/untitled-ui/AuthScreen.jsx';
 import SystemOverviewModal from './components/SystemOverviewModal.jsx';
+import CrmAccountView from './components/CrmAccountView.jsx';
 import { calculateCategoryConsumption } from './services/taxAlertEngine.js';
 import { recordSaleReceipt, closeDailyBatch } from './services/salesBatchService.js';
 import { authService, INITIAL_SCALES, INITIAL_USERS, INITIAL_BUSINESS } from './services/authService.js';
 import { supabaseDataService } from './services/supabaseDataService.js';
+import { crmService } from './services/crmService.js';
+import { accountantDocService } from './services/accountantDocService.js';
 import { soundService } from './services/soundService.js';
 import './index.css';
 
@@ -335,6 +338,8 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
         badges={{
           posSalesCount: pendingSales.length,
           taxTrafficColor: taxMetrics.trafficLight.color,
+          crmDebtorsCount: crmService.getCrmStats()?.debtorsCount || 0,
+          docPendingCount: accountantDocService.getDocMetrics(accountantClientsList)?.pendingCount || 0,
           totalClients: accountantClientsList.length,
           totalUsers: users.length
         }}
@@ -354,6 +359,11 @@ export default function App({ initialUser = null, forceAuthGate = false } = {}) 
               <PosTerminal
                 businessProfile={businessProfile}
                 onRecordSale={handleRecordSale}
+              />
+            ) : clientView === 'crm' ? (
+              <CrmAccountView
+                businessProfile={businessProfile}
+                onNavigateToPos={() => { soundService.playKeyTap(); setClientView('pos'); }}
               />
             ) : (
               <ClientDashboard

@@ -37,7 +37,8 @@ import DfeNotificationCenter from './DfeNotificationCenter.jsx';
 import VepPaymentModal from './VepPaymentModal.jsx';
 import OfficialConstanciaInscripcionModal from './OfficialConstanciaInscripcionModal.jsx';
 import RecurringBillingManager from './RecurringBillingManager.jsx';
-import { CreditCardIcon } from './Icons.jsx';
+import ClientDocUploaderModal from './ClientDocUploaderModal.jsx';
+import { CreditCardIcon, UploadCloudIcon } from './Icons.jsx';
 import '../styles/clientDashboard.css';
 
 export default function ClientDashboard({
@@ -62,6 +63,7 @@ export default function ClientDashboard({
   };
   const [showVepModal, setShowVepModal] = useState(false);
   const [showConstanciaModal, setShowConstanciaModal] = useState(false);
+  const [showDocModal, setShowDocModal] = useState(false);
 
   const pendingCount = pendingSales.length;
   const pendingTotal = pendingSales.reduce((acc, s) => acc + Number(s.amount || 0), 0);
@@ -190,6 +192,15 @@ export default function ClientDashboard({
               title="Descargar informe fiscal en PDF para enviar a tu contador"
             >
               Reporte PDF
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => { soundService.playKeyTap(); setShowDocModal(true); }}
+              iconLeading={<UploadCloudIcon size={16} />}
+              title="Subir extractos bancarios y comprobantes solicitados por tu contador"
+            >
+              Papeles Contador
             </Button>
             <Button
               variant="primary"
@@ -489,6 +500,13 @@ export default function ClientDashboard({
           activity_code: businessProfile.activity_code || '620900',
           cur: '1029384'
         }}
+      />
+
+      {/* Modal de Carga de Documentación para el Estudio Contable */}
+      <ClientDocUploaderModal
+        isOpen={showDocModal}
+        onClose={() => setShowDocModal(false)}
+        businessProfile={businessProfile}
       />
     </div>
   );

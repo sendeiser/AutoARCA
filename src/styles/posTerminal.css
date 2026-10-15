@@ -168,8 +168,8 @@
 /* Selector de Medios de Pago (Apple Segmented Matrix) */
 .pos-payment-selector {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
   margin-bottom: clamp(0.3rem, 0.7vh, 0.55rem);
 }
 
@@ -179,15 +179,18 @@
   border: 0.5px solid var(--pos-card-border);
   border-radius: 12px;
   color: var(--pos-text-muted);
-  font-size: clamp(0.74rem, 1.2vh, 0.8rem);
+  font-size: clamp(0.68rem, 1.1vh, 0.78rem);
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.25rem;
+  padding: 0 0.3rem;
   cursor: pointer;
   transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
   user-select: none;
   touch-action: manipulation;
+  white-space: nowrap;
 }
 
 .payment-chip:hover {
@@ -201,6 +204,13 @@
   font-weight: 700;
   border-color: var(--pos-primary);
   box-shadow: 0 4px 14px rgba(48, 209, 88, 0.35);
+}
+
+.payment-chip.account-chip.active {
+  background: #f59e0b;
+  color: #000000;
+  border-color: #f59e0b;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 
 /* Atajos Rápidos de Dinero */
